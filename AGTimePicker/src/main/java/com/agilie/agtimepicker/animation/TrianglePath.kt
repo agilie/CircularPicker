@@ -1,9 +1,6 @@
 package com.agilie.agtimepicker.animation
 
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
-import android.graphics.PointF
+import android.graphics.*
 
 class TrianglePath(val paint: Paint) {
 
@@ -26,7 +23,18 @@ class TrianglePath(val paint: Paint) {
     fun onActionMove(angle: Float, pullUp: Float) {
         if (lockMove)
             return
+        updateTrianglePath(pullUp)
+        rotateTrianglePath(angle)
+    }
 
+    fun onActionUp() {
+        updateTrianglePath(0f)
+    }
+
+    private fun rotateTrianglePath(angle: Float) {
+        val matrix = Matrix()
+        matrix.setRotate(angle, center.x, center.y)
+        trianglePath.transform(matrix)
     }
 
     fun createTrianglePath() {
@@ -36,7 +44,7 @@ class TrianglePath(val paint: Paint) {
     private fun updateTrianglePath(pullUp: Float) {
         trianglePath.reset()
 
-        val length = radius / 10f
+        val length = radius / 12f
         //Top of triangle
         val point1 = PointF(center.x, center.y - 0.9f * radius - pullUp)
         trianglePath.moveTo(point1.x, point1.y)
@@ -49,5 +57,6 @@ class TrianglePath(val paint: Paint) {
 
         trianglePath.close()
     }
+
 
 }

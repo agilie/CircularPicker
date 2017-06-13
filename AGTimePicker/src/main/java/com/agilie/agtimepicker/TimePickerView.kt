@@ -53,7 +53,7 @@ class TimePickerView : View, View.OnTouchListener {
     private fun setTrianglePaint() = Paint().apply {
         color = Color.WHITE
         isAntiAlias = true
-        style = Paint.Style.STROKE
+        style = Paint.Style.FILL
         strokeWidth = 2f
     }
 
