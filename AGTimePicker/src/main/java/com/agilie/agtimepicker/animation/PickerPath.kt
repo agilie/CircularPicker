@@ -9,10 +9,6 @@ class PickerPath(val paint: Paint) {
         private val pickerPath = Path()
     }
 
-    enum class TimePickerStatus {
-        RESET, CREATE
-    }
-
     var lockMove: Boolean = true
     var center = PointF()
     var radius = 0f
