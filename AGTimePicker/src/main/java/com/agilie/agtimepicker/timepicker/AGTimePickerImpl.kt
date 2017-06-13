@@ -1,8 +1,10 @@
 package com.agilie.agtimepicker.timepicker
 
 import android.graphics.Canvas
+import android.graphics.PointF
 import android.view.MotionEvent
 import com.agilie.agtimepicker.animation.PickerPath
+import com.agilie.volumecontrol.calculateAngleWithTwoVectors
 
 class AGTimePickerImpl(val pickerPath: PickerPath) : AGTimePicker {
 
@@ -15,12 +17,16 @@ class AGTimePickerImpl(val pickerPath: PickerPath) : AGTimePicker {
             x = width / 2f
             y = height / 2f
         }
+
+        val radius = Math.min(width, height) / 6f
+        pickerPath.radius = radius
     }
 
 
     fun onTouchEvent(event: MotionEvent) {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
+                onActionDown(PointF(event.x, event.y))
             }
             MotionEvent.ACTION_MOVE -> {
             }
@@ -28,5 +34,10 @@ class AGTimePickerImpl(val pickerPath: PickerPath) : AGTimePicker {
                 //nothing here
             }
         }
+    }
+
+    private fun onActionDown(pointF: PointF) {
+        val angle = calculateAngleWithTwoVectors(pointF, pickerPath.center)
+        pickerPath.onActionDown(angle)
     }
 }
