@@ -31,6 +31,9 @@ class PickerPath(val paint: Paint) {
         rotatePickerPath(angle)
     }
 
+    fun onActionUp() {
+        updatePickerPath(0f)
+    }
 
     fun createPickerPath() {
         updatePickerPath(0f)
@@ -76,11 +79,5 @@ class PickerPath(val paint: Paint) {
 
         pickerPath.close()
     }
-
-    fun onActionUp() {
-        updatePickerPath(0f)
-    }
-
-
 }
 

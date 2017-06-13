@@ -70,6 +70,7 @@ class AGTimePickerImpl(val pickerPath: PickerPath,
     private fun onActionDown(pointF: PointF) {
         val pointInCircle = pointInCircle(pointF, pickerPath.center, pickerPath.radius)
         pickerPath.lockMove = !pointInCircle
+        trianglePath.lockMove = !pointInCircle
     }
 
     private fun onActionMove(pointF: PointF) {
@@ -79,10 +80,14 @@ class AGTimePickerImpl(val pickerPath: PickerPath,
         val pullUp = min(5 * 15f, max(distance, 0f))
         Log.d("AGTimePickerImpl", "touchP = $pointF pullUp = $pullUp")
         pickerPath.onActionMove(angle, pullUp)
+        trianglePath.onActionMove(angle, pullUp)
     }
 
     private fun onActionUp() {
         pickerPath.lockMove = true
-        pickerPath?.onActionUp()
+        trianglePath.lockMove = true
+
+        pickerPath.onActionUp()
+        trianglePath.onActionUp()
     }
 }
