@@ -1,19 +1,22 @@
 package com.agilie.agtimepicker.timepicker
 
-import android.graphics.Canvas
-import android.graphics.PointF
+import android.graphics.*
 import android.util.Log
 import android.view.MotionEvent
 import com.agilie.agtimepicker.animation.PickerPath
 import com.agilie.agtimepicker.animation.TrianglePath
 import com.agilie.volumecontrol.calculateAngleWithTwoVectors
 import com.agilie.volumecontrol.distance
+import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
 import com.agilie.volumecontrol.pointInCircle
 import java.lang.Math.max
 import java.lang.Math.min
 
 class AGTimePickerImpl(val pickerPath: PickerPath,
-                       val trianglePath: TrianglePath) : AGTimePicker {
+                       val trianglePath: TrianglePath,
+                       var colors: IntArray = intArrayOf(
+                               Color.parseColor("#0080ff"),
+                               Color.parseColor("#53FFFF"))) : AGTimePicker {
 
     override fun onDraw(canvas: Canvas) {
         pickerPath.onDraw(canvas)
@@ -24,7 +27,18 @@ class AGTimePickerImpl(val pickerPath: PickerPath,
 
         val center = PointF(width / 2f, height / 2f)
         val radius = Math.min(width, height) / 5f
+        updatePaint(center, radius)
         drawShapes(center, radius)
+    }
+
+    fun updatePaint(center: PointF, radius: Float) {
+        val startPoint = getPointOnBorderLineOfCircle(center, radius, 180)
+        val endPoint = getPointOnBorderLineOfCircle(center, radius, 0)
+        pickerPath.paint.apply {
+            shader = LinearGradient(startPoint.x, startPoint.y, endPoint.x, endPoint.y, colors,
+                    null,
+                    Shader.TileMode.CLAMP)
+        }
     }
 
     fun onTouchEvent(event: MotionEvent): Boolean {

@@ -50,6 +50,8 @@ class TimePickerView : View, View.OnTouchListener {
         // Load attributes
     }
 
+    fun setGradientColors(vararg color : Int) { timePickerImpl?.colors = color }
+
     private fun setTrianglePaint() = Paint().apply {
         color = Color.WHITE
         isAntiAlias = true
@@ -58,7 +60,7 @@ class TimePickerView : View, View.OnTouchListener {
     }
 
     private fun setPickerPaint() = Paint().apply {
-        color = Color.GREEN
+        color = Color.WHITE
         isAntiAlias = true
         style = Paint.Style.FILL
         strokeWidth = 4f
