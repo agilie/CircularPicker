@@ -37,13 +37,13 @@ class TimePickerView : View, View.OnTouchListener {
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
-        timePickerImpl?.onTouchEvent(event)
-        return true
+        return timePickerImpl!!.onTouchEvent(event)
     }
 
     private fun init() {
         timePickerImpl = AGTimePickerImpl(
                 PickerPath(setPickerPaint()))
+        setOnTouchListener(this)
         // Load attributes
     }
 

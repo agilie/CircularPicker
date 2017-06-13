@@ -9,56 +9,82 @@ class PickerPath(val paint: Paint) {
         private val pickerPath = Path()
     }
 
+    enum class TimePickerStatus {
+        RESET, CREATE
+    }
+
+    var lockMove: Boolean = true
     var center = PointF()
     var radius = 0f
 
     fun onDraw(canvas: Canvas) {
-        val matrix = Matrix()
-        matrix.setRotate(90f, center.x, center.y)
-        pickerPath.reset()
-        updatePickerPath()
-        pickerPath.transform(matrix)
         canvas.drawPath(pickerPath, paint)
-
     }
 
-    fun onActionDown(angle: Int) {
-        //movablePoint = getPointOnBorderLineOfCircle(center, radius * 1.5f, angle)
+    fun onActionDown(angle: Float, pullUp: Float) {
+        //Draw agg
+        updatePickerPath(pullUp)
+        rotatePickerPath(angle)
+    }
+
+    fun onActionMove(angle: Float, pullUp: Float) {
+        if (lockMove)
+            return
+
+        updatePickerPath(pullUp)
+        rotatePickerPath(angle)
     }
 
 
-    fun updatePickerPath() {
+    fun createPickerPath() {
+        updatePickerPath(0f)
+    }
+
+    private fun rotatePickerPath(angle: Float) {
+        //Rotate agg
+        val matrix = Matrix()
+        matrix.setRotate(angle, center.x, center.y)
+        pickerPath.transform(matrix)
+    }
+
+    private fun updatePickerPath(pullUp: Float) {
+        pickerPath.reset()
 
         val controlDelta = radius * 0.552f
-        val offset = 100f
+        //Draw agg or circle
+        val offset = pullUp//radius + pullUp
 
-        val startPoint = PointF(center.x + radius + offset, center.y)
+        val startPoint = PointF(center.x, center.y - radius - offset)
         pickerPath.moveTo(startPoint.x, startPoint.y)
 
-        var controlPoint1 = PointF(startPoint.x, center.y + controlDelta)
-        var controlPoint2 = PointF(center.x + controlDelta, center.y + radius)
+        var controlPoint1 = PointF(center.x + controlDelta, center.y - radius - offset)
+        var controlPoint2 = PointF(center.x + radius, center.y - controlDelta)
 
-        val point2 = PointF(center.x, center.y + radius)
+        val point2 = PointF(center.x + radius, center.y)
         pickerPath.cubicTo(controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, point2.x, point2.y)
 
-        controlPoint1 = PointF(center.x - controlDelta, point2.y)
-        controlPoint2 = PointF(center.x - radius, center.y + controlDelta)
+        controlPoint1 = PointF(center.x + radius, center.y + controlDelta)
+        controlPoint2 = PointF(center.x + controlDelta, center.y + radius)
 
-        val point3 = PointF(center.x - radius, center.y)
+        val point3 = PointF(center.x, center.y + radius)
         pickerPath.cubicTo(controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, point3.x, point3.y)
 
-        controlPoint1 = PointF(point3.x, center.y - controlDelta)
-        controlPoint2 = PointF(center.x - controlDelta, center.y - radius)
-
-        val point4 = PointF(center.x, center.y - radius)
+        controlPoint1 = PointF(center.x - controlDelta, center.y + radius)
+        controlPoint2 = PointF(center.x - radius, center.y + controlDelta)
+        val point4 = PointF(center.x - radius, center.y)
         pickerPath.cubicTo(controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, point4.x, point4.y)
 
-        controlPoint1 = PointF(center.x + controlDelta, center.y - radius)
-        controlPoint2 = PointF(center.x + radius + offset, center.y - controlDelta)
-
+        controlPoint1 = PointF(center.x - radius, center.y - controlDelta)
+        controlPoint2 = PointF(center.x - controlDelta, center.y - radius - offset)
         pickerPath.cubicTo(controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, startPoint.x, startPoint.y)
 
         pickerPath.close()
     }
+
+    fun onActionUp() {
+        updatePickerPath(0f)
+    }
+
+
 }
 
