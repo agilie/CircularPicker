@@ -2,7 +2,6 @@ package com.agilie.agtimepicker.timepicker
 
 import android.graphics.Canvas
 import android.graphics.PointF
-import android.util.Log
 import android.view.MotionEvent
 import com.agilie.agtimepicker.animation.PickerPath
 import com.agilie.agtimepicker.animation.TrianglePath
@@ -64,9 +63,9 @@ class AGTimePickerImpl(val pickerPath: PickerPath,
         val distance = distance(pointF, pickerPath.center) - pickerPath.radius
         //TODO clean up code
         val pullUp = min(5 * 15f, max(distance, 0f))
-        Log.d("AGTimePickerImpl", "touchP = $pointF pullUp = $pullUp")
         pickerPath.onActionMove(angle, pullUp)
-        trianglePath.onActionMove(angle, pullUp)
+
+        if (pullUp != 0f) trianglePath.onActionMove(angle, pullUp)
     }
 
     private fun onActionUp() {
