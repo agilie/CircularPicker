@@ -3,6 +3,7 @@ package com.agilie.agtimepicker
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.CornerPathEffect
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
@@ -50,15 +51,18 @@ class TimePickerView : View, View.OnTouchListener {
         // Load attributes
     }
 
+    fun setGradientColors(vararg color : Int) { timePickerImpl?.colors = color }
+
     private fun setTrianglePaint() = Paint().apply {
         color = Color.WHITE
         isAntiAlias = true
         style = Paint.Style.FILL
+        pathEffect = CornerPathEffect(10f)
         strokeWidth = 2f
     }
 
     private fun setPickerPaint() = Paint().apply {
-        color = Color.GREEN
+        color = Color.WHITE
         isAntiAlias = true
         style = Paint.Style.FILL
         strokeWidth = 4f

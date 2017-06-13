@@ -50,3 +50,4 @@ gradle.properties
 app/build
 intermediates
 /.idea/
+/gradle/wrapper/gradle-wrapper.properties
