@@ -8,7 +8,8 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.agilie.agtimepicker.animation.PickerPath
+import com.agilie.agtimepicker.animation.HoursPickerPath
+import com.agilie.agtimepicker.animation.MinutesPickerPath
 import com.agilie.agtimepicker.animation.TrianglePath
 import com.agilie.agtimepicker.timepicker.AGTimePickerImpl
 
@@ -44,14 +45,17 @@ class TimePickerView : View, View.OnTouchListener {
 
     private fun init() {
         timePickerImpl = AGTimePickerImpl(
-                PickerPath(setPickerPaint()),
+                HoursPickerPath(setPickerPaint()),
+                MinutesPickerPath(setPickerPaint()),
                 TrianglePath(setTrianglePaint()))
 
         setOnTouchListener(this)
         // Load attributes
     }
 
-    fun setGradientColors(vararg color : Int) { timePickerImpl?.colors = color }
+    fun setGradientColors(vararg color: Int) {
+        timePickerImpl?.hoursColors = color
+    }
 
     private fun setTrianglePaint() = Paint().apply {
         color = Color.WHITE
