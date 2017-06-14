@@ -27,7 +27,9 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
                              )) : AGTimePicker, OnSwipeTouchListener.OnSwipeAction {
 
     private val MAX_PULL_UP = 65f
-
+    val SWIPE_RADIUS_FACTOR = 0.6f
+    var viewState = ClockState.HOURS
+    var touchState = TouchState.ROTATE
 
     override fun onDraw(canvas: Canvas) {
         hoursPickerPath.onDraw(canvas)
@@ -73,12 +75,20 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
         return true
     }
 
-    override fun onSwipeRight() {
-        Log.d("swipetest1", "right")
+    fun isSwipe() = touchState == TouchState.SWIPE
+
+
+    override fun onSwipeRight(diff: Float) {
+        if (isSwipe()) {
+
+            Log.d("swipetest1", "right")
+        }
     }
 
-    override fun onSwipeLeft() {
-        Log.d("swipetest1", "left")
+    override fun onSwipeLeft(diff: Float) {
+        if (isSwipe()) {
+            Log.d("swipetest1", "left")
+        }
     }
 
     override fun onSwipeTop() {
@@ -104,10 +114,6 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
         trianglePath.createTrianglePath()
     }
 
-    val SWIPE_RADIUS_FACTOR = 0.6f
-    var viewState = ClockState.HOURS
-    var touchState = TouchState.ROTATE
-
     private fun onActionDown(pointF: PointF) {
         val pointInCircle = pointInCircle(pointF, hoursPickerPath.center, hoursPickerPath.radius)
         if (swipePoint(pointF)) {
@@ -115,10 +121,6 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
         } else {
             touchState = TouchState.ROTATE
         }
-//        Log.d("swipetest", "touch state $touchState \n" +
-//                "view state $viewState \n" +
-//                "swipe point ${swipePoint(pointF)} \n" +
-//                "_________")
         hoursPickerPath.lockMove = !pointInCircle
         trianglePath.lockMove = !pointInCircle
     }
@@ -136,19 +138,12 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
     }
 
     private fun onActionMove(pointF: PointF) {
-        when (touchState) {
-            TouchState.ROTATE -> {
-                val angle = calculateAngleWithTwoVectors(pointF, hoursPickerPath.center)
-                val distance = distance(pointF, hoursPickerPath.center) - hoursPickerPath.radius
-                //TODO clean up code
-                val pullUp = min(MAX_PULL_UP, max(distance, 0f))
-                hoursPickerPath.onActionMove(angle, pullUp)
-                if (pullUp != 0f) trianglePath.onActionMove(angle, pullUp)
-            }
-            TouchState.SWIPE -> {
-
-            }
-        }
+        val angle = calculateAngleWithTwoVectors(pointF, hoursPickerPath.center)
+        val distance = distance(pointF, hoursPickerPath.center) - hoursPickerPath.radius
+        //TODO clean up code
+        val pullUp = min(MAX_PULL_UP, max(distance, 0f))
+        hoursPickerPath.onActionMove(angle, pullUp)
+        if (pullUp != 0f) trianglePath.onActionMove(angle, pullUp)
     }
 
     private fun onActionUp() {

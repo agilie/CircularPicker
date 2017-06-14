@@ -11,8 +11,8 @@ open class OnSwipeTouchListener(context: Context, onSwipeAction: OnSwipeAction?)
 
     companion object {
 
-        private val SWIPE_THRESHOLD = 100
-        private val SWIPE_VELOCITY_THRESHOLD = 100
+        private val SWIPE_THRESHOLD = 10
+        private val SWIPE_VELOCITY_THRESHOLD = 10
     }
 
     private var onSwipeAction: OnSwipeAction? = null
@@ -41,9 +41,9 @@ open class OnSwipeTouchListener(context: Context, onSwipeAction: OnSwipeAction?)
                 if (Math.abs(diffX) > Math.abs(diffY)) {
                     if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                         if (diffX > 0) {
-                            onSwipeAction?.onSwipeRight()
+                            onSwipeAction?.onSwipeRight(diffX)
                         } else {
-                            onSwipeAction?.onSwipeLeft()
+                            onSwipeAction?.onSwipeLeft(diffX)
                         }
                         result = true
                     }
@@ -66,9 +66,9 @@ open class OnSwipeTouchListener(context: Context, onSwipeAction: OnSwipeAction?)
 
     interface OnSwipeAction {
 
-        fun onSwipeRight()
+        fun onSwipeRight(diff: Float)
 
-        fun onSwipeLeft()
+        fun onSwipeLeft(diff: Float)
 
         fun onSwipeTop()
 
