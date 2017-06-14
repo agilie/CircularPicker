@@ -1,6 +1,7 @@
 package com.agilie.agtimepicker.timepicker
 
 import android.graphics.*
+import android.util.Log
 import android.view.MotionEvent
 import com.agilie.agtimepicker.OnSwipeTouchListener
 import com.agilie.agtimepicker.animation.HoursPickerPath
@@ -13,23 +14,25 @@ import com.agilie.volumecontrol.pointInCircle
 import java.lang.Math.max
 import java.lang.Math.min
 
-class AGTimePickerImpl(val hoursPickerPath: HoursPickerPath,
-                       val minutesPickerPath: MinutesPickerPath,
-                       val trianglePath: TrianglePath,
-                       var hoursColors: IntArray = intArrayOf(
-                               Color.parseColor("#0080ff"),
-                               Color.parseColor("#53FFFF")),
-                       var minutesColor: IntArray = intArrayOf(
-                               Color.parseColor("#FF8D00"),
-                               Color.parseColor("#FF0058"),
-                               Color.parseColor("#920084")
-                       )) : AGTimePicker, OnSwipeTouchListener.OnSwipeAction {
+class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
+                             val minutesPickerPath: MinutesPickerPath,
+                             val trianglePath: TrianglePath,
+                             var hoursColors: IntArray = intArrayOf(
+                                     Color.parseColor("#0080ff"),
+                                     Color.parseColor("#53FFFF")),
+                             var minutesColor: IntArray = intArrayOf(
+                                     Color.parseColor("#FF8D00"),
+                                     Color.parseColor("#FF0058"),
+                                     Color.parseColor("#920084")
+                             )) : AGTimePicker, OnSwipeTouchListener.OnSwipeAction {
 
     private val MAX_PULL_UP = 65f
+
 
     override fun onDraw(canvas: Canvas) {
         hoursPickerPath.onDraw(canvas)
         minutesPickerPath.onDraw(canvas)
+
         trianglePath.onDraw(canvas)
     }
 
@@ -71,9 +74,11 @@ class AGTimePickerImpl(val hoursPickerPath: HoursPickerPath,
     }
 
     override fun onSwipeRight() {
+        Log.d("swipetest1", "right")
     }
 
     override fun onSwipeLeft() {
+        Log.d("swipetest1", "left")
     }
 
     override fun onSwipeTop() {
@@ -99,21 +104,51 @@ class AGTimePickerImpl(val hoursPickerPath: HoursPickerPath,
         trianglePath.createTrianglePath()
     }
 
+    val SWIPE_RADIUS_FACTOR = 0.6f
+    var viewState = ClockState.HOURS
+    var touchState = TouchState.ROTATE
+
     private fun onActionDown(pointF: PointF) {
         val pointInCircle = pointInCircle(pointF, hoursPickerPath.center, hoursPickerPath.radius)
+        if (swipePoint(pointF)) {
+            touchState = TouchState.SWIPE
+        } else {
+            touchState = TouchState.ROTATE
+        }
+//        Log.d("swipetest", "touch state $touchState \n" +
+//                "view state $viewState \n" +
+//                "swipe point ${swipePoint(pointF)} \n" +
+//                "_________")
         hoursPickerPath.lockMove = !pointInCircle
         trianglePath.lockMove = !pointInCircle
     }
 
 
-    private fun onActionMove(pointF: PointF) {
-        val angle = calculateAngleWithTwoVectors(pointF, hoursPickerPath.center)
-        val distance = distance(pointF, hoursPickerPath.center) - hoursPickerPath.radius
-        //TODO clean up code
-        val pullUp = min(MAX_PULL_UP, max(distance, 0f))
-        hoursPickerPath.onActionMove(angle, pullUp)
+    fun swipePoint(pointF: PointF) = when (viewState) {
+        ClockState.HOURS -> {
+            pointInCircle(pointF, hoursPickerPath.center, hoursPickerPath.radius) &&
+                    pointInCircle(pointF, hoursPickerPath.center, (hoursPickerPath.radius * SWIPE_RADIUS_FACTOR))
+        }
+        ClockState.MINUTES -> {
+            pointInCircle(pointF, minutesPickerPath.center, minutesPickerPath.radius) &&
+                    pointInCircle(pointF, minutesPickerPath.center, (minutesPickerPath.radius * SWIPE_RADIUS_FACTOR))
+        }
+    }
 
-        if (pullUp != 0f) trianglePath.onActionMove(angle, pullUp)
+    private fun onActionMove(pointF: PointF) {
+        when (touchState) {
+            TouchState.ROTATE -> {
+                val angle = calculateAngleWithTwoVectors(pointF, hoursPickerPath.center)
+                val distance = distance(pointF, hoursPickerPath.center) - hoursPickerPath.radius
+                //TODO clean up code
+                val pullUp = min(MAX_PULL_UP, max(distance, 0f))
+                hoursPickerPath.onActionMove(angle, pullUp)
+                if (pullUp != 0f) trianglePath.onActionMove(angle, pullUp)
+            }
+            TouchState.SWIPE -> {
+
+            }
+        }
     }
 
     private fun onActionUp() {
@@ -124,5 +159,6 @@ class AGTimePickerImpl(val hoursPickerPath: HoursPickerPath,
         trianglePath.onActionUp()
     }
 
-
+    enum class ClockState { HOURS, MINUTES }
+    enum class TouchState { SWIPE, ROTATE }
 }

@@ -15,6 +15,11 @@ class HoursPickerPath(val paint: Paint) {
 
     fun onDraw(canvas: Canvas) {
         canvas.drawPath(hoursPath, paint)
+//        canvas.drawCircle(center.x,center.y,radius*0.6f, Paint().apply {
+//            color=Color.RED
+//            style = Paint.Style.FILL
+//
+//        })
     }
 
     fun onActionDown(angle: Float, pullUp: Float) {

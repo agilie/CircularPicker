@@ -11,10 +11,10 @@ import android.view.View
 import com.agilie.agtimepicker.animation.HoursPickerPath
 import com.agilie.agtimepicker.animation.MinutesPickerPath
 import com.agilie.agtimepicker.animation.TrianglePath
-import com.agilie.agtimepicker.timepicker.AGTimePickerImpl
+import com.agilie.agtimepicker.timepicker.AGTimePickerController
 
 class TimePickerView : View, View.OnTouchListener {
-    var timePickerImpl: AGTimePickerImpl? = null
+    var timePickerController: AGTimePickerController? = null
 
     constructor(context: Context?) : super(context) {
         init()
@@ -28,26 +28,26 @@ class TimePickerView : View, View.OnTouchListener {
         init()
     }
 
-    val onSwipeTouchListener = OnSwipeTouchListener(context, timePickerImpl!!)
+    val onSwipeTouchListener = OnSwipeTouchListener(context, timePickerController)
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        timePickerImpl?.onDraw(canvas)
+        timePickerController?.onDraw(canvas)
         invalidate()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        timePickerImpl?.onSizeChanged(w, h)
+        timePickerController?.onSizeChanged(w, h)
         super.onSizeChanged(w, h, oldw, oldh)
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         onSwipeTouchListener.onTouch(v, event)
-        return timePickerImpl!!.onTouchEvent(event)
+        return timePickerController!!.onTouchEvent(event)
     }
 
     private fun init() {
-        timePickerImpl = AGTimePickerImpl(
+        timePickerController = AGTimePickerController(
                 HoursPickerPath(setPickerPaint()),
                 MinutesPickerPath(setPickerPaint()),
                 TrianglePath(setTrianglePaint()))
@@ -57,7 +57,7 @@ class TimePickerView : View, View.OnTouchListener {
     }
 
     fun setGradientColors(vararg color: Int) {
-        timePickerImpl?.hoursColors = color
+        timePickerController?.hoursColors = color
     }
 
     private fun setTrianglePaint() = Paint().apply {

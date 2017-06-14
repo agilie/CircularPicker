@@ -7,7 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 
 
-open class OnSwipeTouchListener(context: Context, onSwipeAction: OnSwipeAction) : View.OnTouchListener {
+open class OnSwipeTouchListener(context: Context, onSwipeAction: OnSwipeAction?) : View.OnTouchListener {
 
     companion object {
 
