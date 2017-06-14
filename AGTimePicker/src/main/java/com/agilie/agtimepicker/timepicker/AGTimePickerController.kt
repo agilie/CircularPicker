@@ -121,6 +121,7 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
         } else {
             touchState = TouchState.ROTATE
         }
+        previousTouchPoint = pointF
         hoursPickerPath.lockMove = !pointInCircle
         trianglePath.lockMove = !pointInCircle
     }
@@ -141,6 +142,9 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
     private fun onActionMove(pointF: PointF) {
         val moveDistance = distance(pointF, previousTouchPoint)
         val vector = pointF.x - previousTouchPoint.x
+        previousTouchPoint = pointF
+        Log.d("swipetest", "move distance = $moveDistance \n" +
+                "vector = $vector \n__________")
 
         if (!isSwipe()) {
             val angle = calculateAngleWithTwoVectors(pointF, hoursPickerPath.center)
@@ -151,10 +155,10 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
 
             if (pullUp != 0f) trianglePath.onActionMove(angle, pullUp)
         } else {
-            if (vector >= 0 && viewState == ClockState.HOURS)
-                return
-            previousTouchPoint = pointF
-            updatePickerPosition(moveDistance, vector)
+            hoursPickerPath.center.x += vector
+            minutesPickerPath.center.x += vector
+            hoursPickerPath.onUpdatePickerPath()
+            minutesPickerPath.onUpdatePickerPath()
         }
 
 
@@ -162,13 +166,13 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
 
     private fun updatePickerPosition(moveDistance: Float, vector: Float) {
         if (vector < 0 && viewState == ClockState.HOURS) {
-            hoursPickerPath.center.x -= moveDistance
-            minutesPickerPath.center.x -= moveDistance
+            hoursPickerPath.center.x -= vector
+            minutesPickerPath.center.x -= vector
         } else {
         }
         if (vector > 0 && viewState == ClockState.MINUTES) {
-            hoursPickerPath.center.x += moveDistance
-            minutesPickerPath.center.x += moveDistance
+            hoursPickerPath.center.x += vector
+            minutesPickerPath.center.x += vector
         } else {
             // previousTouchPoint = minutesPickerPath.center
         }
