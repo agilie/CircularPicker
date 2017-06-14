@@ -4,10 +4,7 @@ import android.graphics.*
 
 class TrianglePath(val paint: Paint) {
 
-    private companion object CacheForTriangleCanvas {
-        private val trianglePath = Path()
-    }
-
+    private val trianglePath = Path()
     var center = PointF()
     var radius = 0f
     var lockMove = true
@@ -56,6 +53,10 @@ class TrianglePath(val paint: Paint) {
         trianglePath.lineTo(point3.x, point3.y)
 
         trianglePath.close()
+    }
+
+    fun onUpdatePickerPath() {
+        updateTrianglePath(0f)
     }
 
 

@@ -9,8 +9,7 @@ import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
-import com.agilie.agtimepicker.animation.HoursPickerPath
-import com.agilie.agtimepicker.animation.MinutesPickerPath
+import com.agilie.agtimepicker.animation.PickerPath
 import com.agilie.agtimepicker.animation.TrianglePath
 import com.agilie.agtimepicker.timepicker.AGTimePickerController
 import java.lang.Math.abs
@@ -56,8 +55,9 @@ class TimePickerView : View, View.OnTouchListener {
 
     private fun init() {
         timePickerController = AGTimePickerController(
-                HoursPickerPath(setPickerPaint()),
-                MinutesPickerPath(setPickerPaint()),
+                PickerPath(setPickerPaint()),
+                PickerPath(setPickerPaint()),
+                TrianglePath(setTrianglePaint()),
                 TrianglePath(setTrianglePaint()))
 
         setOnTouchListener(this)

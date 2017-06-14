@@ -3,8 +3,7 @@ package com.agilie.agtimepicker.timepicker
 import android.graphics.*
 import android.util.Log
 import android.view.MotionEvent
-import com.agilie.agtimepicker.animation.HoursPickerPath
-import com.agilie.agtimepicker.animation.MinutesPickerPath
+import com.agilie.agtimepicker.animation.PickerPath
 import com.agilie.agtimepicker.animation.TrianglePath
 import com.agilie.volumecontrol.calculateAngleWithTwoVectors
 import com.agilie.volumecontrol.distance
@@ -13,9 +12,10 @@ import com.agilie.volumecontrol.pointInCircle
 import java.lang.Math.max
 import java.lang.Math.min
 
-class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
-                             val minutesPickerPath: MinutesPickerPath,
-                             val trianglePath: TrianglePath,
+class AGTimePickerController(val hoursPickerPath: PickerPath,
+                             val minutesPickerPath: PickerPath,
+                             val hoursTrianglePath: TrianglePath,
+                             val minutesTrianglePath: TrianglePath,
                              var hoursColors: IntArray = intArrayOf(
                                      Color.parseColor("#0080ff"),
                                      Color.parseColor("#53FFFF")),
@@ -35,7 +35,8 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
         hoursPickerPath.onDraw(canvas)
         minutesPickerPath.onDraw(canvas)
 
-        trianglePath.onDraw(canvas)
+        hoursTrianglePath.onDraw(canvas)
+        minutesTrianglePath.onDraw(canvas)
     }
 
     override fun onSizeChanged(width: Int, height: Int) {
@@ -102,16 +103,19 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
             y = center.y
             x = center.x + 2.09f * radius + MAX_PULL_UP
         }
-        trianglePath.center = center
+        hoursTrianglePath.center = center
+        minutesPickerPath.center = minutesPickerPath.center
 
         hoursPickerPath.radius = radius
         minutesPickerPath.radius = radius
-        trianglePath.radius = radius
+        hoursTrianglePath.radius = radius
+        minutesTrianglePath.radius = radius
         previousTouchPoint = center
 
         hoursPickerPath.createPickerPath()
         minutesPickerPath.createPickerPath()
-        trianglePath.createTrianglePath()
+        hoursTrianglePath.createTrianglePath()
+        minutesTrianglePath.createTrianglePath()
     }
 
     private fun onActionDown(pointF: PointF) {
@@ -123,7 +127,10 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
         }
         previousTouchPoint = pointF
         hoursPickerPath.lockMove = !pointInCircle
-        trianglePath.lockMove = !pointInCircle
+        minutesPickerPath.lockMove = !pointInCircle
+        hoursTrianglePath.lockMove = !pointInCircle
+        minutesTrianglePath.lockMove = !pointInCircle
+
     }
 
 
@@ -143,8 +150,6 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
         val moveDistance = distance(pointF, previousTouchPoint)
         val vector = pointF.x - previousTouchPoint.x
         previousTouchPoint = pointF
-        Log.d("swipetest", "move distance = $moveDistance \n" +
-                "vector = $vector \n__________")
 
         if (!isSwipe()) {
             val angle = calculateAngleWithTwoVectors(pointF, hoursPickerPath.center)
@@ -152,41 +157,38 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
             //TODO clean up code
             val pullUp = min(MAX_PULL_UP, max(distance, 0f))
             hoursPickerPath.onActionMove(angle, pullUp)
+            minutesPickerPath.onActionMove(angle, pullUp)
 
-            if (pullUp != 0f) trianglePath.onActionMove(angle, pullUp)
+            if (pullUp != 0f) {
+                hoursTrianglePath.onActionMove(angle, pullUp)
+                minutesTrianglePath.onActionMove(angle, pullUp)
+            }
+
         } else {
             hoursPickerPath.center.x += vector
             minutesPickerPath.center.x += vector
+
+            hoursTrianglePath.center = hoursPickerPath.center
+            minutesTrianglePath.center = minutesPickerPath.center
+
             hoursPickerPath.onUpdatePickerPath()
             minutesPickerPath.onUpdatePickerPath()
+            hoursTrianglePath.onUpdatePickerPath()
+            minutesTrianglePath.onUpdatePickerPath()
         }
-
-
-    }
-
-    private fun updatePickerPosition(moveDistance: Float, vector: Float) {
-        if (vector < 0 && viewState == ClockState.HOURS) {
-            hoursPickerPath.center.x -= vector
-            minutesPickerPath.center.x -= vector
-        } else {
-        }
-        if (vector > 0 && viewState == ClockState.MINUTES) {
-            hoursPickerPath.center.x += vector
-            minutesPickerPath.center.x += vector
-        } else {
-            // previousTouchPoint = minutesPickerPath.center
-        }
-
-        hoursPickerPath.onUpdatePickerPath()
-        minutesPickerPath.onUpdatePickerPath()
     }
 
     private fun onActionUp() {
         hoursPickerPath.lockMove = true
-        trianglePath.lockMove = true
+        minutesPickerPath.lockMove = true
+        hoursTrianglePath.lockMove = true
+        minutesTrianglePath.lockMove = true
 
         hoursPickerPath.onActionUp()
-        trianglePath.onActionUp()
+        minutesPickerPath.onActionUp()
+
+        hoursTrianglePath.onActionUp()
+        minutesTrianglePath.onActionUp()
     }
 
     enum class ClockState { HOURS, MINUTES }
