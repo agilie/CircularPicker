@@ -2,6 +2,7 @@ package com.agilie.agtimepicker.timepicker
 
 import android.graphics.*
 import android.view.MotionEvent
+import com.agilie.agtimepicker.OnSwipeTouchListener
 import com.agilie.agtimepicker.animation.HoursPickerPath
 import com.agilie.agtimepicker.animation.MinutesPickerPath
 import com.agilie.agtimepicker.animation.TrianglePath
@@ -22,17 +23,19 @@ class AGTimePickerImpl(val hoursPickerPath: HoursPickerPath,
                                Color.parseColor("#FF8D00"),
                                Color.parseColor("#FF0058"),
                                Color.parseColor("#920084")
-                       )) : AGTimePicker {
+                       )) : AGTimePicker, OnSwipeTouchListener.OnSwipeAction {
+
+    private val MAX_PULL_UP = 65f
 
     override fun onDraw(canvas: Canvas) {
         hoursPickerPath.onDraw(canvas)
+        minutesPickerPath.onDraw(canvas)
         trianglePath.onDraw(canvas)
     }
 
     override fun onSizeChanged(width: Int, height: Int) {
-
         val center = PointF(width / 2f, height / 2f)
-        val radius = Math.min(width, height) / 5f
+        val radius = Math.min(width, height) / 4f
         updatePaint(center, radius)
         drawShapes(center, radius)
     }
@@ -67,14 +70,32 @@ class AGTimePickerImpl(val hoursPickerPath: HoursPickerPath,
         return true
     }
 
+    override fun onSwipeRight() {
+    }
+
+    override fun onSwipeLeft() {
+    }
+
+    override fun onSwipeTop() {
+    }
+
+    override fun onSwipeBottom() {
+    }
+
     private fun drawShapes(center: PointF, radius: Float) {
         hoursPickerPath.center = center
+        minutesPickerPath.center.apply {
+            y = center.y
+            x = center.x + 2.09f * radius + MAX_PULL_UP
+        }
         trianglePath.center = center
 
         hoursPickerPath.radius = radius
+        minutesPickerPath.radius = radius
         trianglePath.radius = radius
 
         hoursPickerPath.createPickerPath()
+        minutesPickerPath.createPickerPath()
         trianglePath.createTrianglePath()
     }
 
@@ -84,11 +105,12 @@ class AGTimePickerImpl(val hoursPickerPath: HoursPickerPath,
         trianglePath.lockMove = !pointInCircle
     }
 
+
     private fun onActionMove(pointF: PointF) {
         val angle = calculateAngleWithTwoVectors(pointF, hoursPickerPath.center)
         val distance = distance(pointF, hoursPickerPath.center) - hoursPickerPath.radius
         //TODO clean up code
-        val pullUp = min(5 * 15f, max(distance, 0f))
+        val pullUp = min(MAX_PULL_UP, max(distance, 0f))
         hoursPickerPath.onActionMove(angle, pullUp)
 
         if (pullUp != 0f) trianglePath.onActionMove(angle, pullUp)
@@ -101,4 +123,6 @@ class AGTimePickerImpl(val hoursPickerPath: HoursPickerPath,
         hoursPickerPath.onActionUp()
         trianglePath.onActionUp()
     }
+
+
 }

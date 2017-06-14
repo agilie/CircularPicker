@@ -28,6 +28,8 @@ class TimePickerView : View, View.OnTouchListener {
         init()
     }
 
+    val onSwipeTouchListener = OnSwipeTouchListener(context, timePickerImpl!!)
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         timePickerImpl?.onDraw(canvas)
@@ -40,6 +42,7 @@ class TimePickerView : View, View.OnTouchListener {
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
+        onSwipeTouchListener.onTouch(v, event)
         return timePickerImpl!!.onTouchEvent(event)
     }
 
