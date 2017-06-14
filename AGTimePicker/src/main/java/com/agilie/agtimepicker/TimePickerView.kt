@@ -13,13 +13,15 @@ import com.agilie.agtimepicker.animation.HoursPickerPath
 import com.agilie.agtimepicker.animation.MinutesPickerPath
 import com.agilie.agtimepicker.animation.TrianglePath
 import com.agilie.agtimepicker.timepicker.AGTimePickerController
+import java.lang.Math.abs
 
 class TimePickerView : View, View.OnTouchListener {
     var timePickerController: AGTimePickerController? = null
+
     companion object {
 
-        private val SWIPE_THRESHOLD = 10
-        private val SWIPE_VELOCITY_THRESHOLD = 10
+        private val SWIPE_THRESHOLD = 100
+        private val SWIPE_VELOCITY_THRESHOLD = 200
     }
 
     constructor(context: Context?) : super(context) {
@@ -82,7 +84,6 @@ class TimePickerView : View, View.OnTouchListener {
         strokeWidth = 4f
     }
 
-
     private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
 
         override fun onDown(e: MotionEvent): Boolean {
@@ -94,8 +95,9 @@ class TimePickerView : View, View.OnTouchListener {
             try {
                 val diffY = e2.y - e1.y
                 val diffX = e2.x - e1.x
-                if (Math.abs(diffX) > Math.abs(diffY)) {
-                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                timePickerController?.setDiffX(diffX)
+                if (abs(diffX) > abs(diffY)) {
+                    if (abs(diffX) > SWIPE_THRESHOLD && abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
                         if (diffX > 0) {
                             timePickerController?.onSwipeRight(diffX)
                         } else {
@@ -103,7 +105,9 @@ class TimePickerView : View, View.OnTouchListener {
                         }
                         result = true
                     }
+
                 }
+
 //                else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
 //                    if (diffY > 0) {
 //                        timePickerController?.onSwipeBottom(diffY)
@@ -115,9 +119,7 @@ class TimePickerView : View, View.OnTouchListener {
             } catch (exception: Exception) {
                 exception.printStackTrace()
             }
-
             return result
         }
-
     }
 }

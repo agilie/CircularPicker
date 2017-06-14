@@ -29,6 +29,7 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
     val SWIPE_RADIUS_FACTOR = 0.6f
     var viewState = ClockState.HOURS
     var touchState = TouchState.ROTATE
+    private var previousTouchPoint = PointF()
 
     override fun onDraw(canvas: Canvas) {
         hoursPickerPath.onDraw(canvas)
@@ -76,7 +77,6 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
 
     fun isSwipe() = touchState == TouchState.SWIPE
 
-
     fun onSwipeRight(diff: Float) {
         if (isSwipe()) {
 
@@ -107,6 +107,7 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
         hoursPickerPath.radius = radius
         minutesPickerPath.radius = radius
         trianglePath.radius = radius
+        previousTouchPoint = center
 
         hoursPickerPath.createPickerPath()
         minutesPickerPath.createPickerPath()
@@ -115,7 +116,7 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
 
     private fun onActionDown(pointF: PointF) {
         val pointInCircle = pointInCircle(pointF, hoursPickerPath.center, hoursPickerPath.radius)
-        if (swipePoint(pointF)) {
+        if (!swipePoint(pointF)) {
             touchState = TouchState.SWIPE
         } else {
             touchState = TouchState.ROTATE
@@ -128,23 +129,50 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
     fun swipePoint(pointF: PointF) = when (viewState) {
         ClockState.HOURS -> {
             pointInCircle(pointF, hoursPickerPath.center, hoursPickerPath.radius) &&
-                    pointInCircle(pointF, hoursPickerPath.center, (hoursPickerPath.radius * SWIPE_RADIUS_FACTOR))
+                    !pointInCircle(pointF, hoursPickerPath.center, (hoursPickerPath.radius * SWIPE_RADIUS_FACTOR))
         }
         ClockState.MINUTES -> {
             pointInCircle(pointF, minutesPickerPath.center, minutesPickerPath.radius) &&
-                    pointInCircle(pointF, minutesPickerPath.center, (minutesPickerPath.radius * SWIPE_RADIUS_FACTOR))
+                    !pointInCircle(pointF, minutesPickerPath.center, (minutesPickerPath.radius * SWIPE_RADIUS_FACTOR))
         }
     }
 
+
     private fun onActionMove(pointF: PointF) {
+        val moveDistance = distance(pointF, previousTouchPoint)
+        val vector = pointF.x - previousTouchPoint.x
+
         if (!isSwipe()) {
-        val angle = calculateAngleWithTwoVectors(pointF, hoursPickerPath.center)
-        val distance = distance(pointF, hoursPickerPath.center) - hoursPickerPath.radius
-        //TODO clean up code
-        val pullUp = min(MAX_PULL_UP, max(distance, 0f))
-        hoursPickerPath.onActionMove(angle, pullUp)
-        if (pullUp != 0f) trianglePath.onActionMove(angle, pullUp)
+            val angle = calculateAngleWithTwoVectors(pointF, hoursPickerPath.center)
+            val distance = distance(pointF, hoursPickerPath.center) - hoursPickerPath.radius
+            //TODO clean up code
+            val pullUp = min(MAX_PULL_UP, max(distance, 0f))
+            hoursPickerPath.onActionMove(angle, pullUp)
+
+            if (pullUp != 0f) trianglePath.onActionMove(angle, pullUp)
+        } else {
+            previousTouchPoint = pointF
+            updatePickerPosition(moveDistance, vector)
         }
+
+
+    }
+
+    private fun updatePickerPosition(moveDistance: Float, vector: Float) {
+        if (vector < 0 && viewState == ClockState.HOURS) {
+            hoursPickerPath.center.x -= moveDistance
+            minutesPickerPath.center.x -= moveDistance
+        } else {
+        }
+        if (vector > 0 && viewState == ClockState.MINUTES) {
+            hoursPickerPath.center.x += moveDistance
+            minutesPickerPath.center.x += moveDistance
+        } else {
+           // previousTouchPoint = minutesPickerPath.center
+        }
+
+        hoursPickerPath.onUpdatePickerPath()
+        minutesPickerPath.onUpdatePickerPath()
     }
 
     private fun onActionUp() {
@@ -157,4 +185,8 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
 
     enum class ClockState { HOURS, MINUTES }
     enum class TouchState { SWIPE, ROTATE }
+
+    fun setDiffX(diffX: Float) {
+        //this.
+    }
 }

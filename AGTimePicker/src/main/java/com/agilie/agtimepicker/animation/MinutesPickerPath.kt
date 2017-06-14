@@ -78,4 +78,9 @@ class MinutesPickerPath(val paint: Paint) {
 
         minutesPath.close()
     }
+
+    fun onUpdatePickerPath() {
+        updatePickerPath(0f)
+    }
+
 }

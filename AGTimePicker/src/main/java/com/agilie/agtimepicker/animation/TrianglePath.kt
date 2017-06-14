@@ -10,7 +10,7 @@ class TrianglePath(val paint: Paint) {
 
     var center = PointF()
     var radius = 0f
-    var lockMove: Boolean = true
+    var lockMove = true
 
     fun onDraw(canvas: Canvas) {
         canvas.drawPath(trianglePath, paint)

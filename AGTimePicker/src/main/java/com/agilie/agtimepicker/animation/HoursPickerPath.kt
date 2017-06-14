@@ -36,6 +36,10 @@ class HoursPickerPath(val paint: Paint) {
         rotatePickerPath(angle)
     }
 
+    fun onUpdatePickerPath() {
+        updatePickerPath(0f)
+    }
+
     fun onActionUp() {
         updatePickerPath(0f)
     }
