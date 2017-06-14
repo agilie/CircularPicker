@@ -3,7 +3,6 @@ package com.agilie.agtimepicker.timepicker
 import android.graphics.*
 import android.util.Log
 import android.view.MotionEvent
-import com.agilie.agtimepicker.OnSwipeTouchListener
 import com.agilie.agtimepicker.animation.HoursPickerPath
 import com.agilie.agtimepicker.animation.MinutesPickerPath
 import com.agilie.agtimepicker.animation.TrianglePath
@@ -24,7 +23,7 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
                                      Color.parseColor("#FF8D00"),
                                      Color.parseColor("#FF0058"),
                                      Color.parseColor("#920084")
-                             )) : AGTimePicker, OnSwipeTouchListener.OnSwipeAction {
+                             )) : AGTimePicker {
 
     private val MAX_PULL_UP = 65f
     val SWIPE_RADIUS_FACTOR = 0.6f
@@ -78,23 +77,23 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
     fun isSwipe() = touchState == TouchState.SWIPE
 
 
-    override fun onSwipeRight(diff: Float) {
+    fun onSwipeRight(diff: Float) {
         if (isSwipe()) {
 
             Log.d("swipetest1", "right")
         }
     }
 
-    override fun onSwipeLeft(diff: Float) {
+    fun onSwipeLeft(diff: Float) {
         if (isSwipe()) {
             Log.d("swipetest1", "left")
         }
     }
 
-    override fun onSwipeTop() {
+    fun onSwipeTop(diff: Float) {
     }
 
-    override fun onSwipeBottom() {
+    fun onSwipeBottom(diff: Float) {
     }
 
     private fun drawShapes(center: PointF, radius: Float) {
@@ -138,12 +137,14 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
     }
 
     private fun onActionMove(pointF: PointF) {
+        if (!isSwipe()) {
         val angle = calculateAngleWithTwoVectors(pointF, hoursPickerPath.center)
         val distance = distance(pointF, hoursPickerPath.center) - hoursPickerPath.radius
         //TODO clean up code
         val pullUp = min(MAX_PULL_UP, max(distance, 0f))
         hoursPickerPath.onActionMove(angle, pullUp)
         if (pullUp != 0f) trianglePath.onActionMove(angle, pullUp)
+        }
     }
 
     private fun onActionUp() {
