@@ -151,6 +151,8 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
 
             if (pullUp != 0f) trianglePath.onActionMove(angle, pullUp)
         } else {
+            if (vector >= 0 && viewState == ClockState.HOURS)
+                return
             previousTouchPoint = pointF
             updatePickerPosition(moveDistance, vector)
         }
@@ -168,7 +170,7 @@ class AGTimePickerController(val hoursPickerPath: HoursPickerPath,
             hoursPickerPath.center.x += moveDistance
             minutesPickerPath.center.x += moveDistance
         } else {
-           // previousTouchPoint = minutesPickerPath.center
+            // previousTouchPoint = minutesPickerPath.center
         }
 
         hoursPickerPath.onUpdatePickerPath()
