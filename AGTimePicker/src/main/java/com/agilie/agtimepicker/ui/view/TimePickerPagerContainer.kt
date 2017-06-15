@@ -1,8 +1,10 @@
 package com.agilie.agtimepicker.ui.view
 
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Point
+import android.graphics.PointF
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
@@ -13,108 +15,87 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 
+/**Action Flow
+ * 1) Set correct position for view pager
+ * 2) Set correct
+ * */
 
-class TimePickerPagerContainer : FrameLayout, ViewPager.OnPageChangeListener {
+class TimePickerPagerContainer : ViewPager, ViewPager.OnPageChangeListener {
 
 
-    private var mPager: TimePickerViewPager? = null
-    var mNeedsRedraw = false
+    private var pager: ViewPager? = null
+    private var needsRedraw = false
+    //Set adapter
+    //var adapter: PickerPagerAdapter? = null
 
-    constructor(context: Context?) : super(context) {
-        init()
+    constructor(context: Context) : super(context) {
+        init(null)
     }
 
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
-        init()
-    }
-
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init()
+    constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
+        init(attrs)
     }
 
 
-    private fun init() {
-        clipChildren = false
-        mPager = TimePickerViewPager(context)
-        mPager?.adapter = MyPagerAdapter()
-        addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            var layPar = LayoutParams(layoutParams)
-            mPager?.pageMargin = 15
-            mPager?.layoutParams = LayoutParams(layPar)
-        }
+    override fun onPageScrollStateChanged(state: Int) {
+        needsRedraw = state != ViewPager.SCROLL_STATE_IDLE
 
-        addView(mPager)
-        setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-    }
-
-    override fun onFinishInflate() {
-        try {
-            mPager = getChildAt(0) as TimePickerViewPager
-            mPager!!.setOnPageChangeListener(this)
-        } catch (e: Exception) {
-            throw IllegalStateException("The root child of PagerContainer must be a ViewPager")
-        }
-
-    }
-
-    fun getViewPager(): ViewPager {
-        return mPager!!
-    }
-
-    private val mCenter = Point()
-    private val mInitialTouch = Point()
-
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        mCenter.x = w / 2
-        mCenter.y = h / 2
-    }
-
-    override fun onTouchEvent(ev: MotionEvent): Boolean {
-        when (ev.action) {
-            MotionEvent.ACTION_DOWN -> {
-                mInitialTouch.x = ev.x.toInt()
-                mInitialTouch.y = ev.y.toInt()
-                ev.offsetLocation(mCenter.x - mInitialTouch.x.toFloat(), mCenter.y - mInitialTouch.y.toFloat())
-            }
-            else -> ev.offsetLocation(mCenter.x - mInitialTouch.x.toFloat(), mCenter.y - mInitialTouch.y.toFloat())
-        }
-
-        return mPager!!.dispatchTouchEvent(ev)
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-        if (mNeedsRedraw) invalidate()
+        super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+        // if (needsRedraw) invalidate()
     }
 
-    override fun onPageSelected(position: Int) {}
+    /*override fun onPageScrolled(position: Int, offset: Float, offsetPixels: Int) {
+        super.onPageScrolled(position, offset, offsetPixels)
+    }*/
 
-    override fun onPageScrollStateChanged(state: Int) {
-        mNeedsRedraw = state != ViewPager.SCROLL_STATE_IDLE
+    override fun onDraw(canvas: Canvas?) {
+        super.onDraw(canvas)
+    }
+
+    override fun onPageSelected(position: Int) {
     }
 
 
-    private inner class MyPagerAdapter : PagerAdapter() {
-
-        override fun instantiateItem(container: ViewGroup, position: Int): Any {
-            val view = TextView(context)
-            view.text = "Item " + position
-            view.gravity = Gravity.CENTER
-            view.setBackgroundColor(Color.argb(255, position * 50, position * 10, position * 50))
-
-            container.addView(view)
-            return view
-        }
-
-        override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-            container.removeView(`object` as View)
-        }
-
-        override fun getCount(): Int {
-            return 2
-        }
-
-        override fun isViewFromObject(view: View, `object`: Any): Boolean {
-            return view === `object`
+    override fun onFinishInflate() {
+        try {
+            pager = getChildAt(0) as ViewPager
+            pager?.setOnPageChangeListener(this)
+        } catch (e: Exception) {
+            throw IllegalStateException("The root child of PagerContainer must be a ViewPager")
         }
     }
+
+    private val center = PointF()
+    private val touch = PointF()
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        center.x = w / 2f
+        center.y = h / 2f
+    }
+
+
+    // TODO Handle pending deleting
+    override fun onTouchEvent(ev: MotionEvent): Boolean {
+        //We capture any touches not already handled by the ViewPager
+        // to implement scrolling from a touch outside the pager bounds.
+        when (ev.action) {
+            MotionEvent.ACTION_DOWN -> {
+                touch.x = ev.x
+                touch.y = ev.y
+                ev.offsetLocation((center.x - touch.x), (center.y - touch.y))
+            }
+            else -> ev.offsetLocation((center.x - touch.x), (center.y - touch.y))
+        }
+
+        return getChildAt(0).dispatchTouchEvent(ev)
+    }
+
+    private fun init(attrs: AttributeSet?) {
+        clipChildren = false
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null)
+    }
+
 }

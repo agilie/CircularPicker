@@ -14,7 +14,7 @@ import com.agilie.agtimepicker.presenter.TimePickerContract
 import com.agilie.agtimepicker.ui.animation.PickerPath
 import com.agilie.agtimepicker.ui.animation.TrianglePath
 
-class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
+class TimePickerView : View, View.OnTouchListener, TimePickerContract.View { // TODO DELETE
 
     var behavior: TimePickerContract.Behavior? = null
 

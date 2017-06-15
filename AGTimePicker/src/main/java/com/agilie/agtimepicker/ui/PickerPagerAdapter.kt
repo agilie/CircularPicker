@@ -1,4 +1,4 @@
-package com.agilie.agtimepicker
+package com.agilie.agtimepicker.ui
 
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
