@@ -1,10 +1,10 @@
-package com.agilie.agtimepicker.timepicker
+package com.agilie.agtimepicker.presenter.timepicker
 
 import android.graphics.*
 import android.util.Log
 import android.view.MotionEvent
-import com.agilie.agtimepicker.animation.PickerPath
-import com.agilie.agtimepicker.animation.TrianglePath
+import com.agilie.agtimepicker.ui.animation.PickerPath
+import com.agilie.agtimepicker.ui.animation.TrianglePath
 import com.agilie.volumecontrol.calculateAngleWithTwoVectors
 import com.agilie.volumecontrol.distance
 import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
@@ -61,7 +61,7 @@ class AGTimePickerController(val hoursPickerPath: PickerPath,
         }
     }
 
-    fun onTouchEvent(event: MotionEvent): Boolean {
+    override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 onActionDown(PointF(event.x, event.y))

@@ -1,4 +1,4 @@
-package com.agilie.agtimepicker.animation
+package com.agilie.agtimepicker.ui.animation
 
 import android.graphics.*
 
