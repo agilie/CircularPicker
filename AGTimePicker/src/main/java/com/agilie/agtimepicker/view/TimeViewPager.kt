@@ -1,4 +1,4 @@
-package com.agilie.agtimepicker
+package com.agilie.agtimepicker.view
 
 import android.content.Context
 import android.graphics.Color
@@ -13,7 +13,12 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
 
-class PickerFrameLayout : FrameLayout, ViewPager.OnPageChangeListener {
+/**Action Flow
+ * 1) Set correct position for view pager
+ * 2) Set correct
+ * */
+
+class TimeViewPager : FrameLayout, ViewPager.OnPageChangeListener {
 
     private var mPager: ViewPager? = null
     internal var mNeedsRedraw = false
@@ -85,7 +90,7 @@ class PickerFrameLayout : FrameLayout, ViewPager.OnPageChangeListener {
 
         this.addView(pager)
 
-        val layoutParams = FrameLayout.LayoutParams(150,150)
+        val layoutParams = LayoutParams(150,150)
         layoutParams.height = 100
         layoutParams.width = 150
 

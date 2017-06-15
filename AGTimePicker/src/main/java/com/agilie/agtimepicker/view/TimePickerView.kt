@@ -1,4 +1,4 @@
-package com.agilie.agtimepicker
+package com.agilie.agtimepicker.view
 
 import android.content.Context
 import android.graphics.Canvas
