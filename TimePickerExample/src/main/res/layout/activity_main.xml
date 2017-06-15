@@ -9,11 +9,11 @@
 
     </com.agilie.agtimepicker.view.TimePickerView>-->
 
-    <com.agilie.agtimepicker.view.TimePickerFrameLayout
+    <com.agilie.agtimepicker.ui.TimePickerFrameLayout
         android:background="@color/colorAccent"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </com.agilie.agtimepicker.view.TimePickerFrameLayout>
+    </com.agilie.agtimepicker.ui.TimePickerFrameLayout>
 
 </RelativeLayout>
