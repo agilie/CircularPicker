@@ -156,6 +156,7 @@ class AGTimePickerController(val hoursPickerPath: PickerPath,
             val distance = distance(pointF, hoursPickerPath.center) - hoursPickerPath.radius
             //TODO clean up code
             val pullUp = min(MAX_PULL_UP, max(distance, 0f))
+
             hoursPickerPath.onActionMove(angle, pullUp)
             minutesPickerPath.onActionMove(angle, pullUp)
 

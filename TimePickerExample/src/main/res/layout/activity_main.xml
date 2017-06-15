@@ -3,10 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.agilie.agtimepicker.TimePickerView
+  <!--  <com.agilie.agtimepicker.TimePickerView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </com.agilie.agtimepicker.TimePickerView>
+    </com.agilie.agtimepicker.TimePickerView>-->
+
+    <com.agilie.agtimepicker.PickerFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.agilie.agtimepicker.PickerFrameLayout>
 
 </RelativeLayout>
