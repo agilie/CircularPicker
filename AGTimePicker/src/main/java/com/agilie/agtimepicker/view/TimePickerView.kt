@@ -17,11 +17,11 @@ import java.lang.Math.abs
 class TimePickerView : View, View.OnTouchListener {
     var timePickerController: AGTimePickerController? = null
 
-    companion object {
+
 
         private val SWIPE_THRESHOLD = 100
         private val SWIPE_VELOCITY_THRESHOLD = 200
-    }
+
 
     constructor(context: Context?) : super(context) {
         init()
