@@ -9,10 +9,11 @@
 
     </com.agilie.agtimepicker.view.TimePickerView>-->
 
-    <com.agilie.agtimepicker.ui.view.TimePickerPagerContainer
-        android:layout_width="200dp"
-        android:layout_height="150dp">
+    <com.agilie.agtimepicker.view.TimePickerFrameLayout
+        android:background="@color/colorAccent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    </com.agilie.agtimepicker.ui.view.TimePickerPagerContainer>
+    </com.agilie.agtimepicker.view.TimePickerFrameLayout>
 
 </RelativeLayout>
