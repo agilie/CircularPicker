@@ -5,12 +5,13 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
-import android.widget.FrameLayout
+import android.view.ViewGroup
+import android.widget.RelativeLayout
 import com.agilie.agtimepicker.presenter.TimePickerContract
 import com.agilie.agtimepicker.ui.view.TimePickerPagerContainer
 import com.agilie.agtimepicker.ui.view.TimePickerView
 
-class TimePickerFrameLayout : FrameLayout, TimePickerContract.Behavior.ValueListener, TimePickerContract.Layout{
+class TimePickerFrameLayout : RelativeLayout, TimePickerContract.Behavior.ValueListener, TimePickerContract.Layout {
     override fun valueListener(value: Float) {
     }
 
@@ -34,24 +35,18 @@ class TimePickerFrameLayout : FrameLayout, TimePickerContract.Behavior.ValueList
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
 
+        setViewPagerContainerParams()
+        setViewPagerPosition()
+
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         this.w = w
         this.h = h
-        // setViewPagerPosition()
-        setViewPagerContainerParams()
+
     }
 
-    private fun setViewPagerPosition() {
-        viewPager.let {
-            this.top = (0.4 * h).toInt()
-            this.left = (0.2 * w).toInt()
-            this.right = ((0.8 * w).toInt())
-            this.bottom = h
-        }
-    }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
@@ -78,8 +73,15 @@ class TimePickerFrameLayout : FrameLayout, TimePickerContract.Behavior.ValueList
         timeViewPagerContainer?.addView(viewPager)
 
         val pickerPagerAdapter = PickerPagerAdapter()
-        pickerPagerAdapter.addView(TimePickerView(context))
-        pickerPagerAdapter.addView(TimePickerView(context))
+
+        pickerPagerAdapter.addView(TimePickerView(context).apply {
+            setBackgroundColor(Color.BLACK)
+            layoutParams = ViewGroup.LayoutParams(300, 300)
+        })
+        pickerPagerAdapter.addView(TimePickerView(context).apply {
+            setBackgroundColor(Color.BLACK)
+            layoutParams = ViewGroup.LayoutParams(300, 300)
+        })
 
         pickerPagerAdapter.notifyDataSetChanged()
 
@@ -90,30 +92,17 @@ class TimePickerFrameLayout : FrameLayout, TimePickerContract.Behavior.ValueList
 
     // Set TimeViewPagerContainer coordinates
     private fun setViewPagerContainerParams() {
-        /*addOnLayoutChangeListener { v, left, top, right, bottom, _, _, _, _ ->
-            run {
-                timeViewPagerContainer.let {
-                    this.left = left
-                    this.right = right
-                    this.bottom = bottom
-                    this.top = (0.4 * h).toInt()
-                }
-               *//* viewPager.let {
-                    this.top = (0.4 * h).toInt()
-                    this.left = (0.2 * w).toInt()
-                    this.right = ((0.8 * w).toInt())
-                    this.bottom = h
-                }*//*
-            }
-        }*/
-        timeViewPagerContainer.let {
-            this.left = left
-            this.right = right
-            this.bottom = bottom
-            this.top = (0.4 * h).toInt()
-        }
+        val params = RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, (h * 0.8).toInt())
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+        params.addRule(RelativeLayout.ALIGN_PARENT_START)
+        timeViewPagerContainer?.layoutParams = params
+
+    }
+
+    private fun setViewPagerPosition() {
 
 
     }
+
 
 }
