@@ -17,7 +17,7 @@ import android.widget.RelativeLayout
 class TimePickerPagerContainer : RelativeLayout, ViewPager.OnPageChangeListener {
 
 
-    private var pager: ViewPager? = null
+    private var pager: TimePickerViewPager? = null
     private var needsRedraw = false
     //Set adapter
     //var adapter: PickerPagerAdapter? = null
@@ -50,7 +50,7 @@ class TimePickerPagerContainer : RelativeLayout, ViewPager.OnPageChangeListener 
 
     override fun onFinishInflate() {
         try {
-            pager = getChildAt(0) as ViewPager
+            pager = getChildAt(0) as TimePickerViewPager
             pager?.setOnPageChangeListener(this)
         } catch (e: Exception) {
             throw IllegalStateException("The root child of PagerContainer must be a ViewPager")
