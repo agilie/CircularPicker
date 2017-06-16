@@ -3,7 +3,9 @@ package com.agilie.agtimepicker.ui.view
 import android.content.Context
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
+import com.agilie.volumecontrol.pointInCircle
 
 
 class TimePickerViewPager : ViewPager {
@@ -17,7 +19,8 @@ class TimePickerViewPager : ViewPager {
         else return false
     }
 
-    override fun onInterceptTouchEvent(ev: MotionEvent?) =
-            if (swipeEnable) super.onInterceptTouchEvent(ev)
-            else false
+    override fun onInterceptTouchEvent(ev: MotionEvent?) : Boolean{
+        if (swipeEnable) return super.onInterceptTouchEvent(ev)
+        else return false
+    }
 }

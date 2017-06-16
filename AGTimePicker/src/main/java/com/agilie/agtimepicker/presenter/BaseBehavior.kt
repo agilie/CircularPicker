@@ -1,6 +1,7 @@
 package com.agilie.agtimepicker.presenter
 
 import android.graphics.*
+import android.util.Log
 import android.view.MotionEvent
 import com.agilie.agtimepicker.ui.animation.PickerPath
 import com.agilie.agtimepicker.ui.animation.TrianglePath

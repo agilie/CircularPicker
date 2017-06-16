@@ -24,7 +24,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     get() = behavior!!.pointCenter
     val radius : Float
     get() = behavior!!.radius
-    var touchPoint = PointF()
 
     var touchListener: TouchListener? = null
 
@@ -53,9 +52,14 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         when (event.action) {
-            MotionEvent.ACTION_DOWN -> touchListener?.onViewTouched(PointF(event.x, event.y))
+            MotionEvent.ACTION_DOWN -> touchListener?.onViewTouched(PointF(event.x, event.y), event)
         }
         return behavior!!.onTouchEvent(event)
+    }
+
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        return super.onTouchEvent(event)
     }
 
     private fun init() {
@@ -64,7 +68,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
                 TrianglePath(setTrianglePaint()))
 
         setOnTouchListener(this)
-        // Load attributes
     }
 
 //    fun setGradientColors(vararg color: Int) {
@@ -89,6 +92,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
 
     interface TouchListener {
-        fun onViewTouched (pointF: PointF)
+        fun onViewTouched (pointF: PointF, event: MotionEvent?)
     }
 }
