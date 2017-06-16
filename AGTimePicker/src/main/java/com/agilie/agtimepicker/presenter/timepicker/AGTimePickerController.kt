@@ -1,3 +1,4 @@
+/*
 package com.agilie.agtimepicker.presenter.timepicker
 
 import android.graphics.*
@@ -198,4 +199,4 @@ class AGTimePickerController(val hoursPickerPath: PickerPath,
     fun setDiffX(diffX: Float) {
         //this.
     }
-}
+}*/

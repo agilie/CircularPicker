@@ -3,7 +3,6 @@ package com.agilie.agtimepicker.ui.view
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import com.agilie.agtimepicker.presenter.BaseBehavior
@@ -16,14 +15,16 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
     var behavior: BaseBehavior? = null
 
-    var picker : Boolean
-    set(value) { behavior?.picker = value }
-    get() = behavior?.picker ?: false
+    var picker: Boolean
+        set(value) {
+            behavior?.picker = value
+        }
+        get() = behavior?.picker ?: false
 
-    val center : PointF
-    get() = behavior!!.pointCenter
-    val radius : Float
-    get() = behavior!!.radius
+    val center: PointF
+        get() = behavior!!.pointCenter
+    val radius: Float
+        get() = behavior!!.radius
     var touchPoint = PointF()
 
     var touchListener: TouchListener? = null
@@ -43,7 +44,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         behavior?.onDraw(canvas)
-        invalidate()
+        //invalidate()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -58,8 +59,12 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         return behavior!!.onTouchEvent(event)
     }
 
+    fun onInvalidate() {
+        invalidate()
+    }
+
     private fun init() {
-        behavior = HourPickerBehavior(
+        behavior = HourPickerBehavior(this,
                 PickerPath(setPickerPaint()),
                 TrianglePath(setTrianglePaint()))
 
@@ -89,6 +94,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
 
     interface TouchListener {
-        fun onViewTouched (pointF: PointF)
+        fun onViewTouched(pointF: PointF)
     }
 }
