@@ -5,11 +5,11 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
-import android.view.ViewGroup
+import android.view.Gravity
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.agilie.agtimepicker.presenter.TimePickerContract
 import com.agilie.agtimepicker.ui.view.TimePickerPagerContainer
-import com.agilie.agtimepicker.ui.view.TimePickerView
 
 class TimePickerFrameLayout : RelativeLayout, TimePickerContract.Behavior.ValueListener, TimePickerContract.Layout {
     override fun valueListener(value: Float) {
@@ -36,7 +36,7 @@ class TimePickerFrameLayout : RelativeLayout, TimePickerContract.Behavior.ValueL
         super.onLayout(changed, left, top, right, bottom)
 
         setViewPagerContainerParams()
-        setViewPagerPosition()
+        setViewPagerParams()
 
     }
 
@@ -74,14 +74,20 @@ class TimePickerFrameLayout : RelativeLayout, TimePickerContract.Behavior.ValueL
 
         val pickerPagerAdapter = PickerPagerAdapter()
 
-        pickerPagerAdapter.addView(TimePickerView(context).apply {
+       /* pickerPagerAdapter.addView(TimePickerView(context).apply {
             setBackgroundColor(Color.BLACK)
             layoutParams = ViewGroup.LayoutParams(300, 300)
         })
         pickerPagerAdapter.addView(TimePickerView(context).apply {
             setBackgroundColor(Color.BLACK)
             layoutParams = ViewGroup.LayoutParams(300, 300)
-        })
+        })*/
+
+        val view = TextView(context)
+        view.text = "Item "
+        view.gravity = Gravity.CENTER
+        view.setBackgroundColor(Color.argb(255,  50,  10,  50))
+        pickerPagerAdapter.addView(view)
 
         pickerPagerAdapter.notifyDataSetChanged()
 
@@ -99,8 +105,12 @@ class TimePickerFrameLayout : RelativeLayout, TimePickerContract.Behavior.ValueL
 
     }
 
-    private fun setViewPagerPosition() {
-
+    private fun setViewPagerParams() {
+        val params = ViewPager.LayoutParams()
+        params.width = 300
+        params.height = LayoutParams.MATCH_PARENT
+        params.gravity = Gravity.CENTER_HORIZONTAL
+        viewPager?.layoutParams = params
 
     }
 
