@@ -16,14 +16,17 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
     var behavior: BaseBehavior? = null
 
-    var picker : Boolean
-    set(value) { behavior?.picker = value }
-    get() = behavior?.picker ?: false
+    var picker: Boolean
+        set(value) {
+            behavior?.picker = value
+        }
+        get() = behavior?.picker ?: false
 
-    val center : PointF
-    get() = behavior!!.pointCenter
-    val radius : Float
-    get() = behavior!!.radius
+    val center: PointF
+        get() = behavior!!.pointCenter
+    val radius: Float
+        get() = behavior!!.radius
+    var touchPoint = PointF()
 
     var touchListener: TouchListener? = null
 
@@ -42,7 +45,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         behavior?.onDraw(canvas)
-        invalidate()
+        //invalidate()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -52,22 +55,23 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         when (event.action) {
-            MotionEvent.ACTION_DOWN -> touchListener?.onViewTouched(PointF(event.x, event.y), event)
+            MotionEvent.ACTION_DOWN -> touchListener?.onViewTouched(PointF(event.x, event.y))
         }
         return behavior!!.onTouchEvent(event)
     }
 
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        return super.onTouchEvent(event)
+    fun onInvalidate() {
+        invalidate()
     }
 
+
     private fun init() {
-        behavior = HourPickerBehavior(
+        behavior = HourPickerBehavior(this,
                 PickerPath(setPickerPaint()),
                 TrianglePath(setTrianglePaint()))
 
         setOnTouchListener(this)
+        // Load attributes
     }
 
 //    fun setGradientColors(vararg color: Int) {
@@ -92,6 +96,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
 
     interface TouchListener {
+        fun onViewTouched(pointF: PointF)
         fun onViewTouched (pointF: PointF, event: MotionEvent?)
     }
 }

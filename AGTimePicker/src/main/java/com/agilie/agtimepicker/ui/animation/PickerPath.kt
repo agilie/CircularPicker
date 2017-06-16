@@ -9,13 +9,9 @@ class PickerPath(val paint: Paint) {
     var lockMove: Boolean = true
     var center = PointF()
     var radius = 0f
+
     fun onDraw(canvas: Canvas) {
         canvas.drawPath(path, paint)
-//        canvas.drawCircle(center.x,center.y,radius*0.6f, Paint().apply {
-//            color=Color.RED
-//            style = Paint.Style.FILL
-//
-//        })
     }
 
     fun onActionDown(angle: Float, pullUp: Float) {

@@ -5,13 +5,15 @@ import android.util.Log
 import android.view.MotionEvent
 import com.agilie.agtimepicker.ui.animation.PickerPath
 import com.agilie.agtimepicker.ui.animation.TrianglePath
+import com.agilie.agtimepicker.ui.view.TimePickerView
 import com.agilie.volumecontrol.calculateAngleWithTwoVectors
 import com.agilie.volumecontrol.distance
 import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
 import com.agilie.volumecontrol.pointInCircle
 
 
-abstract class BaseBehavior(val pickerPath: PickerPath,
+abstract class BaseBehavior(val view: TimePickerView,
+                            val pickerPath: PickerPath,
                             val trianglePath: TrianglePath,
                             var colors: IntArray = intArrayOf(
                                     Color.parseColor("#0080ff"),
@@ -35,7 +37,7 @@ abstract class BaseBehavior(val pickerPath: PickerPath,
 
     override fun onSizeChanged(width: Int, height: Int) {
         val center = PointF(width / 2f, height / 2f)
-        val radius = Math.min(width, height) / 4f
+        val radius = Math.min(width, height) / 3f
         updatePaint(center, radius)
         drawShapes(center, radius)
     }
@@ -54,12 +56,15 @@ abstract class BaseBehavior(val pickerPath: PickerPath,
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 onActionDown(PointF(event.x, event.y))
+                view.onInvalidate()
             }
             MotionEvent.ACTION_MOVE -> {
                 onActionMove(PointF(event.x, event.y))
+                view.onInvalidate()
             }
             MotionEvent.ACTION_UP -> {
                 onActionUp()
+                view.onInvalidate()
             }
         }
         return true
