@@ -115,12 +115,14 @@ class TimePickerLayout : RelativeLayout, TimePickerContract.Behavior.ValueListen
 
     private fun addTouchListener(view: TimePickerView) = view.apply {
         touchListener = object : TimePickerView.TouchListener {
-            override fun onViewTouched(pointF: PointF) {
+
+            override fun onViewTouched(pointF: PointF, event: MotionEvent?) {
                 val pickerPoint = pointInCircle(pointF, center, radius) &&
                         !pointInCircle(pointF, center, (radius * SWIPE_RADIUS_FACTOR))
 
                 picker = pickerPoint
                 viewPager?.swipeEnable = !pickerPoint
+                viewPager?.onInterceptTouchEvent(event)
             }
         }
     }

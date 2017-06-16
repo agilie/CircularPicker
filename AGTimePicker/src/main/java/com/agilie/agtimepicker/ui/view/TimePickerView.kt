@@ -55,7 +55,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         when (event.action) {
-            MotionEvent.ACTION_DOWN -> touchListener?.onViewTouched(PointF(event.x, event.y))
+            MotionEvent.ACTION_DOWN -> touchListener?.onViewTouched(PointF(event.x, event.y), event)
         }
         return behavior!!.onTouchEvent(event)
     }
@@ -96,7 +96,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
 
     interface TouchListener {
-        fun onViewTouched(pointF: PointF)
         fun onViewTouched (pointF: PointF, event: MotionEvent?)
     }
 }
