@@ -40,10 +40,6 @@ class TimePickerPagerContainer : RelativeLayout, ViewPager.OnPageChangeListener 
          if (needsRedraw) invalidate()
     }
 
-    /*override fun onPageScrolled(position: Int, offset: Float, offsetPixels: Int) {
-        super.onPageScrolled(position, offset, offsetPixels)
-    }*/
-
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
     }

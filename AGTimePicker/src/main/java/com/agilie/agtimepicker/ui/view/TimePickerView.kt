@@ -30,8 +30,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View { // 
         init()
     }
 
-    var gestureDetector: GestureDetector? = null
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         behavior?.onDraw(canvas)
@@ -44,7 +42,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View { // 
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
-        gestureDetector!!.onTouchEvent(event)
         return behavior!!.onTouchEvent(event)
     }
 

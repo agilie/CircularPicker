@@ -6,10 +6,12 @@ import android.graphics.Color
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.agilie.agtimepicker.presenter.TimePickerContract
 import com.agilie.agtimepicker.ui.view.TimePickerPagerContainer
+import com.agilie.agtimepicker.ui.view.TimePickerView
 
 class TimePickerFrameLayout : RelativeLayout, TimePickerContract.Behavior.ValueListener, TimePickerContract.Layout {
     override fun valueListener(value: Float) {
@@ -72,16 +74,16 @@ class TimePickerFrameLayout : RelativeLayout, TimePickerContract.Behavior.ValueL
         }
         timeViewPagerContainer?.addView(viewPager)
 
-        val pickerPagerAdapter = PickerPagerAdapter(context)
+        val pickerPagerAdapter = PickerPagerAdapter()
 
-       /* pickerPagerAdapter.addView(TimePickerView(context).apply {
+        pickerPagerAdapter.addView(TimePickerView(context).apply {
             setBackgroundColor(Color.BLACK)
             layoutParams = ViewGroup.LayoutParams(300, 300)
         })
         pickerPagerAdapter.addView(TimePickerView(context).apply {
             setBackgroundColor(Color.BLACK)
             layoutParams = ViewGroup.LayoutParams(300, 300)
-        })*/
+        })
 
         val view = TextView(context)
         view.text = "Item "
@@ -110,7 +112,7 @@ class TimePickerFrameLayout : RelativeLayout, TimePickerContract.Behavior.ValueL
         params.width = 300
         params.height = LayoutParams.MATCH_PARENT
         params.gravity = Gravity.CENTER_HORIZONTAL
-      //  viewPager?.layoutParams = params
+        //viewPager?.layoutParams = params
 
     }
 
