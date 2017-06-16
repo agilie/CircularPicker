@@ -10,6 +10,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.agilie.agtimepicker.presenter.TimePickerContract
 import com.agilie.agtimepicker.ui.view.TimePickerPagerContainer
+import com.agilie.agtimepicker.ui.view.TimePickerViewPager
 
 class TimePickerFrameLayout : RelativeLayout, TimePickerContract.Behavior.ValueListener, TimePickerContract.Layout {
     override fun valueListener(value: Float) {
@@ -64,7 +65,7 @@ class TimePickerFrameLayout : RelativeLayout, TimePickerContract.Behavior.ValueL
     private var viewPager: ViewPager? = null
 
     private fun addViewPager() {
-        viewPager = ViewPager(context).apply {
+        viewPager = TimePickerViewPager(context).apply {
             setBackgroundColor(Color.RED)
             pageMargin = 15
             clipChildren = false

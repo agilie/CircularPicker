@@ -3,6 +3,7 @@ package com.agilie.agtimepicker.ui
 import android.content.Context
 import android.graphics.Color
 import android.support.v4.view.PagerAdapter
+import android.support.v4.view.ViewPager
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +12,7 @@ import android.widget.TextView
 
 class PickerPagerAdapter(val context: Context) : PagerAdapter() {
 
-    /*private val views = ArrayList<View>()
+    private val views = ArrayList<View>()
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = views[position]
@@ -62,29 +63,29 @@ class PickerPagerAdapter(val context: Context) : PagerAdapter() {
 
     fun getView(position: Int): View {
         return views[position]
-    }*/
-
-
-    override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val view = TextView(context)
-        view.text = "Item " + position
-        view.gravity = Gravity.CENTER
-        view.setBackgroundColor(Color.argb(255, position * 50, position * 10, position * 50))
-
-        container.addView(view)
-        return view
     }
 
-    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-        container.removeView(`object` as View)
-    }
 
-    override fun getCount(): Int {
-        return 2
-    }
-
-    override fun isViewFromObject(view: View, `object`: Any): Boolean {
-        return view === `object`
-    }
+//    override fun instantiateItem(container: ViewGroup, position: Int): Any {
+//        val view = TextView(context)
+//        view.text = "Item " + position
+//        view.gravity = Gravity.CENTER
+//        view.setBackgroundColor(Color.argb(255, position * 50, position * 10, position * 50))
+//
+//        container.addView(view)
+//        return view
+//    }
+//
+//    override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+//        container.removeView(`object` as View)
+//    }
+//
+//    override fun getCount(): Int {
+//        return 2
+//    }
+//
+//    override fun isViewFromObject(view: View, `object`: Any): Boolean {
+//        return view === `object`
+//    }
 
 }
