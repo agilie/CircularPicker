@@ -72,7 +72,7 @@ class TimePickerFrameLayout : RelativeLayout, TimePickerContract.Behavior.ValueL
         }
         timeViewPagerContainer?.addView(viewPager)
 
-        val pickerPagerAdapter = PickerPagerAdapter()
+        val pickerPagerAdapter = PickerPagerAdapter(context)
 
        /* pickerPagerAdapter.addView(TimePickerView(context).apply {
             setBackgroundColor(Color.BLACK)
@@ -87,7 +87,7 @@ class TimePickerFrameLayout : RelativeLayout, TimePickerContract.Behavior.ValueL
         view.text = "Item "
         view.gravity = Gravity.CENTER
         view.setBackgroundColor(Color.argb(255,  50,  10,  50))
-        pickerPagerAdapter.addView(view)
+        //pickerPagerAdapter.addView(view)
 
         pickerPagerAdapter.notifyDataSetChanged()
 
@@ -110,7 +110,7 @@ class TimePickerFrameLayout : RelativeLayout, TimePickerContract.Behavior.ValueL
         params.width = 300
         params.height = LayoutParams.MATCH_PARENT
         params.gravity = Gravity.CENTER_HORIZONTAL
-        viewPager?.layoutParams = params
+      //  viewPager?.layoutParams = params
 
     }
 
