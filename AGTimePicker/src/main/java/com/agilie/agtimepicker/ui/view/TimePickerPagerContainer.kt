@@ -65,8 +65,6 @@ class TimePickerPagerContainer : RelativeLayout, ViewPager.OnPageChangeListener 
         center.y = h / 2f
     }
 
-
-    // TODO Handle pending deleting
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         //We capture any touches not already handled by the ViewPager
         // to implement scrolling from a touch outside the pager bounds.

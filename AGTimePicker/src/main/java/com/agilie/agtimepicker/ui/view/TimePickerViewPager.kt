@@ -12,9 +12,10 @@ class TimePickerViewPager : ViewPager {
 
     var swipeEnable = false
 
-    override fun onTouchEvent(ev: MotionEvent?) =
-            if (swipeEnable) super.onTouchEvent(ev)
-            else false
+    override fun onTouchEvent(ev: MotionEvent?): Boolean {
+        if (swipeEnable) return super.onTouchEvent(ev)
+        else return false
+    }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?) =
             if (swipeEnable) super.onInterceptTouchEvent(ev)

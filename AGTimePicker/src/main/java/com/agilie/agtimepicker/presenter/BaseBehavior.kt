@@ -2,7 +2,6 @@ package com.agilie.agtimepicker.presenter
 
 import android.graphics.*
 import android.view.MotionEvent
-import com.agilie.agtimepicker.presenter.timepicker.AGTimePicker
 import com.agilie.agtimepicker.ui.animation.PickerPath
 import com.agilie.agtimepicker.ui.animation.TrianglePath
 import com.agilie.volumecontrol.calculateAngleWithTwoVectors
@@ -11,25 +10,26 @@ import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
 import com.agilie.volumecontrol.pointInCircle
 
 
-abstract class BaseBehavior(val hoursPickerPath: PickerPath,
-                   val hoursTrianglePath: TrianglePath,
-                   var colors: IntArray = intArrayOf(
-                           Color.parseColor("#0080ff"),
-                           Color.parseColor("#53FFFF"))) : TimePickerContract.Behavior{
+abstract class BaseBehavior(val pickerPath: PickerPath,
+                            val trianglePath: TrianglePath,
+                            var colors: IntArray = intArrayOf(
+                                    Color.parseColor("#0080ff"),
+                                    Color.parseColor("#53FFFF"))) : TimePickerContract.Behavior {
 
     private val MAX_PULL_UP = 65f
-    val SWIPE_RADIUS_FACTOR = 0.6f
     private var previousTouchPoint = PointF()
-    var touchState = TouchState.ROTATE
-
-
     var angle = 0f
+    var picker = false
     var valueListener: TimePickerContract.Behavior.ValueListener? = null
-    fun isSwipe() = touchState == TouchState.SWIPE
+
+    val pointCenter: PointF
+        get() = pickerPath.center
+    val radius: Float
+        get() = pickerPath.radius
 
     override fun onDraw(canvas: Canvas) {
-        hoursPickerPath.onDraw(canvas)
-        hoursTrianglePath.onDraw(canvas)
+        pickerPath.onDraw(canvas)
+        trianglePath.onDraw(canvas)
     }
 
     override fun onSizeChanged(width: Int, height: Int) {
@@ -42,7 +42,7 @@ abstract class BaseBehavior(val hoursPickerPath: PickerPath,
     fun updatePaint(center: PointF, radius: Float) {
         val startPoint = getPointOnBorderLineOfCircle(center, radius, 180)
         val endPoint = getPointOnBorderLineOfCircle(center, radius, 0)
-        hoursPickerPath.paint.apply {
+        pickerPath.paint.apply {
             shader = LinearGradient(startPoint.x, startPoint.y, endPoint.x, endPoint.y, colors,
                     null,
                     Shader.TileMode.CLAMP)
@@ -65,60 +65,49 @@ abstract class BaseBehavior(val hoursPickerPath: PickerPath,
     }
 
     private fun drawShapes(center: PointF, radius: Float) {
-        hoursPickerPath.center = center
-        hoursTrianglePath.center = center
+        pickerPath.center = center
+        trianglePath.center = center
 
-        hoursPickerPath.radius = radius
-        hoursTrianglePath.radius = radius
+        pickerPath.radius = radius
+        trianglePath.radius = radius
 
         previousTouchPoint = center
 
-        hoursPickerPath.createPickerPath()
-        hoursTrianglePath.createTrianglePath()
+        pickerPath.createPickerPath()
+        trianglePath.createTrianglePath()
     }
 
-    fun swipePoint(pointF: PointF) =
-            pointInCircle(pointF, hoursPickerPath.center, hoursPickerPath.radius) &&
-                    !pointInCircle(pointF, hoursPickerPath.center, (hoursPickerPath.radius * SWIPE_RADIUS_FACTOR))
 
     private fun onActionDown(pointF: PointF) {
-        val pointInCircle = pointInCircle(pointF, hoursPickerPath.center, hoursPickerPath.radius)
-        if (!swipePoint(pointF)) {
-            touchState = TouchState.SWIPE
-        } else {
-            touchState = TouchState.ROTATE
-        }
+        val pointInCircle = pointInCircle(pointF, pickerPath.center, pickerPath.radius)
         previousTouchPoint = pointF
-        hoursPickerPath.lockMove = !pointInCircle
-        hoursTrianglePath.lockMove = !pointInCircle
+        pickerPath.lockMove = !pointInCircle
+        trianglePath.lockMove = !pointInCircle
     }
 
 
     private fun onActionMove(pointF: PointF) {
         previousTouchPoint = pointF
-
-        if (!isSwipe()) {
-            angle = calculateAngleWithTwoVectors(pointF, hoursPickerPath.center)
-            val distance = distance(pointF, hoursPickerPath.center) - hoursPickerPath.radius
+        if (picker) {
+            angle = calculateAngleWithTwoVectors(pointF, pickerPath.center)
+            val distance = distance(pointF, pickerPath.center) - pickerPath.radius
             //TODO clean up code
             val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
 
-            hoursPickerPath.onActionMove(angle, pullUp)
+            pickerPath.onActionMove(angle, pullUp)
 
             if (pullUp != 0f) {
-                hoursTrianglePath.onActionMove(angle, pullUp)
+                trianglePath.onActionMove(angle, pullUp)
             }
             valueListener?.valueListener(calculateValue(angle = angle.toInt()))
-        } else {
-            //
         }
     }
 
     private fun onActionUp() {
-        hoursPickerPath.lockMove = true
-        hoursTrianglePath.lockMove = true
-        hoursPickerPath.onActionUp()
-        hoursTrianglePath.onActionUp()
+        pickerPath.lockMove = true
+        trianglePath.lockMove = true
+        pickerPath.onActionUp()
+        trianglePath.onActionUp()
     }
 
     enum class TouchState { SWIPE, ROTATE }
