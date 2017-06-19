@@ -17,11 +17,11 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     private var h = 0
 
 
-    /*var picker: Boolean
+    var picker: Boolean
         set(value) {
             behavior?.picker = value
         }
-        get() = behavior?.picker ?: false*/
+        get() = behavior?.picker ?: false
 
     val center: PointF
         get() = behavior!!.pointCenter
@@ -29,7 +29,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         get() = behavior!!.radius
     var touchPoint = PointF()
 
-    //var touchListener: TouchListener? = null
+    var touchListener: TouchListener? = null
 
     constructor(context: Context?) : super(context) {
         init()
@@ -60,11 +60,11 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
-        /*when (event.action) {
-            //MotionEvent.ACTION_DOWN -> touchListener?.onViewTouched(PointF(event.x, event.y), event)
+        when (event.action) {
+            MotionEvent.ACTION_DOWN -> touchListener?.onViewTouched(PointF(event.x, event.y), event)
 
-        }*/
-        behavior?.onTouchEvent(event)
+        }
+        //behavior?.onTouchEvent(event)
         return behavior!!.onTouchEvent(event)
     }
 

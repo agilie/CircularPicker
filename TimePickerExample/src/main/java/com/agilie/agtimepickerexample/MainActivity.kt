@@ -62,25 +62,21 @@ class MainActivity : AppCompatActivity(), ViewsAdapter.AddNewViewsListener {
         pickerPagerAdapter.notifyDataSetChanged()
         view_pager.adapter = pickerPagerAdapter
 
-        pickerPagerAdapter.views.forEach { it.setOnTouchListener { v, event ->
-            when (event?.action) {
-                MotionEvent.ACTION_DOWN -> {
-                    if (!pointInActionArea(PointF(event.x, event.y), v as TimePickerView)) {
-                        touchState = BaseBehavior.TouchState.SWIPE
-                        view_pager.swipeEnable = true
-                    } else {
-                        touchState = BaseBehavior.TouchState.ROTATE
-                        view_pager.swipeEnable = false
+        pickerPagerAdapter.views.forEach {
+            (it as TimePickerView).apply {
+                touchListener = object : TimePickerView.TouchListener {
 
+                    override fun onViewTouched(pointF: PointF, event: MotionEvent?) {
+                        val pickerPoint = pointInCircle(pointF, center, radius) &&
+                                !pointInCircle(pointF, center, (radius * SWIPE_RADIUS_FACTOR))
+
+                        picker = pickerPoint
+                        view_pager?.swipeEnable = !pickerPoint
+                        view_pager?.onInterceptTouchEvent(event)
                     }
                 }
-
             }
-
-            true
-        } }
-
-
+        }
     }
 
     fun pointInActionArea(pointF: PointF, view: TimePickerView) = pointInCircle(pointF, view.center, view.radius) &&

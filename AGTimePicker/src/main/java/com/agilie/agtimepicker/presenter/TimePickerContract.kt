@@ -19,6 +19,11 @@ interface TimePickerContract {
             fun countOfValues(): Int
             fun onValueCalculated(value: Int)
         }
+
+        interface ValueListener {
+            fun angleListener(angle: Int) {}
+            fun valueListener(value: Float)
+        }
     }
 
     interface View
