@@ -14,7 +14,7 @@ import com.agilie.agtimepicker.ui.view.TimePickerViewPager
 import com.agilie.volumecontrol.pointInCircle
 
 
-class TimePickerLayout : RelativeLayout, TimePickerContract.Behavior.ValueListener, TimePickerContract.Layout {
+class TimePickerLayout : RelativeLayout, TimePickerContract.Layout {
 
     val SWIPE_RADIUS_FACTOR = 0.6f
     var pickerPagerAdapter: PickerPagerAdapter? = null
@@ -34,8 +34,6 @@ class TimePickerLayout : RelativeLayout, TimePickerContract.Behavior.ValueListen
         return super.onInterceptTouchEvent(event)
     }
 
-    override fun valueListener(value: Float) {
-    }
 
     var timeViewPagerContainer: TimePickerPagerContainer? = null
 
@@ -101,10 +99,10 @@ class TimePickerLayout : RelativeLayout, TimePickerContract.Behavior.ValueListen
             addView(TimePickerView(context).apply {
                 setBackgroundColor(Color.parseColor("#00000000"))
                 addTouchListener(this)
-                behavior?.colors = intArrayOf(
-                        Color.parseColor("#FF8D00"),
-                        Color.parseColor("#FF0058"),
-                        Color.parseColor("#920084"))
+//                behavior?.colors = intArrayOf(
+//                        Color.parseColor("#FF8D00"),
+//                        Color.parseColor("#FF0058"),
+//                        Color.parseColor("#920084"))
             })
         }
 

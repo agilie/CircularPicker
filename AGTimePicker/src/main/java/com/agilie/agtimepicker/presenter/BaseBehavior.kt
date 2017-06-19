@@ -1,7 +1,6 @@
 package com.agilie.agtimepicker.presenter
 
 import android.graphics.*
-import android.util.Log
 import android.view.MotionEvent
 import com.agilie.agtimepicker.ui.animation.PickerPath
 import com.agilie.agtimepicker.ui.animation.TrianglePath
@@ -23,7 +22,6 @@ abstract class BaseBehavior(val view: TimePickerView,
     private var previousTouchPoint = PointF()
     var angle = 0f
     var picker = false
-    var valueListener: TimePickerContract.Behavior.ValueListener? = null
 
     val pointCenter: PointF
         get() = pickerPath.center
@@ -91,6 +89,7 @@ abstract class BaseBehavior(val view: TimePickerView,
         trianglePath.lockMove = !pointInCircle
     }
 
+    var currentLap = 0
 
     private fun onActionMove(pointF: PointF) {
         previousTouchPoint = pointF
@@ -105,7 +104,7 @@ abstract class BaseBehavior(val view: TimePickerView,
             if (pullUp != 0f) {
                 trianglePath.onActionMove(angle, pullUp)
             }
-            valueListener?.valueListener(calculateValue(angle = angle.toInt()))
+            value(calculateValue(currentLap, angle.toInt()))
         }
     }
 

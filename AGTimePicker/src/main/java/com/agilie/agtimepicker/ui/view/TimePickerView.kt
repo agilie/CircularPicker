@@ -1,20 +1,18 @@
 package com.agilie.agtimepicker.ui.view
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.PointF
 import android.util.AttributeSet
-import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import com.agilie.agtimepicker.presenter.BaseBehavior
-import com.agilie.agtimepicker.presenter.HourPickerBehavior
+import com.agilie.agtimepicker.presenter.BehaviorWrapper
 import com.agilie.agtimepicker.presenter.TimePickerContract
-import com.agilie.agtimepicker.ui.animation.PickerPath
-import com.agilie.agtimepicker.ui.animation.TrianglePath
 
 class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
-    var behavior: BaseBehavior? = null
+    private var behavior: BaseBehavior? = null
 
     var picker: Boolean
         set(value) {
@@ -65,10 +63,12 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     }
 
 
+    fun setBehavior(behaviorWrapper: BehaviorWrapper) { behavior = behaviorWrapper.generateBehavior() }
+
     private fun init() {
-        behavior = HourPickerBehavior(this,
-                PickerPath(setPickerPaint()),
-                TrianglePath(setTrianglePaint()))
+//        behavior = PickerBehavior(this,
+//                PickerPath(setPickerPaint()),
+//                TrianglePath(setTrianglePaint()))
 
         setOnTouchListener(this)
         // Load attributes
@@ -79,23 +79,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 //    }
 
 
-    private fun setTrianglePaint() = Paint().apply {
-        color = Color.WHITE
-        isAntiAlias = true
-        style = Paint.Style.FILL
-        pathEffect = CornerPathEffect(10f)
-        strokeWidth = 2f
-    }
-
-    private fun setPickerPaint() = Paint().apply {
-        color = Color.WHITE
-        isAntiAlias = true
-        style = Paint.Style.FILL
-        strokeWidth = 4f
-    }
-
-
     interface TouchListener {
-        fun onViewTouched (pointF: PointF, event: MotionEvent?)
+        fun onViewTouched(pointF: PointF, event: MotionEvent?)
     }
 }

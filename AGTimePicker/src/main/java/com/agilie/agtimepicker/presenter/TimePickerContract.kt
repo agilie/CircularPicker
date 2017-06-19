@@ -9,11 +9,15 @@ interface TimePickerContract {
 
     interface Behavior : AGTimePicker {
 
-        fun calculateValue(angle: Int) : Float
+        fun calculateValue(lap: Int, angle: Int): Int
+        fun countOfLaps(): Int
+        fun countOfValues(): Int
+        fun value(value: Int)
 
-        interface ValueListener {
-            fun angleListener(angle: Int) {}
-            fun valueListener(value: Float)
+        interface BehaviorConstructor {
+            fun countOfLaps(): Int
+            fun countOfValues(): Int
+            fun onValueCalculated(value: Int)
         }
     }
 
