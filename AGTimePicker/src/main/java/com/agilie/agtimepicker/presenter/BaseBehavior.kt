@@ -21,6 +21,8 @@ abstract class BaseBehavior(val view: TimePickerView,
 
     private val MAX_PULL_UP = 45f
     private var previousTouchPoint = PointF()
+    var angle = 0f
+    var picker = false
     val SWIPE_RADIUS_FACTOR = 0.6f
     //var angle = 0f
     //var picker = true
@@ -93,6 +95,7 @@ abstract class BaseBehavior(val view: TimePickerView,
         //trianglePath.lockMove = !action
     }
 
+    var currentLap = 0
     fun pointInActionArea(pointF: PointF) = pointInCircle(pointF, pickerPath.center, pickerPath.radius) &&
             !pointInCircle(pointF, pickerPath.center, (pickerPath.radius * SWIPE_RADIUS_FACTOR))
 
@@ -111,6 +114,7 @@ abstract class BaseBehavior(val view: TimePickerView,
         //}
         //valueListener?.valueListener(calculateValue(angle = angle.toInt()))
         //}
+        value(calculateValue(currentLap, angle.toInt()))
     }
 
     private fun onActionUp() {

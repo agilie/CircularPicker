@@ -26,6 +26,6 @@ class ViewsAdapter(var viewsList: List<TimePickerView>, var addNewViewsListener:
     }
 
     interface AddNewViewsListener {
-        fun addNewUser()
+        fun addNewView()
     }
 }

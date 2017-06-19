@@ -1,20 +1,21 @@
 package com.agilie.agtimepicker.ui.view
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.agilie.agtimepicker.presenter.BaseBehavior
-import com.agilie.agtimepicker.presenter.HourPickerBehavior
+import com.agilie.agtimepicker.presenter.BehaviorWrapper
 import com.agilie.agtimepicker.presenter.TimePickerContract
-import com.agilie.agtimepicker.ui.animation.PickerPath
 
 class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
     var behavior: BaseBehavior? = null
     private var w = 0
     private var h = 0
+
 
     /*var picker: Boolean
         set(value) {
@@ -72,12 +73,21 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     }
 
 
-    private fun init() {
-        behavior = HourPickerBehavior(this,
-                PickerPath(setPickerPaint()
-                        , setTrianglePaint())
-        )
+    fun setBehavior(behaviorWrapper: BehaviorWrapper) { behavior = behaviorWrapper.generateBehavior() }
 
+    private fun init() {
+//        behavior = PickerBehavior(this,
+//                PickerPath(setPickerPaint()),
+//                TrianglePath(setTrianglePaint()))
+        behavior = BehaviorWrapper(this, object :TimePickerContract.Behavior.BehaviorConstructor {
+            override fun onValueCalculated(value: Int) {
+            }
+
+            override fun countOfLaps() = 0
+
+            override fun countOfValues() = 0
+
+        }).generateBehavior()
         setOnTouchListener(this)
         // Load attributes
     }
@@ -87,23 +97,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 //    }
 
 
-    private fun setTrianglePaint() = Paint().apply {
-        color = Color.WHITE
-        isAntiAlias = true
-        style = Paint.Style.FILL
-        pathEffect = CornerPathEffect(10f)
-        strokeWidth = 2f
+    interface TouchListener {
+        fun onViewTouched(pointF: PointF, event: MotionEvent?)
     }
-
-    private fun setPickerPaint() = Paint().apply {
-        color = Color.WHITE
-        isAntiAlias = true
-        style = Paint.Style.FILL
-        strokeWidth = 4f
-    }
-
-
-    /* interface TouchListener {
-         fun onViewTouched (pointF: PointF, event: MotionEvent?)
-     }*/
 }

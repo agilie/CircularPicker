@@ -10,7 +10,7 @@ class PickerPagerTransformer : ViewPager.PageTransformer {
     private var viewPager: ViewPager? = null
 
     constructor (context: Context) {
-        this.maxTranslateOffsetX = dp2px(context, 320f)
+        this.maxTranslateOffsetX = dp2px(context, 120f)
     }
 
     override fun transformPage(view: View, position: Float) {

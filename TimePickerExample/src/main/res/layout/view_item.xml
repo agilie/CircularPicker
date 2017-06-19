@@ -5,6 +5,6 @@
     android:orientation="vertical">
 
     <com.agilie.agtimepicker.ui.view.TimePickerView
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"></com.agilie.agtimepicker.ui.view.TimePickerView>
 </LinearLayout>
