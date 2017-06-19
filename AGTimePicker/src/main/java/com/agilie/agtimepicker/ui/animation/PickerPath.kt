@@ -3,21 +3,24 @@ package com.agilie.agtimepicker.ui.animation
 import android.graphics.*
 
 
-class PickerPath(val paint: Paint) {
+class PickerPath(val pickerPaint: Paint,
+                 val trianglePaint: Paint) {
 
     private val path = Path()
+    private val trianglePath = Path()
     var lockMove: Boolean = true
     var center = PointF()
     var radius = 0f
 
     fun onDraw(canvas: Canvas) {
-        canvas.drawPath(path, paint)
+        canvas.drawPath(path, pickerPaint)
+        canvas.drawPath(trianglePath, trianglePaint)
     }
 
     fun onActionDown(angle: Float, pullUp: Float) {
         //Draw agg
         updatePickerPath(pullUp)
-        rotatePickerPath(angle)
+        rotatePicker(angle)
     }
 
     fun onActionMove(angle: Float, pullUp: Float) {
@@ -25,26 +28,30 @@ class PickerPath(val paint: Paint) {
             return
 
         updatePickerPath(pullUp)
-        rotatePickerPath(angle)
+        updateTrianglePath(pullUp)
+        rotatePicker(angle)
     }
-
+/*
     fun onUpdatePickerPath() {
         updatePickerPath(0f)
-    }
+    }*/
 
     fun onActionUp() {
         updatePickerPath(0f)
+        updateTrianglePath(0f)
     }
 
     fun createPickerPath() {
         updatePickerPath(0f)
+        updateTrianglePath(0f)
     }
 
-    private fun rotatePickerPath(angle: Float) {
+    private fun rotatePicker(angle: Float) {
         //Rotate agg
         val matrix = Matrix()
         matrix.setRotate(angle, center.x, center.y)
         path.transform(matrix)
+        trianglePath.transform(matrix)
     }
 
     private fun updatePickerPath(pullUp: Float) {
@@ -79,6 +86,23 @@ class PickerPath(val paint: Paint) {
         path.cubicTo(controlPoint1.x, controlPoint1.y, controlPoint2.x, controlPoint2.y, startPoint.x, startPoint.y)
 
         path.close()
+    }
+
+    private fun updateTrianglePath(pullUp: Float) {
+        trianglePath.reset()
+
+        val length = radius / 12f
+        //Top of triangle
+        val point1 = PointF(center.x, center.y - 0.9f * radius - pullUp)
+        trianglePath.moveTo(point1.x, point1.y)
+        //Left corn
+        val point2 = PointF(point1.x - length, point1.y + length)
+        trianglePath.lineTo(point2.x, point2.y)
+        //Right corn
+        val point3 = PointF(point1.x + length, point1.y + length)
+        trianglePath.lineTo(point3.x, point3.y)
+
+        trianglePath.close()
     }
 }
 

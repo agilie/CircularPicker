@@ -1,3 +1,4 @@
+/*
 package com.agilie.agtimepicker.ui.animation
 
 import android.graphics.*
@@ -60,4 +61,4 @@ class TrianglePath(val paint: Paint) {
     }
 
 
-}
+}*/

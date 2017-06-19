@@ -3,24 +3,22 @@ package com.agilie.agtimepicker.ui.view
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import com.agilie.agtimepicker.presenter.BaseBehavior
 import com.agilie.agtimepicker.presenter.HourPickerBehavior
 import com.agilie.agtimepicker.presenter.TimePickerContract
 import com.agilie.agtimepicker.ui.animation.PickerPath
-import com.agilie.agtimepicker.ui.animation.TrianglePath
 
 class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
     var behavior: BaseBehavior? = null
 
-    var picker: Boolean
+    /*var picker: Boolean
         set(value) {
             behavior?.picker = value
         }
-        get() = behavior?.picker ?: false
+        get() = behavior?.picker ?: false*/
 
     val center: PointF
         get() = behavior!!.pointCenter
@@ -28,7 +26,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         get() = behavior!!.radius
     var touchPoint = PointF()
 
-    var touchListener: TouchListener? = null
+    //var touchListener: TouchListener? = null
 
     constructor(context: Context?) : super(context) {
         init()
@@ -54,9 +52,11 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> touchListener?.onViewTouched(PointF(event.x, event.y), event)
-        }
+        /*when (event.action) {
+            //MotionEvent.ACTION_DOWN -> touchListener?.onViewTouched(PointF(event.x, event.y), event)
+
+        }*/
+        behavior?.onTouchEvent(event)
         return behavior!!.onTouchEvent(event)
     }
 
@@ -67,8 +67,9 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
     private fun init() {
         behavior = HourPickerBehavior(this,
-                PickerPath(setPickerPaint()),
-                TrianglePath(setTrianglePaint()))
+                PickerPath(setPickerPaint()
+                        , setTrianglePaint())
+        )
 
         setOnTouchListener(this)
         // Load attributes
@@ -95,7 +96,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     }
 
 
-    interface TouchListener {
-        fun onViewTouched (pointF: PointF, event: MotionEvent?)
-    }
+    /* interface TouchListener {
+         fun onViewTouched (pointF: PointF, event: MotionEvent?)
+     }*/
 }
