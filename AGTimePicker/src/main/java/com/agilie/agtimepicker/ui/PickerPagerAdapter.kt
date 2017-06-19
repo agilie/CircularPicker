@@ -8,7 +8,7 @@ import android.view.ViewGroup
 
 class PickerPagerAdapter : PagerAdapter() {
 
-    private val views = ArrayList<View>()
+    val views = ArrayList<View>()
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val view = views[position]

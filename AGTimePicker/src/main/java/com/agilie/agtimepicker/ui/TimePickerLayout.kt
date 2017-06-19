@@ -67,8 +67,9 @@ class TimePickerLayout : RelativeLayout, TimePickerContract.Layout {
     private fun init(attrs: AttributeSet?) {
         timeViewPagerContainer = TimePickerPagerContainer(context)
         //add view pager
-        addView(timeViewPagerContainer)
         addViewPager()
+        addView(timeViewPagerContainer)
+
 
     }
 
