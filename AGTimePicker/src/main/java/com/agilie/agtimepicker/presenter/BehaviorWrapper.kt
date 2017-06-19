@@ -4,13 +4,12 @@ import android.graphics.Color
 import android.graphics.CornerPathEffect
 import android.graphics.Paint
 import com.agilie.agtimepicker.ui.animation.PickerPath
-import com.agilie.agtimepicker.ui.animation.TrianglePath
 import com.agilie.agtimepicker.ui.view.TimePickerView
 
 
 class BehaviorWrapper(var timePickerView: TimePickerView, var behaviorConstructor: TimePickerContract.Behavior.BehaviorConstructor) {
 
-    fun generateBehavior() = PickerBehavior(timePickerView, PickerPath(setPickerPaint()), TrianglePath(setTrianglePaint()), behaviorConstructor)
+    fun generateBehavior() = PickerBehavior(timePickerView, PickerPath(setPickerPaint(), setTrianglePaint()), behaviorConstructor)
 
     private fun setTrianglePaint() = Paint().apply {
         color = Color.WHITE

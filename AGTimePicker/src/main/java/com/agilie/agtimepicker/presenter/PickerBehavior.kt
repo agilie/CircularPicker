@@ -1,18 +1,18 @@
 package com.agilie.agtimepicker.presenter
 
 import com.agilie.agtimepicker.ui.animation.PickerPath
-import com.agilie.agtimepicker.ui.animation.TrianglePath
 import com.agilie.agtimepicker.ui.view.TimePickerView
 
 
 class PickerBehavior : BaseBehavior, TimePickerContract.Behavior {
+
     constructor(timePickerView: TimePickerView, hoursPickerPath: PickerPath,
-                hoursTrianglePath: TrianglePath, behaviorConstructor: TimePickerContract.Behavior.BehaviorConstructor) : super(timePickerView, hoursPickerPath, hoursTrianglePath) {
+                behaviorConstructor: TimePickerContract.Behavior.BehaviorConstructor) : super(timePickerView, hoursPickerPath) {
         init(behaviorConstructor)
     }
 
-    constructor(timePickerView: TimePickerView, hoursPickerPath: PickerPath, hoursTrianglePath: TrianglePath,
-                colors: IntArray, behaviorConstructor: TimePickerContract.Behavior.BehaviorConstructor) : super(timePickerView, hoursPickerPath, hoursTrianglePath, colors) {
+    constructor(timePickerView: TimePickerView, hoursPickerPath: PickerPath,
+                colors: IntArray, behaviorConstructor: TimePickerContract.Behavior.BehaviorConstructor) : super(timePickerView, hoursPickerPath, colors) {
         init(behaviorConstructor)
     }
 
@@ -32,5 +32,7 @@ class PickerBehavior : BaseBehavior, TimePickerContract.Behavior {
 
     override fun countOfValues() = behaviorConstructor?.countOfValues() ?: 0
 
-    override fun value(value: Int) { behaviorConstructor?.onValueCalculated(value) }
+    override fun value(value: Int) {
+        behaviorConstructor?.onValueCalculated(value)
+    }
 }
