@@ -13,6 +13,8 @@ import com.agilie.agtimepicker.ui.animation.PickerPath
 class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
     var behavior: BaseBehavior? = null
+    private var w = 0
+    private var h = 0
 
     /*var picker: Boolean
         set(value) {
@@ -32,6 +34,8 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         init()
     }
 
+
+
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
         init()
     }
@@ -47,8 +51,11 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        behavior?.onSizeChanged(w, h)
         super.onSizeChanged(w, h, oldw, oldh)
+        this.w = w
+        this.h = h
+        behavior?.onSizeChanged(w, h)
+
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {

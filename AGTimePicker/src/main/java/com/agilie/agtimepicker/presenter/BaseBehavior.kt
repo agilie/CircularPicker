@@ -8,6 +8,8 @@ import com.agilie.volumecontrol.calculateAngleWithTwoVectors
 import com.agilie.volumecontrol.distance
 import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
 import com.agilie.volumecontrol.pointInCircle
+import java.lang.Math.max
+import java.lang.Math.min
 
 
 abstract class BaseBehavior(val view: TimePickerView,
@@ -36,7 +38,7 @@ abstract class BaseBehavior(val view: TimePickerView,
 
     override fun onSizeChanged(width: Int, height: Int) {
         val center = PointF(width / 2f, height / 2f)
-        val radius = Math.min(width, height) / 3f
+        val radius = max(min(width, height),0) / 3f
         updatePaint(center, radius)
         drawShapes(center, radius)
     }
