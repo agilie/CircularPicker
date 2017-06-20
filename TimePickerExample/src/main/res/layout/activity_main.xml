@@ -5,36 +5,24 @@
     android:layout_height="match_parent"
     android:background="#191646">
 
-    <!--  <android.support.v7.widget.RecyclerView
-          android:id="@+id/recycler_view"
-          android:layout_width="wrap_content"
-          android:layout_height="300dp"
-          android:orientation="horizontal"
-          app:layoutManager="android.support.v7.widget.LinearLayoutManager"
-          android:layout_alignParentBottom="true"
-          android:layout_alignParentStart="true">
-
-      </android.support.v7.widget.RecyclerView>
-  -->
     <com.agilie.agtimepicker.ui.view.TimePickerPagerContainer
         android:layout_width="match_parent"
-        android:background="@color/colorAccent"
         android:layout_height="300dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="53dp">
+        android:layout_marginBottom="53dp"
+        android:background="@color/colorAccent">
 
         <com.agilie.agtimepicker.ui.view.TimePickerViewPager
-            android:background="@color/colorPrimaryDark"
             android:id="@+id/view_pager"
             android:layout_width="300dp"
             android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorPrimaryDark">
 
         </com.agilie.agtimepicker.ui.view.TimePickerViewPager>
     </com.agilie.agtimepicker.ui.view.TimePickerPagerContainer>
-
 
 </RelativeLayout>
