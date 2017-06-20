@@ -8,7 +8,6 @@ import com.agilie.agtimepicker.ui.view.TimePickerView
 import com.agilie.volumecontrol.calculateAngleWithTwoVectors
 import com.agilie.volumecontrol.distance
 import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
-import com.agilie.volumecontrol.pointInCircle
 import java.lang.Math.max
 import java.lang.Math.min
 
@@ -20,7 +19,7 @@ abstract class BaseBehavior(val view: TimePickerView,
                                     Color.parseColor("#53FFFF"))) : TimePickerContract.Behavior {
 
     private val MAX_PULL_UP = 45f
-    var angle = 0f
+    var currentAngle = 0
     val SWIPE_RADIUS_FACTOR = 0.6f
     var picker = true
 
@@ -53,7 +52,7 @@ abstract class BaseBehavior(val view: TimePickerView,
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                if (picker)actionDownAngle = calculateAngleWithTwoVectors(PointF(event.x, event.y), pickerPath.center).toInt()
+                if (picker) actionDownAngle = calculateAngleWithTwoVectors(PointF(event.x, event.y), pickerPath.center).toInt()
                 onActionDown(PointF(event.x, event.y))
                 view.onInvalidate()
             }
@@ -77,43 +76,47 @@ abstract class BaseBehavior(val view: TimePickerView,
         pickerPath.createPickerPath()
     }
 
-
     private fun onActionDown(pointF: PointF) {
-        val action = pointInActionArea(pointF)
-        pickerPath.lockMove = !action
+        //val action = pointInActionArea(pointF)
+        pickerPath.lockMove = !picker
     }
 
-    fun pointInActionArea(pointF: PointF) = pointInCircle(pointF, pickerPath.center, pickerPath.radius) &&
-            !pointInCircle(pointF, pickerPath.center, (pickerPath.radius * SWIPE_RADIUS_FACTOR))
+    /*fun pointInActionArea(pointF: PointF) = pointInCircle(pointF, pickerPath.center, pickerPath.radius) &&
+            !pointInCircle(pointF, pickerPath.center, (pickerPath.radius * SWIPE_RADIUS_FACTOR))*/
 
     private fun onActionMove(pointF: PointF) {
-        val currentAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
-
-        if (previousAngle != currentAngle) {
-            if (overlappedClockwise(direction, previousAngle, currentAngle)) {
-                angleDelta += (360 - previousAngle + currentAngle)
-            } else if (overlappedCclockwise(direction, previousAngle, currentAngle)) {
-                angleDelta -= (360 - currentAngle + previousAngle)
-            } else if (previousAngle < currentAngle) {
-                direction = Direction.CLOCKWISE
-                angleDelta += (currentAngle - previousAngle)
-            } else {
-                direction = Direction.CCLOCKWISE
-                angleDelta += (previousAngle - currentAngle)
-            }
-        }
-        Log.d("TestLogTest", "currentAngle $currentAngle previousAngle $previousAngle direction $direction actionDownAngle $actionDownAngle angleDelta $angleDelta")
+        //val currentAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
         if (picker) {
-            angle = calculateAngleWithTwoVectors(pointF, pickerPath.center)
+            currentAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
+
+            if (previousAngle != currentAngle) {
+                if (overlappedClockwise(direction, previousAngle, currentAngle)) {
+                    angleDelta += (360 - previousAngle + currentAngle)
+                } else if (overlappedCclockwise(direction, previousAngle, currentAngle)) {
+                    angleDelta -= (360 - currentAngle + previousAngle)
+                } else if (previousAngle < currentAngle) {
+                    direction = Direction.CLOCKWISE
+                    angleDelta += (currentAngle - previousAngle)
+                } else {
+                    direction = Direction.CCLOCKWISE
+                    angleDelta -= (previousAngle - currentAngle)
+                }
+
+                Log.d("TestLogTest", "currentAngle $currentAngle previousAngle $previousAngle direction $direction actionDownAngle $actionDownAngle angleDelta $angleDelta")
+            }
+
+
             val distance = distance(pointF, pickerPath.center) - pickerPath.radius
             //TODO clean up code
             val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
-            pickerPath.onActionMove(angle, pullUp)
+            pickerPath.onActionMove(currentAngle.toFloat(), pullUp)
 
             newLap(Math.max(Math.min(actionDownAngle + angleDelta, 360), 0))
+
+            previousAngle = currentAngle
+            value(calculateValue(currentLap, currentAngle))
         }
-        previousAngle = currentAngle
-        value(calculateValue(currentLap, angle.toInt()))
+
     }
 
     var currentLap = 0
@@ -127,23 +130,23 @@ abstract class BaseBehavior(val view: TimePickerView,
     enum class Direction {
         UNDEFINED, CLOCKWISE, CCLOCKWISE
     }
+
     private fun overlappedCclockwise(direction: Direction, previousAngle: Int, currentAngle: Int) = direction == Direction.CCLOCKWISE && (currentAngle - previousAngle) > 45
 
     private fun overlappedClockwise(direction: Direction, previousAngle: Int, currentAngle: Int) = direction == Direction.CLOCKWISE && (previousAngle - currentAngle) > 45
 
     private fun newLap(angle: Int) {
-//        Log.d("TestLogTest", "_____________________________${angle}")
+//        Log.d("TestLogTest", "_____________________________${currentAngle}")
         if (angle == 360) {
             currentLap++
             actionDownAngle = 0
             angleDelta = 0
-        }
-        else if (angle == 0) {
+        } else if (angle == 0) {
             currentLap--
             actionDownAngle = 0
             angleDelta = 0
         }
-        Log.d("TestLogTest", "_______________$currentLap   ${this.angle}")
+        Log.d("TestLogTest", "_______________$currentLap   ${this.currentAngle}")
     }
 
     private fun onActionUp() {

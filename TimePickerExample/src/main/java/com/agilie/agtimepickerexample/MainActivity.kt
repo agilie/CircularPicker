@@ -1,21 +1,23 @@
 package com.agilie.agtimepickerexample
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.agilie.agtimepicker.presenter.BaseBehavior
+import com.agilie.agtimepicker.ui.PickerPagerAdapter
+import com.agilie.agtimepicker.ui.view.PickerPagerTransformer
+import com.agilie.agtimepicker.ui.view.TimePickerView
+import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity() {
 
-    val SWIPE_RADIUS_FACTOR = 0.6f
 
-    private var touchState = BaseBehavior.TouchState.ROTATE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        /*      view_pager.apply {
+        view_pager.apply {
 
             pageMargin = -50
             clipChildren = false
@@ -38,26 +40,6 @@ class MainActivity : AppCompatActivity() {
         pickerPagerAdapter.notifyDataSetChanged()
         view_pager.adapter = pickerPagerAdapter
 
-        pickerPagerAdapter.views.forEach {
-            (it as TimePickerView).apply {
-                touchListener = object : TimePickerView.TouchListener {
-
-                    override fun onViewTouched(pointF: PointF, event: MotionEvent?) {
-                        val pickerPoint = pointInCircle(pointF, center, radius) &&
-                                !pointInCircle(pointF, center, (radius * SWIPE_RADIUS_FACTOR))
-
-                        picker = pickerPoint
-                        view_pager?.swipeEnable = !pickerPoint
-                        view_pager?.onInterceptTouchEvent(event)
-                    }
-                }
-            }
-        }
     }
 
-    fun pointInActionArea(pointF: PointF, view: TimePickerView) = pointInCircle(pointF, view.center, view.radius) &&
-            !pointInCircle(pointF, view.center, (view.radius * SWIPE_RADIUS_FACTOR))
-
-    }*/
-    }
 }

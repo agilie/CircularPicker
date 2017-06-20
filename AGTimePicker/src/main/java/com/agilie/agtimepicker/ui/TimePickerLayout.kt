@@ -2,7 +2,6 @@ package com.agilie.agtimepicker.ui
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.PointF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.RelativeLayout
@@ -11,15 +10,29 @@ import com.agilie.agtimepicker.ui.view.PickerPagerTransformer
 import com.agilie.agtimepicker.ui.view.TimePickerPagerContainer
 import com.agilie.agtimepicker.ui.view.TimePickerView
 import com.agilie.agtimepicker.ui.view.TimePickerViewPager
-import com.agilie.volumecontrol.pointInCircle
 
 
 class TimePickerLayout : RelativeLayout, TimePickerContract.Layout {
 
-    val SWIPE_RADIUS_FACTOR = 0.6f
     var pickerPagerAdapter: PickerPagerAdapter? = null
-    var timeViewPagerContainer: TimePickerPagerContainer? = null
 
+    override fun onInterceptTouchEvent(event: MotionEvent?): Boolean {
+        when (event?.action) {
+            MotionEvent.ACTION_DOWN -> {
+//                if (!
+//                pointInActionArea()
+//                        ) {
+//                    touchState = BaseBehavior.TouchState.SWIPE
+//                } else {
+//                    touchState = BaseBehavior.TouchState.ROTATE
+//                }
+            }
+        }
+        return super.onInterceptTouchEvent(event)
+    }
+
+    var timeViewPagerContainer: TimePickerPagerContainer? = null
+    var onLayout = true
     private var w = 0
     private var h = 0
 
@@ -35,20 +48,18 @@ class TimePickerLayout : RelativeLayout, TimePickerContract.Layout {
         init(attrs)
     }
 
-    private var onLayout = true
-
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
         if (onLayout) {
-            setViewPagerContainerParams()
             setViewPagerParams()
+            setViewPagerContainerParams()
             onLayout = false
         }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
         onLayout = true
+        super.onSizeChanged(w, h, oldw, oldh)
         this.w = w
         this.h = h
     }
@@ -56,8 +67,8 @@ class TimePickerLayout : RelativeLayout, TimePickerContract.Layout {
     private fun init(attrs: AttributeSet?) {
         timeViewPagerContainer = TimePickerPagerContainer(context)
         //add view pager
-        addViewPager()
         addView(timeViewPagerContainer)
+        addViewPager()
     }
 
     private var viewPager: TimePickerViewPager? = null
@@ -70,7 +81,6 @@ class TimePickerLayout : RelativeLayout, TimePickerContract.Layout {
             clipChildren = false
             setPageTransformer(false, PickerPagerTransformer(context))
         }
-        viewPager?.offscreenPageLimit = 2
 
         timeViewPagerContainer?.addView(viewPager)
 
@@ -79,36 +89,16 @@ class TimePickerLayout : RelativeLayout, TimePickerContract.Layout {
 
             addView(TimePickerView(context).apply {
                 setBackgroundColor(Color.parseColor("#00000000"))
-                addTouchListener(this)
             })
 
             addView(TimePickerView(context).apply {
                 setBackgroundColor(Color.parseColor("#00000000"))
-                addTouchListener(this)
-//                behavior?.colors = intArrayOf(
-//                        Color.parseColor("#FF8D00"),
-//                        Color.parseColor("#FF0058"),
-//                        Color.parseColor("#920084"))
             })
         }
 
-        pickerPagerAdapter?.notifyDataSetChanged()
         viewPager?.adapter = pickerPagerAdapter
+        pickerPagerAdapter?.notifyDataSetChanged()
 
-    }
-
-    private fun addTouchListener(view: TimePickerView) = view.apply {
-        touchListener = object : TimePickerView.TouchListener {
-
-            override fun onViewTouched(pointF: PointF, event: MotionEvent?) {
-                val pickerPoint = pointInCircle(pointF, center, radius) &&
-                        !pointInCircle(pointF, center, (radius * SWIPE_RADIUS_FACTOR))
-
-                picker = pickerPoint
-                viewPager?.swipeEnable = !pickerPoint
-                viewPager?.onInterceptTouchEvent(event)
-            }
-        }
     }
 
     // Set TimeViewPagerContainer coordinates
@@ -121,10 +111,9 @@ class TimePickerLayout : RelativeLayout, TimePickerContract.Layout {
     }
 
     private fun setViewPagerParams() {
-        val params = RelativeLayout.LayoutParams((w * 0.8).toInt(), LayoutParams.MATCH_PARENT)
+        val params = RelativeLayout.LayoutParams((w * 0.7).toInt(), LayoutParams.MATCH_PARENT)
         params.addRule(RelativeLayout.CENTER_HORIZONTAL)
         viewPager?.layoutParams = params
 
     }
-
 }

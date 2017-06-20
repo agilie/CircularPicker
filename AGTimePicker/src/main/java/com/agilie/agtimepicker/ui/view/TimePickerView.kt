@@ -9,9 +9,12 @@ import android.view.View
 import com.agilie.agtimepicker.presenter.BaseBehavior
 import com.agilie.agtimepicker.presenter.BehaviorWrapper
 import com.agilie.agtimepicker.presenter.TimePickerContract
+import com.agilie.volumecontrol.pointInCircle
 
 class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
+
+    val SWIPE_RADIUS_FACTOR = 0.6f
     var behavior: BaseBehavior? = null
     private var w = 0
     private var h = 0
@@ -35,8 +38,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         init()
     }
 
-
-
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
         init()
     }
@@ -56,7 +57,22 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         this.w = w
         this.h = h
         behavior?.onSizeChanged(w, h)
+        addTouchListener()
+    }
 
+    private fun addTouchListener() {
+        val parent = parent as TimePickerViewPager
+        touchListener = object : TimePickerView.TouchListener {
+
+            override fun onViewTouched(pointF: PointF, event: MotionEvent?) {
+                val pickerPoint = pointInCircle(pointF, center, radius) &&
+                        !pointInCircle(pointF, center, (radius * SWIPE_RADIUS_FACTOR))
+
+                picker = pickerPoint
+                parent?.swipeEnable = !pickerPoint
+                parent?.onInterceptTouchEvent(event)
+            }
+        }
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
