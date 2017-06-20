@@ -22,16 +22,16 @@ class PickerBehavior : BaseBehavior, TimePickerContract.Behavior {
     }
 
     override fun calculateValue(lap: Int, angle: Int): Int {
-        if (lap == 0 || angle == 0) return 1
+        if (lap <= 0 || angle <= 0) return 1
         val valuesPerLap = countOfValues() / countOfLaps()
         val anglesPerValue = 360 / valuesPerLap
-        val closestAngle = (0..360 step anglesPerValue).firstOrNull { it > angle } ?: 0
+        val closestAngle = (0..360 step anglesPerValue).firstOrNull { it > angle } ?: 1
         return (valuesPerLap * closestAngle) / 360
     }
 
-    override fun countOfLaps() = behaviorConstructor?.countOfLaps() ?: 0
+    override fun countOfLaps() = behaviorConstructor?.countOfLaps() ?: 1
 
-    override fun countOfValues() = behaviorConstructor?.countOfValues() ?: 0
+    override fun countOfValues() = behaviorConstructor?.countOfValues() ?: 1
 
     override fun value(value: Int) {
         behaviorConstructor?.onValueCalculated(value)

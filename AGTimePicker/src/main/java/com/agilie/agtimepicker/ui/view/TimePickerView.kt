@@ -83,9 +83,9 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
             override fun onValueCalculated(value: Int) {
             }
 
-            override fun countOfLaps() = 0
+            override fun countOfLaps() = 1
 
-            override fun countOfValues() = 0
+            override fun countOfValues() = 1
 
         }).generateBehavior()
         setOnTouchListener(this)

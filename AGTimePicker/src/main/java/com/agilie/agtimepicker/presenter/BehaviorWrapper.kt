@@ -7,7 +7,7 @@ import com.agilie.agtimepicker.ui.animation.PickerPath
 import com.agilie.agtimepicker.ui.view.TimePickerView
 
 
-class BehaviorWrapper(var timePickerView: TimePickerView, var behaviorConstructor: TimePickerContract.Behavior.BehaviorConstructor) {
+open class BehaviorWrapper(var timePickerView: TimePickerView, var behaviorConstructor: TimePickerContract.Behavior.BehaviorConstructor) {
 
     fun generateBehavior() = PickerBehavior(timePickerView, PickerPath(setPickerPaint(), setTrianglePaint()), behaviorConstructor)
 
