@@ -69,8 +69,8 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
                         !pointInCircle(pointF, center, (radius * SWIPE_RADIUS_FACTOR))
 
                 picker = pickerPoint
-                parent?.swipeEnable = !pickerPoint
-                parent?.onInterceptTouchEvent(event)
+                parent.swipeEnable = !pickerPoint
+                parent.onInterceptTouchEvent(event)
             }
         }
     }
@@ -89,13 +89,15 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     }
 
 
-    fun setBehavior(behaviorWrapper: BehaviorWrapper) { behavior = behaviorWrapper.generateBehavior() }
+    fun setBehavior(behaviorWrapper: BehaviorWrapper) {
+        behavior = behaviorWrapper.generateBehavior()
+    }
 
     private fun init() {
 //        behavior = PickerBehavior(this,
 //                PickerPath(setPickerPaint()),
 //                TrianglePath(setTrianglePaint()))
-        behavior = BehaviorWrapper(this, object :TimePickerContract.Behavior.BehaviorConstructor {
+        behavior = BehaviorWrapper(this, object : TimePickerContract.Behavior.BehaviorConstructor {
             override fun onValueCalculated(value: Int) {
             }
 
@@ -104,6 +106,8 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
             override fun countOfValues() = 1
 
         }).generateBehavior()
+        // add paint
+        //behavior?.pickerPath?.pickerPaint = paint
         setOnTouchListener(this)
         // Load attributes
     }
@@ -111,7 +115,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 //    fun setGradientColors(vararg color: Int) {
 //        behavior?.hoursColors = color
 //    }
-
 
 
     interface TouchListener {
