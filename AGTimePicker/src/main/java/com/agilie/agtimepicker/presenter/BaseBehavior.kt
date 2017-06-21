@@ -26,6 +26,7 @@ abstract class BaseBehavior(val view: TimePickerView,
         val MAX_ANGLE = 360
     }
 
+    var text = ""
     var picker = true
 
     val pointCenter: PointF
@@ -33,8 +34,15 @@ abstract class BaseBehavior(val view: TimePickerView,
     val radius: Float
         get() = pickerPath.radius
 
+    val textPaint = Paint().apply {
+        color = Color.WHITE
+        strokeWidth = 40f
+        textSize = 70f
+    }
     override fun onDraw(canvas: Canvas) {
         pickerPath.onDraw(canvas)
+        canvas.drawText(text, (pointCenter.x - (textPaint.measureText(text) / 2)),
+                (pointCenter.y - ((textPaint.descent() + textPaint.ascent())) / 2), textPaint)
     }
 
     override fun onSizeChanged(width: Int, height: Int) {

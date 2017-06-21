@@ -16,6 +16,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         var SWIPE_RADIUS_FACTOR = 0.6f
     }
 
+
     var behavior: BaseBehavior? = null
     private var w = 0
     private var h = 0
@@ -71,6 +72,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
     private fun init() {
         this.PickerBehavior().build()
+
         setOnTouchListener(this)
     }
 
@@ -100,7 +102,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         private var anglesPerValue = 1
         private var valueChangeListener: TimePickerContract.Behavior.ValueChangeListener? = null
 
-        fun setValueChangeListener(valueChangeListener: TimePickerContract.Behavior.ValueChangeListener) : PickerBehavior {
+        fun setValueChangeListener(valueChangeListener: TimePickerContract.Behavior.ValueChangeListener): PickerBehavior {
             this.valueChangeListener = valueChangeListener
             return this
         }
@@ -121,7 +123,12 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
             return this
         }
 
-        fun build() : TimePickerView{
+        fun setCenteredText(text: String): PickerBehavior {
+            this@PickerBehavior.text = text
+            return this
+        }
+
+        fun build(): TimePickerView {
             valuesPerLap = countOfValues / maxLapCount
             anglesPerValue = 360 / valuesPerLap
             behavior = this@PickerBehavior
