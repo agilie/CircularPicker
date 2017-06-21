@@ -24,31 +24,34 @@ class MainActivity : AppCompatActivity() {
             setPageTransformer(false, PickerPagerTransformer(context))
         }
 
-        view_pager.onAddView(TimePickerView(this).PickerBehavior(object : TimePickerContract.Behavior.BehaviorConstructor {
-            override fun onValueCalculated(value: Int) {
-                Log.d("valTest", "Hour $value \n" +
-                        "__________________________")
-            }
-        }).setGradient(intArrayOf(
-                Color.parseColor("#00EDE9"),
-                Color.parseColor("#0087D9"),
-                Color.parseColor("#8A1CC3")), 45)
+        view_pager.onAddView(TimePickerView(this).PickerBehavior()
+                .setGradient(intArrayOf(
+                        Color.parseColor("#00EDE9"),
+                        Color.parseColor("#0087D9"),
+                        Color.parseColor("#8A1CC3")), 45)
                 .setMaxLap(2)
                 .setMaxValue(24)
-                .build())
+                .setValueChangeListener(object : TimePickerContract.Behavior.ValueChangeListener {
+                    override fun onValueChanged(value: Int) {
+                        Log.d("valTest", "Hour $value \n" +
+                                "__________________________")
+                    }
+                }).build())
 
-        view_pager.onAddView(TimePickerView(this).PickerBehavior(object : TimePickerContract.Behavior.BehaviorConstructor {
-            override fun onValueCalculated(value: Int) {
-                Log.d("valTest", "Minute $value\n" +
-                        "__________________________")
-            }
-        }).setGradient(intArrayOf(
-                Color.parseColor("#FF8D00"),
-                Color.parseColor("#FF0058"),
-                Color.parseColor("#920084")), 45)
+        view_pager.onAddView(TimePickerView(this).PickerBehavior()
+                .setGradient(intArrayOf(
+                        Color.parseColor("#FF8D00"),
+                        Color.parseColor("#FF0058"),
+                        Color.parseColor("#920084")), 45)
                 .setMaxValue(60)
                 .setMaxLap(1)
-                .build())
+                .setValueChangeListener(object : TimePickerContract.Behavior.ValueChangeListener {
+                    override fun onValueChanged(value: Int) {
+                        Log.d("valTest", "Hour $value \n" +
+                                "__________________________")
+                    }
+                }).build())
+
 
     }
 

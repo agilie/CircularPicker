@@ -138,10 +138,8 @@ abstract class BaseBehavior(val view: TimePickerView,
                 angleDelta = MAX_ANGLE
             }
             previousAngle = currentAngle
-//            Log.d("TAG", "angle  $angle lapCount $lapCount  currentAngle $currentAngle actionDownAngle $actionDownAngle + angleDelta + $angleDelta")
 
             val distance = distance(pointF, pickerPath.center) - pickerPath.radius
-            //TODO clean up code
             val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
             pickerPath.onActionMove(currentAngle.toFloat(), pullUp)
             if (angle == 360 || angle == 0) return

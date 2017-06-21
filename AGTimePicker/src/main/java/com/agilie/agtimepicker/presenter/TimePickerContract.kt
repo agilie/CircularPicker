@@ -12,8 +12,8 @@ interface TimePickerContract {
         fun calculateValue(angle: Int): Int
         fun value(value: Int)
 
-        interface BehaviorConstructor {
-            fun onValueCalculated(value: Int)
+        interface ValueChangeListener {
+            fun onValueChanged (value: Int)
         }
     }
 

@@ -42,7 +42,6 @@ class PickerPagerAdapter : PagerAdapter() {
 
     fun addView(v: View, position: Int): Int {
         views.add(position, v)
-        //notifyDataSetChanged()
         return position
     }
 

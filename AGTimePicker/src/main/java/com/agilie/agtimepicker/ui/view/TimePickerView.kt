@@ -8,7 +8,6 @@ import android.view.View
 import com.agilie.agtimepicker.presenter.BaseBehavior
 import com.agilie.agtimepicker.presenter.TimePickerContract
 import com.agilie.agtimepicker.ui.animation.PickerPath
-import com.agilie.volumecontrol.pointInCircle
 
 class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
@@ -71,11 +70,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     }
 
     private fun init() {
-        this.PickerBehavior(object : TimePickerContract.Behavior.BehaviorConstructor {
-            override fun onValueCalculated(value: Int) {
-//                Log.d("valueTest", "$value")
-            }
-        }).build()
+        this.PickerBehavior().build()
         setOnTouchListener(this)
     }
 
@@ -99,19 +94,15 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     }
 
 
-    inner class PickerBehavior : BaseBehavior {
-        var valuesPerLap = 1
-        var anglesPerValue = 1
-        var behaviorConstructor: TimePickerContract.Behavior.BehaviorConstructor? = null
+    inner class PickerBehavior @JvmOverloads constructor(countOfValues: Int = 24, countOfLaps: Int = 2)
+        : BaseBehavior(this@TimePickerView, PickerPath(setPickerPaint(), setTrianglePaint()), countOfValues, countOfLaps) {
+        private var valuesPerLap = 1
+        private var anglesPerValue = 1
+        private var valueChangeListener: TimePickerContract.Behavior.ValueChangeListener? = null
 
-
-        @JvmOverloads constructor(behaviorConstructor: TimePickerContract.Behavior.BehaviorConstructor?, countOfValues: Int = 24, countOfLaps: Int = 2) :
-                super(this@TimePickerView, PickerPath(setPickerPaint(), setTrianglePaint()), countOfValues, countOfLaps) {
-            init(behaviorConstructor)
-        }
-
-        fun init(behaviorConstructor: TimePickerContract.Behavior.BehaviorConstructor?) {
-            this.behaviorConstructor = behaviorConstructor
+        fun setValueChangeListener(valueChangeListener: TimePickerContract.Behavior.ValueChangeListener) : PickerBehavior {
+            this.valueChangeListener = valueChangeListener
+            return this
         }
 
         @JvmOverloads fun setGradient(colors: IntArray, angle: Int = 0): PickerBehavior {
@@ -141,19 +132,16 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         override fun calculateValue(angle: Int): Int {
             val maxAngle = 360 * maxLapCount
             val closestAngle = (0..maxAngle step anglesPerValue).firstOrNull { it > angle } ?: 360 * lapCount - 1
-//            Log.d("valTest", "__________________________ \n" +
-//                    "closestAngle $closestAngle Angle $angle")
             val value = (countOfValues * closestAngle) / (360 * maxLapCount) - 1
-//            Log.d("valTest", "value $value")
             return value
         }
 
         override fun value(value: Int) {
             if (prevValue == value) return
-            if (value < 0) behaviorConstructor?.onValueCalculated(prevValue)
+            if (value < 0) valueChangeListener?.onValueChanged(prevValue)
             else {
                 prevValue = value
-                behaviorConstructor?.onValueCalculated(prevValue)
+                valueChangeListener?.onValueChanged(prevValue)
             }
         }
 

@@ -31,10 +31,6 @@ class PickerPath(val pickerPaint: Paint,
         updateTrianglePath(pullUp)
         rotatePicker(angle)
     }
-/*
-    fun onUpdatePickerPath() {
-        updatePickerPath(0f)
-    }*/
 
     fun onActionUp() {
         updatePickerPath(0f)
