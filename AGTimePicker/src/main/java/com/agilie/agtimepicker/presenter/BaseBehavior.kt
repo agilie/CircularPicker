@@ -20,13 +20,13 @@ abstract class BaseBehavior(val view: TimePickerView,
                                     Color.parseColor("#0080ff"),
                                     Color.parseColor("#53FFFF"))) : TimePickerContract.Behavior {
 
-    companion object {
+    private companion object {
         val MIN_LAP_COUNT = 1
         val MIN_ANGLE = 0
         val MAX_ANGLE = 360
+        val MAX_PULL_UP = 35f
     }
 
-    private val MAX_PULL_UP = 35f
     var picker = true
 
     val pointCenter: PointF
