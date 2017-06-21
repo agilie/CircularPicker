@@ -1,6 +1,7 @@
 package com.agilie.agtimepicker.presenter
 
 import android.graphics.*
+import android.text.TextPaint
 import android.view.MotionEvent
 import com.agilie.agtimepicker.ui.animation.PickerPath
 import com.agilie.agtimepicker.ui.view.TimePickerView
@@ -12,13 +13,20 @@ import java.lang.Math.max
 import java.lang.Math.min
 
 
-abstract class BaseBehavior(val view: TimePickerView,
-                            val pickerPath: PickerPath,
-                            var countOfValues: Int,
-                            var maxLapCount: Int,
-                            var colors: IntArray = intArrayOf(
-                                    Color.parseColor("#0080ff"),
-                                    Color.parseColor("#53FFFF"))) : TimePickerContract.Behavior {
+abstract class BaseBehavior : TimePickerContract.Behavior {
+    val view: TimePickerView
+    val pickerPath: PickerPath
+    var countOfValues = 24
+    var maxLapCount = 2
+    var colors: IntArray = intArrayOf(
+            Color.parseColor("#0080ff"),
+            Color.parseColor("#53FFFF"))
+
+    constructor(view: TimePickerView, pickerPath: PickerPath) {
+        this.view = view
+        this.pickerPath = pickerPath
+    }
+
 
     private companion object {
         val MIN_LAP_COUNT = 1
@@ -26,7 +34,10 @@ abstract class BaseBehavior(val view: TimePickerView,
         val MAX_ANGLE = 360
     }
 
-    var text = ""
+    var valueChangeListener: TimePickerContract.Behavior.ValueChangeListener? = null
+
+    var centeredText = ""
+
     var picker = true
 
     val pointCenter: PointF
@@ -34,14 +45,29 @@ abstract class BaseBehavior(val view: TimePickerView,
     val radius: Float
         get() = pickerPath.radius
 
-    val textPaint = Paint().apply {
-        color = Color.WHITE
-        strokeWidth = 40f
-        textSize = 70f
+    var centeredTextSize = 50f
+    var centeredStrokeWidth = 40f
+    var centeredTypeface = Typeface.DEFAULT
+    var centeredTextColor = Color.WHITE
+
+    var textPaint = Paint().apply {
+        color = centeredTextColor
+        textSize = centeredTextSize
+        typeface = centeredTypeface
+        strokeWidth = centeredStrokeWidth
     }
+
     override fun onDraw(canvas: Canvas) {
         pickerPath.onDraw(canvas)
-        canvas.drawText(text, (pointCenter.x - (textPaint.measureText(text) / 2)),
+        drawText(canvas)
+    }
+
+    fun drawText(canvas: Canvas) {
+        textPaint.color = centeredTextColor
+        textPaint.textSize = centeredTextSize
+        textPaint.typeface = centeredTypeface
+        textPaint.strokeWidth = centeredStrokeWidth
+        canvas.drawText(centeredText, (pointCenter.x - (textPaint.measureText(centeredText) / 2)),
                 (pointCenter.y - ((textPaint.descent() + textPaint.ascent())) / 2), textPaint)
     }
 
@@ -180,4 +206,5 @@ abstract class BaseBehavior(val view: TimePickerView,
         angleDelta = MIN_ANGLE
     }
 
+    abstract fun build()
 }
