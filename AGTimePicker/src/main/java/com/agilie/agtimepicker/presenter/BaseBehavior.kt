@@ -44,9 +44,11 @@ abstract class BaseBehavior(val view: TimePickerView,
         drawShapes(center, radius)
     }
 
+    var gradientAngle = 0
+
     fun updatePaint(center: PointF, radius: Float) {
-        val startPoint = getPointOnBorderLineOfCircle(center, radius, 180)
-        val endPoint = getPointOnBorderLineOfCircle(center, radius, 0)
+        val startPoint = getPointOnBorderLineOfCircle(center, radius, 180 + gradientAngle)
+        val endPoint = getPointOnBorderLineOfCircle(center, radius, 0 + gradientAngle)
         pickerPath.pickerPaint.apply {
             shader = LinearGradient(startPoint.x, startPoint.y, endPoint.x, endPoint.y, colors,
                     null,
@@ -142,6 +144,7 @@ abstract class BaseBehavior(val view: TimePickerView,
             //TODO clean up code
             val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
             pickerPath.onActionMove(currentAngle.toFloat(), pullUp)
+            if (angle == 360 || angle == 0) return
             value(calculateValue(((MAX_ANGLE * lapCount) - MAX_ANGLE) + angle))
         }
 
@@ -149,9 +152,9 @@ abstract class BaseBehavior(val view: TimePickerView,
 
     private var actionDownAngle = 0
     private var angleDelta = 0
-    private var lapCount = 1
+    var lapCount = 1
+    var direction: Direction = Direction.UNDEFINED
     private var previousAngle = 0
-    private var direction: Direction = Direction.UNDEFINED
 
     enum class Direction {
         UNDEFINED, CLOCKWISE, CCLOCKWISE
@@ -163,14 +166,12 @@ abstract class BaseBehavior(val view: TimePickerView,
 
     private fun onActionUp() {
         setMinAngleValue()
-        lapCount = MIN_LAP_COUNT
         pickerPath.lockMove = true
     }
 
     private fun setMinAngleValue() {
         actionDownAngle = MIN_ANGLE
         angleDelta = MIN_ANGLE
-
     }
 
 }

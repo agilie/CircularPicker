@@ -1,14 +1,13 @@
 package com.agilie.agtimepicker.ui.view
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.PointF
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
 import com.agilie.agtimepicker.presenter.BaseBehavior
-import com.agilie.agtimepicker.presenter.BehaviorWrapper
 import com.agilie.agtimepicker.presenter.TimePickerContract
+import com.agilie.agtimepicker.ui.animation.PickerPath
 import com.agilie.volumecontrol.pointInCircle
 
 class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
@@ -50,7 +49,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         behavior?.onDraw(canvas)
-        //invalidate()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -67,7 +65,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
             override fun onViewTouched(pointF: PointF, event: MotionEvent?) {
                 val pickerPoint = pointInCircle(pointF, center, radius + MAX_PULL_UP) &&
-                        !pointInCircle(pointF, center, (radius  * SWIPE_RADIUS_FACTOR))
+                        !pointInCircle(pointF, center, (radius * SWIPE_RADIUS_FACTOR))
 
                 picker = pickerPoint
                 parent.swipeEnable = !pickerPoint
@@ -81,7 +79,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
             MotionEvent.ACTION_DOWN -> touchListener?.onViewTouched(PointF(event.x, event.y), event)
 
         }
-        //behavior?.onTouchEvent(event)
         return behavior!!.onTouchEvent(event)
     }
 
@@ -89,31 +86,91 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         invalidate()
     }
 
-
-    fun setBehavior(behaviorWrapper: BehaviorWrapper) {
-        behavior = behaviorWrapper.generateBehavior()
-    }
-
     private fun init() {
-//        behavior = PickerBehavior(this,
-//                PickerPath(setPickerPaint()),
-//                TrianglePath(setTrianglePaint()))
-        behavior = BehaviorWrapper(this, object : TimePickerContract.Behavior.BehaviorConstructor {
+        this.PickerBehavior(object : TimePickerContract.Behavior.BehaviorConstructor {
             override fun onValueCalculated(value: Int) {
+//                Log.d("valueTest", "$value")
             }
-        }).generateBehavior()
-        // add paint
-        //behavior?.pickerPath?.pickerPaint = paint
+        }).build()
         setOnTouchListener(this)
-        // Load attributes
     }
-
-//    fun setGradientColors(vararg color: Int) {
-//        behavior?.hoursColors = color
-//    }
-
 
     interface TouchListener {
         fun onViewTouched(pointF: PointF, event: MotionEvent?)
+    }
+
+    private fun setTrianglePaint() = Paint().apply {
+        color = Color.WHITE
+        isAntiAlias = true
+        style = Paint.Style.FILL
+        pathEffect = CornerPathEffect(10f)
+        strokeWidth = 2f
+    }
+
+    private fun setPickerPaint() = Paint().apply {
+        color = Color.WHITE
+        isAntiAlias = true
+        style = Paint.Style.FILL
+        strokeWidth = 4f
+    }
+
+
+    inner class PickerBehavior : BaseBehavior {
+        var valuesPerLap = 1
+        var anglesPerValue = 1
+        var behaviorConstructor: TimePickerContract.Behavior.BehaviorConstructor? = null
+
+
+        @JvmOverloads constructor(behaviorConstructor: TimePickerContract.Behavior.BehaviorConstructor?, countOfValues: Int = 24, countOfLaps: Int = 2) :
+                super(this@TimePickerView, PickerPath(setPickerPaint(), setTrianglePaint()), countOfValues, countOfLaps) {
+            init(behaviorConstructor)
+        }
+
+        fun init(behaviorConstructor: TimePickerContract.Behavior.BehaviorConstructor?) {
+            this.behaviorConstructor = behaviorConstructor
+        }
+
+        @JvmOverloads fun setGradient(colors: IntArray, angle: Int = 0): PickerBehavior {
+            this@PickerBehavior.colors = colors
+            this@PickerBehavior.gradientAngle = angle
+            return this
+        }
+
+        fun setMaxValue(countOfValues: Int): PickerBehavior {
+            this@PickerBehavior.countOfValues = countOfValues
+            return this
+        }
+
+        fun setMaxLap(maxLap: Int): PickerBehavior {
+            this@PickerBehavior.maxLapCount = maxLap
+            return this
+        }
+
+        fun build() {
+            valuesPerLap = countOfValues / maxLapCount
+            anglesPerValue = 360 / valuesPerLap
+            behavior = this@PickerBehavior
+        }
+
+        var prevValue = 0
+        override fun calculateValue(angle: Int): Int {
+            val maxAngle = 360 * maxLapCount
+            val closestAngle = (0..maxAngle step anglesPerValue).firstOrNull { it > angle } ?: 360 * lapCount - 1
+//            Log.d("valTest", "__________________________ \n" +
+//                    "closestAngle $closestAngle Angle $angle")
+            val value = (countOfValues * closestAngle) / (360 * maxLapCount) - 1
+//            Log.d("valTest", "value $value")
+            return value
+        }
+
+        override fun value(value: Int) {
+            if (prevValue == value) return
+            if (value < 0) behaviorConstructor?.onValueCalculated(prevValue)
+            else {
+                prevValue = value
+                behaviorConstructor?.onValueCalculated(prevValue)
+            }
+        }
+
     }
 }
