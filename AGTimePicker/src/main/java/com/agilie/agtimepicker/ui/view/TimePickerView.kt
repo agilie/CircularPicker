@@ -130,10 +130,11 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
             return this
         }
 
-        fun build() {
+        fun build() : TimePickerView{
             valuesPerLap = countOfValues / maxLapCount
             anglesPerValue = 360 / valuesPerLap
             behavior = this@PickerBehavior
+            return this@TimePickerView
         }
 
         var prevValue = 0
