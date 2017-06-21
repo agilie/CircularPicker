@@ -30,7 +30,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         get() = behavior!!.pointCenter
     val radius: Float
         get() = behavior!!.radius
-    var touchPoint = PointF()
 
     var touchListener: TouchListener? = null
 
@@ -100,11 +99,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         behavior = BehaviorWrapper(this, object : TimePickerContract.Behavior.BehaviorConstructor {
             override fun onValueCalculated(value: Int) {
             }
-
-            override fun countOfLaps() = 1
-
-            override fun countOfValues() = 1
-
         }).generateBehavior()
         // add paint
         //behavior?.pickerPath?.pickerPaint = paint

@@ -14,13 +14,16 @@ import java.lang.Math.min
 
 abstract class BaseBehavior(val view: TimePickerView,
                             val pickerPath: PickerPath,
+                            var countOfValues: Int,
+                            var maxLapCount: Int,
                             var colors: IntArray = intArrayOf(
                                     Color.parseColor("#0080ff"),
                                     Color.parseColor("#53FFFF"))) : TimePickerContract.Behavior {
 
+
+
+
     private val MAX_PULL_UP = 45f
-    var currentAngle = 0
-    val SWIPE_RADIUS_FACTOR = 0.6f
     var picker = true
 
     val pointCenter: PointF
@@ -92,8 +95,6 @@ abstract class BaseBehavior(val view: TimePickerView,
             !pointInCircle(pointF, pickerPath.center, (pickerPath.radius * SWIPE_RADIUS_FACTOR))*/
 
     private var lapCount = 1
-    private var lapValue = 0
-    private var maxLapCount = 4
     private fun onActionMove(pointF: PointF) {
         val currentAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
 
@@ -117,20 +118,22 @@ abstract class BaseBehavior(val view: TimePickerView,
             }
 
             if (lapCount <= 0) {
-                lapCount = maxLapCount
+                lapCount = 1
             }
             val angle = Math.max(Math.min(actionDownAngle + angleDelta, 360), 0)
-            if (angle == 360) {
-                lapCount++
-            }
-            if (angle == 360 && lapCount <= maxLapCount) {
-                actionDownAngle = 0
-                angleDelta = 0
-            }
-            if (angle == 360 && lapCount >= maxLapCount) {
-                lapCount = 1
-                actionDownAngle = 0
-                angleDelta = 0
+            if (direction == Direction.CLOCKWISE && angle == 360) {
+                if (angle == 360) {
+                    lapCount++
+                }
+                if (angle == 360 && lapCount <= maxLapCount) {
+                    actionDownAngle = 0
+                    angleDelta = 0
+                }
+                if (angle == 360 && lapCount >= maxLapCount) {
+                    lapCount = 1
+                    actionDownAngle = 0
+                    angleDelta = 0
+                }
             }
             // when CCLOCKWISE
             if (direction == Direction.CCLOCKWISE && angle == 0) {
@@ -152,6 +155,7 @@ abstract class BaseBehavior(val view: TimePickerView,
             //TODO clean up code
             val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
             pickerPath.onActionMove(currentAngle.toFloat(), pullUp)
+            value(calculateValue(((360 * lapCount) - 360) + angle))
         }
 
     }
