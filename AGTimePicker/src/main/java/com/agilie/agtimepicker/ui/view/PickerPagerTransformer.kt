@@ -9,8 +9,8 @@ class PickerPagerTransformer : ViewPager.PageTransformer {
     private var maxTranslateOffsetX = 0
     private var viewPager: ViewPager? = null
 
-    constructor (context: Context) {
-        this.maxTranslateOffsetX = dp2px(context, 120f)
+    constructor (context: Context, dipValue: Int) {
+        this.maxTranslateOffsetX = dp2px(context, dipValue)
     }
 
     override fun transformPage(view: View, position: Float) {
@@ -22,7 +22,7 @@ class PickerPagerTransformer : ViewPager.PageTransformer {
 
         val centerXInViewPager = leftInScreen + view.measuredWidth / 2
         val offsetX = centerXInViewPager - viewPager!!.measuredWidth / 2
-        val offsetRate = offsetX.toFloat() * 0.4f / viewPager!!.measuredWidth
+        val offsetRate = offsetX.toFloat() * 0.2f / viewPager!!.measuredWidth
         val scaleFactor = 1 - Math.abs(offsetRate)
 
 
@@ -34,7 +34,7 @@ class PickerPagerTransformer : ViewPager.PageTransformer {
         }
     }
 
-    private fun dp2px(context: Context, dipValue: Float): Int {
+    private fun dp2px(context: Context, dipValue: Int): Int {
         val m = context.resources.displayMetrics.density
         return (dipValue * m + 0.5f).toInt()
     }

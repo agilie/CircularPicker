@@ -3,15 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#191646">
+    android:background="@drawable/gradient">
 
     <com.agilie.agtimepicker.ui.view.TimePickerPagerContainer
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="53dp"
-        android:background="@color/colorAccent">
+        android:layout_marginBottom="53dp">
 
         <com.agilie.agtimepicker.ui.view.TimePickerViewPager
             android:id="@+id/view_pager"
@@ -19,8 +18,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/colorPrimaryDark">
+            android:layout_gravity="center_horizontal">
 
         </com.agilie.agtimepicker.ui.view.TimePickerViewPager>
     </com.agilie.agtimepicker.ui.view.TimePickerPagerContainer>

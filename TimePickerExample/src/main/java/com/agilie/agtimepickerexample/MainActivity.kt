@@ -18,17 +18,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         view_pager.apply {
-
-            pageMargin = -50
             clipChildren = false
-            setPageTransformer(false, PickerPagerTransformer(context))
+            setPageTransformer(false, PickerPagerTransformer(context, 400))
         }
 
         view_pager.onAddView(TimePickerView(this).PickerBehavior()
                 .setGradient(intArrayOf(
                         Color.parseColor("#00EDE9"),
                         Color.parseColor("#0087D9"),
-                        Color.parseColor("#8A1CC3")), 45)
+                        Color.parseColor("#8A1CC3")), 220)
                 .setMaxLap(2)
                 .setMaxValue(24)
                 .setValueChangeListener(object : TimePickerContract.Behavior.ValueChangeListener {
@@ -42,16 +40,15 @@ class MainActivity : AppCompatActivity() {
                 .setGradient(intArrayOf(
                         Color.parseColor("#FF8D00"),
                         Color.parseColor("#FF0058"),
-                        Color.parseColor("#920084")), 45)
+                        Color.parseColor("#920084")), 150)
                 .setMaxValue(60)
                 .setMaxLap(1)
                 .setValueChangeListener(object : TimePickerContract.Behavior.ValueChangeListener {
                     override fun onValueChanged(value: Int) {
-                        Log.d("valTest", "Hour $value \n" +
+                        Log.d("valTest", "Minutes $value \n" +
                                 "__________________________")
                     }
                 }).build())
-
 
     }
 

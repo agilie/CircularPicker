@@ -94,7 +94,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     }
 
 
-    inner class PickerBehavior @JvmOverloads constructor(countOfValues: Int = 24, countOfLaps: Int = 2)
+    inner class PickerBehavior (countOfValues: Int = 24, countOfLaps: Int = 2)
         : BaseBehavior(this@TimePickerView, PickerPath(setPickerPaint(), setTrianglePaint()), countOfValues, countOfLaps) {
         private var valuesPerLap = 1
         private var anglesPerValue = 1
@@ -105,7 +105,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
             return this
         }
 
-        @JvmOverloads fun setGradient(colors: IntArray, angle: Int = 0): PickerBehavior {
+        fun setGradient(colors: IntArray, angle: Int = 0): PickerBehavior {
             this@PickerBehavior.colors = colors
             this@PickerBehavior.gradientAngle = angle
             return this
