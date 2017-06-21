@@ -39,10 +39,7 @@ class PickerBehavior : BaseBehavior, TimePickerContract.Behavior {
     }
 
     override fun calculateValue(angle: Int): Int {
-        Log.d("valueTest", "angle $angle")
         val closestAngle = (((0..360 * maxLapCount)) step anglesPerValue).firstOrNull { it > angle } ?: 1
-        Log.d("valueTest", " closestAngle $closestAngle")
-
         return (countOfValues * closestAngle) / (360 * maxLapCount)
     }
 

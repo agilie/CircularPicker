@@ -20,12 +20,8 @@ abstract class BaseBehavior(val view: TimePickerView,
                                     Color.parseColor("#0080ff"),
                                     Color.parseColor("#53FFFF"))) : TimePickerContract.Behavior {
 
-
-
-
     private val MAX_PULL_UP = 45f
     var picker = true
-
     val pointCenter: PointF
         get() = pickerPath.center
     val radius: Float
@@ -55,7 +51,6 @@ abstract class BaseBehavior(val view: TimePickerView,
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                //if (picker) actionDownAngle = calculateAngleWithTwoVectors(PointF(event.x, event.y), pickerPath.center).toInt()
                 onActionDown(PointF(event.x, event.y))
                 view.onInvalidate()
             }
@@ -65,7 +60,6 @@ abstract class BaseBehavior(val view: TimePickerView,
             }
             MotionEvent.ACTION_UP -> {
                 angleDelta = 0
-                //if (picker) previousAngle = calculateAngleWithTwoVectors(PointF(event.x, event.y), pickerPath.center).toInt()
                 onActionUp()
                 view.onInvalidate()
             }
@@ -80,27 +74,25 @@ abstract class BaseBehavior(val view: TimePickerView,
     }
 
     private fun onActionDown(pointF: PointF) {
-        //val action = pointInActionArea(pointF)
-        actionDownAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
-        previousAngle = actionDownAngle
-        direction = Direction.UNDEFINED
-        angleDelta = 0
 
-
-        Log.d("TAG", "actionDownAngle $actionDownAngle")
-        pickerPath.lockMove = !picker
+        if (picker) {
+            pickerPath.lockMove = !picker
+            val distance = distance(pointF, pickerPath.center) - pickerPath.radius
+            val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
+            actionDownAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
+            pickerPath.onActionMove(actionDownAngle.toFloat(), pullUp)
+            previousAngle = actionDownAngle
+            direction = Direction.UNDEFINED
+            angleDelta = 0
+            value(calculateValue(((360 * lapCount) - 360) + actionDownAngle))
+        }
     }
-
-    /*fun pointInActionArea(pointF: PointF) = pointInCircle(pointF, pickerPath.center, pickerPath.radius) &&
-            !pointInCircle(pointF, pickerPath.center, (pickerPath.radius * SWIPE_RADIUS_FACTOR))*/
 
     private var lapCount = 1
     private fun onActionMove(pointF: PointF) {
         val currentAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
 
         if (picker) {
-            //val currentAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
-
             val angleChanged = previousAngle != currentAngle
 
             if (angleChanged) {
@@ -145,22 +137,18 @@ abstract class BaseBehavior(val view: TimePickerView,
                 actionDownAngle = 0
                 angleDelta = 360
             }
-
-
             previousAngle = currentAngle
-
-            Log.d("TAG", "angle  $angle lapCount $lapCount  currentAngle $currentAngle actionDownAngle $actionDownAngle + angleDelta + $angleDelta")
+//            Log.d("TAG", "angle  $angle lapCount $lapCount  currentAngle $currentAngle actionDownAngle $actionDownAngle + angleDelta + $angleDelta")
 
             val distance = distance(pointF, pickerPath.center) - pickerPath.radius
             //TODO clean up code
             val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
             pickerPath.onActionMove(currentAngle.toFloat(), pullUp)
-            value(calculateValue(((360 * lapCount) - 360) + angle))
+            value(calculateValue(((360 * lapCount) - 360) + currentAngle))
         }
 
     }
 
-    var currentLap = 0
     private var actionDownAngle: Int = 0
     private var angleDelta = 0
 
@@ -179,10 +167,9 @@ abstract class BaseBehavior(val view: TimePickerView,
 
         actionDownAngle = 0
         angleDelta = 0
-        currentLap = 0
-        lapCount = 0
+//        lapCount = 1
         pickerPath.lockMove = true
-        pickerPath.onActionUp()
+//        pickerPath.onActionUp()
     }
 
     enum class TouchState { SWIPE, ROTATE }
