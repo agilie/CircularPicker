@@ -56,22 +56,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         this.w = w
         this.h = h
         behavior?.onSizeChanged(w, h)
-        addTouchListener()
-    }
-
-    private fun addTouchListener() {
-        val parent = parent as TimePickerViewPager
-        touchListener = object : TimePickerView.TouchListener {
-
-            override fun onViewTouched(pointF: PointF, event: MotionEvent?) {
-                val pickerPoint = pointInCircle(pointF, center, radius + MAX_PULL_UP) &&
-                        !pointInCircle(pointF, center, (radius * SWIPE_RADIUS_FACTOR))
-
-                picker = pickerPoint
-                parent.swipeEnable = !pickerPoint
-                parent.onInterceptTouchEvent(event)
-            }
-        }
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
