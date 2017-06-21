@@ -9,7 +9,6 @@ import android.view.View
 import com.agilie.agtimepicker.presenter.BaseBehavior
 import com.agilie.agtimepicker.presenter.BehaviorWrapper
 import com.agilie.agtimepicker.presenter.TimePickerContract
-import com.agilie.volumecontrol.pointInCircle
 
 class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
@@ -58,22 +57,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         this.w = w
         this.h = h
         behavior?.onSizeChanged(w, h)
-        addTouchListener()
-    }
-
-    private fun addTouchListener() {
-        val parent = parent as TimePickerViewPager
-        touchListener = object : TimePickerView.TouchListener {
-
-            override fun onViewTouched(pointF: PointF, event: MotionEvent?) {
-                val pickerPoint = pointInCircle(pointF, center, radius + MAX_PULL_UP) &&
-                        !pointInCircle(pointF, center, (radius  * SWIPE_RADIUS_FACTOR))
-
-                picker = pickerPoint
-                parent.swipeEnable = !pickerPoint
-                parent.onInterceptTouchEvent(event)
-            }
-        }
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
@@ -89,29 +72,18 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         invalidate()
     }
 
-
     fun setBehavior(behaviorWrapper: BehaviorWrapper) {
         behavior = behaviorWrapper.generateBehavior()
     }
 
     private fun init() {
-//        behavior = PickerBehavior(this,
-//                PickerPath(setPickerPaint()),
-//                TrianglePath(setTrianglePaint()))
+
         behavior = BehaviorWrapper(this, object : TimePickerContract.Behavior.BehaviorConstructor {
             override fun onValueCalculated(value: Int) {
             }
         }).generateBehavior()
-        // add paint
-        //behavior?.pickerPath?.pickerPaint = paint
         setOnTouchListener(this)
-        // Load attributes
     }
-
-//    fun setGradientColors(vararg color: Int) {
-//        behavior?.hoursColors = color
-//    }
-
 
     interface TouchListener {
         fun onViewTouched(pointF: PointF, event: MotionEvent?)
