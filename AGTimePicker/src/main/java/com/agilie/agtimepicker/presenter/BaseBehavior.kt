@@ -91,7 +91,7 @@ abstract class BaseBehavior(val view: TimePickerView,
             previousAngle = actionDownAngle
             direction = Direction.UNDEFINED
             angleDelta = 0
-            value(calculateValue(((360 * lapCount) - 360) + actionDownAngle))
+            value(calculateValue(((MAX_ANGLE * lapCount) - MAX_ANGLE) + actionDownAngle))
         }
     }
 
