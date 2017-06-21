@@ -20,10 +20,13 @@ abstract class BaseBehavior(val view: TimePickerView,
                                     Color.parseColor("#0080ff"),
                                     Color.parseColor("#53FFFF"))) : TimePickerContract.Behavior {
 
+    companion object {
+        val MIN_LAP_COUNT = 1
+        val MIN_ANGLE = 0
+        val MAX_ANGLE = 360
+    }
 
-
-
-    private val MAX_PULL_UP = 45f
+    private val MAX_PULL_UP = 35f
     var picker = true
 
     val pointCenter: PointF
@@ -55,7 +58,6 @@ abstract class BaseBehavior(val view: TimePickerView,
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
-                //if (picker) actionDownAngle = calculateAngleWithTwoVectors(PointF(event.x, event.y), pickerPath.center).toInt()
                 onActionDown(PointF(event.x, event.y))
                 view.onInvalidate()
             }
@@ -64,8 +66,6 @@ abstract class BaseBehavior(val view: TimePickerView,
                 view.onInvalidate()
             }
             MotionEvent.ACTION_UP -> {
-                angleDelta = 0
-                //if (picker) previousAngle = calculateAngleWithTwoVectors(PointF(event.x, event.y), pickerPath.center).toInt()
                 onActionUp()
                 view.onInvalidate()
             }
@@ -80,34 +80,26 @@ abstract class BaseBehavior(val view: TimePickerView,
     }
 
     private fun onActionDown(pointF: PointF) {
-        //val action = pointInActionArea(pointF)
         actionDownAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
         previousAngle = actionDownAngle
         direction = Direction.UNDEFINED
         angleDelta = 0
 
-
-        Log.d("TAG", "actionDownAngle $actionDownAngle")
         pickerPath.lockMove = !picker
     }
 
-    /*fun pointInActionArea(pointF: PointF) = pointInCircle(pointF, pickerPath.center, pickerPath.radius) &&
-            !pointInCircle(pointF, pickerPath.center, (pickerPath.radius * SWIPE_RADIUS_FACTOR))*/
-
-    private var lapCount = 1
     private fun onActionMove(pointF: PointF) {
         val currentAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
 
         if (picker) {
-            //val currentAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
 
             val angleChanged = previousAngle != currentAngle
 
             if (angleChanged) {
                 if (overlappedClockwise(direction, previousAngle, currentAngle)) {
-                    angleDelta += (360 - previousAngle + currentAngle)
+                    angleDelta += (MAX_ANGLE - previousAngle + currentAngle)
                 } else if (overlappedCclockwise(direction, previousAngle, currentAngle)) {
-                    angleDelta -= (360 - currentAngle + previousAngle)
+                    angleDelta -= (MAX_ANGLE - currentAngle + previousAngle)
                 } else if (previousAngle < currentAngle) {
                     direction = Direction.CLOCKWISE
                     angleDelta += (currentAngle - previousAngle)
@@ -117,53 +109,43 @@ abstract class BaseBehavior(val view: TimePickerView,
                 }
             }
 
-            if (lapCount <= 0) {
-                lapCount = 1
-            }
-            val angle = Math.max(Math.min(actionDownAngle + angleDelta, 360), 0)
-            if (direction == Direction.CLOCKWISE && angle == 360) {
-                if (angle == 360) {
+            val angle = Math.max(Math.min(actionDownAngle + angleDelta, MAX_ANGLE), MIN_ANGLE)
+            //when CLOCKWISE
+            if (direction == Direction.CLOCKWISE && angle == MAX_ANGLE) {
+                if (lapCount >= maxLapCount) {
+                    lapCount = MIN_LAP_COUNT
+
+                } else {
                     lapCount++
                 }
-                if (angle == 360 && lapCount <= maxLapCount) {
-                    actionDownAngle = 0
-                    angleDelta = 0
-                }
-                if (angle == 360 && lapCount >= maxLapCount) {
-                    lapCount = 1
-                    actionDownAngle = 0
-                    angleDelta = 0
-                }
+                setMinAngleValue()
             }
             // when CCLOCKWISE
-            if (direction == Direction.CCLOCKWISE && angle == 0) {
-                if (lapCount == 1) {
+            if (direction == Direction.CCLOCKWISE && angle == MIN_ANGLE) {
+                if (lapCount == MIN_LAP_COUNT) {
                     lapCount = maxLapCount
                 } else {
                     lapCount--
                 }
-                actionDownAngle = 0
-                angleDelta = 360
+                actionDownAngle = MIN_ANGLE
+                angleDelta = MAX_ANGLE
             }
 
-
             previousAngle = currentAngle
-
             Log.d("TAG", "angle  $angle lapCount $lapCount  currentAngle $currentAngle actionDownAngle $actionDownAngle + angleDelta + $angleDelta")
 
             val distance = distance(pointF, pickerPath.center) - pickerPath.radius
             //TODO clean up code
             val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
             pickerPath.onActionMove(currentAngle.toFloat(), pullUp)
-            value(calculateValue(((360 * lapCount) - 360) + angle))
+            value(calculateValue(((MAX_ANGLE * lapCount) - MAX_ANGLE) + angle))
         }
 
     }
 
-    var currentLap = 0
-    private var actionDownAngle: Int = 0
+    private var actionDownAngle = 0
     private var angleDelta = 0
-
+    private var lapCount = 1
     private var previousAngle = 0
     private var direction: Direction = Direction.UNDEFINED
 
@@ -176,14 +158,16 @@ abstract class BaseBehavior(val view: TimePickerView,
     private fun overlappedClockwise(direction: Direction, previousAngle: Int, currentAngle: Int) = direction == Direction.CLOCKWISE && (previousAngle - currentAngle) > 45
 
     private fun onActionUp() {
-
-        actionDownAngle = 0
-        angleDelta = 0
-        currentLap = 0
-        lapCount = 0
+        setMinAngleValue()
+        lapCount = MIN_LAP_COUNT
         pickerPath.lockMove = true
         pickerPath.onActionUp()
     }
 
-    enum class TouchState { SWIPE, ROTATE }
+    private fun setMinAngleValue() {
+        actionDownAngle = MIN_ANGLE
+        angleDelta = MIN_ANGLE
+
+    }
+
 }
