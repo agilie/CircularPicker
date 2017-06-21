@@ -3,6 +3,9 @@ package com.agilie.agtimepickerexample
 import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import com.agilie.agtimepicker.presenter.BehaviorWrapper
+import com.agilie.agtimepicker.presenter.TimePickerContract
 import com.agilie.agtimepicker.ui.PickerPagerAdapter
 import com.agilie.agtimepicker.ui.view.PickerPagerTransformer
 import com.agilie.agtimepicker.ui.view.TimePickerView
@@ -23,6 +26,7 @@ class MainActivity : AppCompatActivity() {
             setPageTransformer(false, PickerPagerTransformer(context))
         }
 
+
         val pickerPagerAdapter = PickerPagerAdapter().apply {
 
             addView(TimePickerView(this@MainActivity).apply {
@@ -38,6 +42,13 @@ class MainActivity : AppCompatActivity() {
         view_pager.adapter = pickerPagerAdapter
 
 
+        (pickerPagerAdapter.views[0] as TimePickerView).setBehavior(
+                BehaviorWrapper(pickerPagerAdapter.views[0] as TimePickerView,
+                        object : TimePickerContract.Behavior.BehaviorConstructor {
+                            override fun onValueCalculated(value: Int) {
+                                Log.d("123", "$value")
+                            }
+                        }, 60, 3))
     }
 
 }
