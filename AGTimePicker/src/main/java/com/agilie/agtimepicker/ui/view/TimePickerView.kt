@@ -13,12 +13,14 @@ import com.agilie.volumecontrol.pointInCircle
 
 class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
+    companion object {
+        var MAX_PULL_UP = 35f
+        var SWIPE_RADIUS_FACTOR = 0.6f
+    }
 
-    val SWIPE_RADIUS_FACTOR = 0.6f
     var behavior: BaseBehavior? = null
     private var w = 0
     private var h = 0
-
 
     var picker: Boolean
         set(value) {
@@ -64,8 +66,8 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         touchListener = object : TimePickerView.TouchListener {
 
             override fun onViewTouched(pointF: PointF, event: MotionEvent?) {
-                val pickerPoint = pointInCircle(pointF, center, radius) &&
-                        !pointInCircle(pointF, center, (radius * SWIPE_RADIUS_FACTOR))
+                val pickerPoint = pointInCircle(pointF, center, radius + MAX_PULL_UP) &&
+                        !pointInCircle(pointF, center, (radius  * SWIPE_RADIUS_FACTOR))
 
                 picker = pickerPoint
                 parent.swipeEnable = !pickerPoint

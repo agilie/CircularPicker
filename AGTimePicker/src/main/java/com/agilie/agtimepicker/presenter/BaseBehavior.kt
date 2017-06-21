@@ -1,10 +1,10 @@
 package com.agilie.agtimepicker.presenter
 
 import android.graphics.*
-import android.util.Log
 import android.view.MotionEvent
 import com.agilie.agtimepicker.ui.animation.PickerPath
 import com.agilie.agtimepicker.ui.view.TimePickerView
+import com.agilie.agtimepicker.ui.view.TimePickerView.Companion.MAX_PULL_UP
 import com.agilie.volumecontrol.calculateAngleWithTwoVectors
 import com.agilie.volumecontrol.distance
 import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
@@ -24,7 +24,6 @@ abstract class BaseBehavior(val view: TimePickerView,
         val MIN_LAP_COUNT = 1
         val MIN_ANGLE = 0
         val MAX_ANGLE = 360
-        val MAX_PULL_UP = 35f
     }
 
     var picker = true
@@ -59,7 +58,6 @@ abstract class BaseBehavior(val view: TimePickerView,
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 onActionDown(PointF(event.x, event.y))
-                view.onInvalidate()
             }
             MotionEvent.ACTION_MOVE -> {
                 onActionMove(PointF(event.x, event.y))
@@ -92,6 +90,7 @@ abstract class BaseBehavior(val view: TimePickerView,
             direction = Direction.UNDEFINED
             angleDelta = 0
             value(calculateValue(((MAX_ANGLE * lapCount) - MAX_ANGLE) + actionDownAngle))
+            view.onInvalidate()
         }
     }
 
@@ -163,14 +162,9 @@ abstract class BaseBehavior(val view: TimePickerView,
     private fun overlappedClockwise(direction: Direction, previousAngle: Int, currentAngle: Int) = direction == Direction.CLOCKWISE && (previousAngle - currentAngle) > 45
 
     private fun onActionUp() {
-
-        actionDownAngle = 0
-        angleDelta = 0
-//        lapCount = 1
         setMinAngleValue()
         lapCount = MIN_LAP_COUNT
         pickerPath.lockMove = true
-//        pickerPath.onActionUp()
     }
 
     private fun setMinAngleValue() {
