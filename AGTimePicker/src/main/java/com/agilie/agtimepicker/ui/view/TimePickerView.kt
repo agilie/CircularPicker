@@ -169,7 +169,9 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         }
 
         var prevValue = 0
+        var angle = 0
         override fun calculateValue(angle: Int): Int {
+            this.angle = angle
             val maxAngle = 360 * maxLapCount
             val closestAngle = (0..maxAngle step anglesPerValue).firstOrNull { it > angle } ?: 360 * lapCount - 1
             val value = (countOfValues * closestAngle) / (360 * maxLapCount) - 1
