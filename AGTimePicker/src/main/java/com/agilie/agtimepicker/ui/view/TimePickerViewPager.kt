@@ -39,6 +39,8 @@ class TimePickerViewPager : ViewPager {
         adapter = pagerAdapter
     }
 
+    fun getView(position: Int) = pagerAdapter.views[position] as TimePickerView
+
     private fun addTouchListener(view: TimePickerView) {
         view.apply {
             touchListener = object : TimePickerView.TouchListener {

@@ -1,6 +1,7 @@
 package com.agilie.agtimepicker.presenter
 
 import android.graphics.*
+import android.util.Log
 import android.view.MotionEvent
 import com.agilie.agtimepicker.ui.animation.PickerPath
 import com.agilie.agtimepicker.ui.view.TimePickerView
@@ -12,19 +13,30 @@ import java.lang.Math.max
 import java.lang.Math.min
 
 
-abstract class BaseBehavior(val view: TimePickerView,
-                            val pickerPath: PickerPath,
-                            var countOfValues: Int,
-                            var maxLapCount: Int,
-                            var colors: IntArray = intArrayOf(
-                                    Color.parseColor("#0080ff"),
-                                    Color.parseColor("#53FFFF"))) : TimePickerContract.Behavior {
+abstract class BaseBehavior : TimePickerContract.Behavior {
+    val view: TimePickerView
+    val pickerPath: PickerPath
+    var countOfValues = 24
+    var maxLapCount = 2
+    var colors: IntArray = intArrayOf(
+            Color.parseColor("#0080ff"),
+            Color.parseColor("#53FFFF"))
+
+    constructor(view: TimePickerView, pickerPath: PickerPath) {
+        this.view = view
+        this.pickerPath = pickerPath
+    }
+
 
     private companion object {
         val MIN_LAP_COUNT = 1
         val MIN_ANGLE = 0
         val MAX_ANGLE = 360
     }
+
+    var valueChangeListener: TimePickerContract.Behavior.ValueChangeListener? = null
+
+    var centeredText = ""
 
     var picker = true
 
@@ -33,8 +45,30 @@ abstract class BaseBehavior(val view: TimePickerView,
     val radius: Float
         get() = pickerPath.radius
 
+    var centeredTextSize = 50f
+    var centeredStrokeWidth = 40f
+    var centeredTypeface = Typeface.DEFAULT
+    var centeredTextColor = Color.WHITE
+
+    var textPaint = Paint().apply {
+        color = centeredTextColor
+        textSize = centeredTextSize
+        typeface = centeredTypeface
+        strokeWidth = centeredStrokeWidth
+    }
+
     override fun onDraw(canvas: Canvas) {
         pickerPath.onDraw(canvas)
+        drawText(canvas)
+    }
+
+    fun drawText(canvas: Canvas) {
+        textPaint.color = centeredTextColor
+        textPaint.textSize = centeredTextSize
+        textPaint.typeface = centeredTypeface
+        textPaint.strokeWidth = centeredStrokeWidth
+        canvas.drawText(centeredText, (pointCenter.x - (textPaint.measureText(centeredText) / 2)),
+                (pointCenter.y - ((textPaint.descent() + textPaint.ascent())) / 2), textPaint)
     }
 
     override fun onSizeChanged(width: Int, height: Int) {
@@ -67,7 +101,7 @@ abstract class BaseBehavior(val view: TimePickerView,
             }
             MotionEvent.ACTION_UP -> {
                 angleDelta = 0
-                onActionUp()
+                onActionUp(PointF(event.x, event.y))
                 view.onInvalidate()
             }
         }
@@ -81,25 +115,14 @@ abstract class BaseBehavior(val view: TimePickerView,
     }
 
     private fun onActionDown(pointF: PointF) {
-
-        if (picker) {
-            pickerPath.lockMove = !picker
-            val distance = distance(pointF, pickerPath.center) - pickerPath.radius
-            val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
-            actionDownAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
-            pickerPath.onActionMove(actionDownAngle.toFloat(), pullUp)
-            previousAngle = actionDownAngle
-            direction = Direction.UNDEFINED
-            angleDelta = 0
-            value(calculateValue(((MAX_ANGLE * lapCount) - MAX_ANGLE) + actionDownAngle))
-            view.onInvalidate()
-        }
+        calculateAngleValue(pointF)
     }
 
     private fun onActionMove(pointF: PointF) {
-        val currentAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
+
 
         if (picker) {
+            val currentAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
             val angleChanged = previousAngle != currentAngle
 
             if (angleChanged) {
@@ -114,36 +137,37 @@ abstract class BaseBehavior(val view: TimePickerView,
                     direction = Direction.CCLOCKWISE
                     angleDelta -= (previousAngle - currentAngle)
                 }
-            }
 
-            val angle = Math.max(Math.min(actionDownAngle + angleDelta, MAX_ANGLE), MIN_ANGLE)
-            //when CLOCKWISE
-            if (direction == Direction.CLOCKWISE && angle == MAX_ANGLE) {
-                if (lapCount >= maxLapCount) {
-                    lapCount = MIN_LAP_COUNT
 
-                } else {
-                    lapCount++
+                val angle = Math.max(Math.min(actionDownAngle + angleDelta, MAX_ANGLE), MIN_ANGLE)
+                //when CLOCKWISE
+                if (direction == Direction.CLOCKWISE && angle == MAX_ANGLE) {
+                    if (lapCount >= maxLapCount) {
+                        lapCount = MIN_LAP_COUNT
+
+                    } else {
+                        lapCount++
+                    }
+                    setMinAngleValue()
                 }
-                setMinAngleValue()
-            }
-            // when CCLOCKWISE
-            if (direction == Direction.CCLOCKWISE && angle == MIN_ANGLE) {
-                if (lapCount == MIN_LAP_COUNT) {
-                    lapCount = maxLapCount
-                } else {
-                    lapCount--
+                // when CCLOCKWISE
+                if (direction == Direction.CCLOCKWISE && angle == MIN_ANGLE) {
+                    if (lapCount == MIN_LAP_COUNT) {
+                        lapCount = maxLapCount
+                    } else {
+                        lapCount--
+                    }
+                    actionDownAngle = MAX_ANGLE
+                    angleDelta = MAX_ANGLE
                 }
-                actionDownAngle = MIN_ANGLE
-                angleDelta = MAX_ANGLE
-            }
-            previousAngle = currentAngle
 
-            val distance = distance(pointF, pickerPath.center) - pickerPath.radius
-            val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
-            pickerPath.onActionMove(currentAngle.toFloat(), pullUp)
-            if (angle == 360 || angle == 0) return
-            value(calculateValue(((MAX_ANGLE * lapCount) - MAX_ANGLE) + angle))
+                if (angle == 360 || angle == 0) return
+                previousAngle = currentAngle
+                val distance = distance(pointF, pickerPath.center) - pickerPath.radius
+                val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
+                pickerPath.onActionMove(currentAngle.toFloat(), pullUp)
+                value(calculateValue(((MAX_ANGLE * lapCount) - MAX_ANGLE) + currentAngle))
+            }
         }
 
     }
@@ -162,9 +186,24 @@ abstract class BaseBehavior(val view: TimePickerView,
 
     private fun overlappedClockwise(direction: Direction, previousAngle: Int, currentAngle: Int) = direction == Direction.CLOCKWISE && (previousAngle - currentAngle) > 45
 
-    private fun onActionUp() {
+    private fun onActionUp(pointF: PointF) {
         setMinAngleValue()
         pickerPath.lockMove = true
+    }
+
+
+    fun calculateAngleValue(pointF: PointF) {
+        if (picker) {
+            pickerPath.lockMove = !picker
+            val distance = distance(pointF, pickerPath.center) - pickerPath.radius
+            val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
+            actionDownAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
+            pickerPath.onActionMove(actionDownAngle.toFloat(), pullUp)
+            previousAngle = actionDownAngle
+            direction = Direction.UNDEFINED
+            value(calculateValue(((MAX_ANGLE * lapCount) - MAX_ANGLE) + actionDownAngle))
+            view.onInvalidate()
+        }
     }
 
     private fun setMinAngleValue() {
@@ -172,4 +211,5 @@ abstract class BaseBehavior(val view: TimePickerView,
         angleDelta = MIN_ANGLE
     }
 
+    abstract fun build()
 }

@@ -10,26 +10,91 @@ import com.agilie.agtimepicker.presenter.TimePickerContract
 import com.agilie.agtimepicker.ui.animation.PickerPath
 
 class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
+    var behavior: BaseBehavior = PickerBehavior()
 
     companion object {
         var MAX_PULL_UP = 35f
         var SWIPE_RADIUS_FACTOR = 0.6f
     }
 
-    var behavior: BaseBehavior? = null
+    var centeredTextSize: Float
+        get() = behavior.centeredTextSize
+        set(value) {
+            behavior.centeredTextSize = value
+        }
+
+    var centeredTextColor: Int
+        get() = behavior.centeredTextColor
+        set(value) {
+            behavior.centeredTextColor = value
+        }
+
+    var centeredTypeFace: Typeface
+        get() = behavior.centeredTypeface
+        set(value) {
+            behavior.centeredTypeface = value
+        }
+
+    var maxValue: Int
+        get() = behavior.countOfValues
+        set(value) {
+            behavior.countOfValues = value
+            behavior.build()
+        }
+
+    var maxLapCount: Int
+        get() = behavior.maxLapCount
+        set(value) {
+            behavior.maxLapCount = value
+            behavior.build()
+        }
+
+    var color: Int
+        get() = behavior.colors[0]
+        set(value) {
+            behavior.colors = intArrayOf(value, value)
+            behavior.updatePaint(center, radius)
+        }
+
+    var colors: IntArray
+        get() = behavior.colors
+        set(value) {
+            behavior.colors = value
+            behavior.updatePaint(center, radius)
+        }
+
+    var gradientAngle: Int
+        get() = behavior.gradientAngle
+        set(value) {
+            behavior.gradientAngle = value
+            behavior.updatePaint(center, radius)
+        }
+
+    var centeredText: String
+        get() = behavior.centeredText
+        set(value) {
+            behavior.centeredText = value
+        }
+
+
+    var valueChangeListener: TimePickerContract.Behavior.ValueChangeListener?
+        get() = behavior.valueChangeListener
+        set(value) {
+            behavior.valueChangeListener = value
+        }
     private var w = 0
     private var h = 0
 
     var picker: Boolean
         set(value) {
-            behavior?.picker = value
+            behavior.picker = value
         }
-        get() = behavior?.picker ?: false
+        get() = behavior.picker
 
     val center: PointF
-        get() = behavior!!.pointCenter
+        get() = behavior.pointCenter
     val radius: Float
-        get() = behavior!!.radius
+        get() = behavior.radius
 
     var touchListener: TouchListener? = null
 
@@ -47,14 +112,14 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        behavior?.onDraw(canvas)
+        behavior.onDraw(canvas)
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         this.w = w
         this.h = h
-        behavior?.onSizeChanged(w, h)
+        behavior.onSizeChanged(w, h)
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
@@ -62,7 +127,7 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
             MotionEvent.ACTION_DOWN -> touchListener?.onViewTouched(PointF(event.x, event.y), event)
 
         }
-        return behavior!!.onTouchEvent(event)
+        return behavior.onTouchEvent(event)
     }
 
     fun onInvalidate() {
@@ -70,7 +135,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     }
 
     private fun init() {
-        this.PickerBehavior().build()
         setOnTouchListener(this)
     }
 
@@ -94,42 +158,19 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     }
 
 
-    inner class PickerBehavior (countOfValues: Int = 24, countOfLaps: Int = 2)
-        : BaseBehavior(this@TimePickerView, PickerPath(setPickerPaint(), setTrianglePaint()), countOfValues, countOfLaps) {
+    inner class PickerBehavior : BaseBehavior(this@TimePickerView, PickerPath(setPickerPaint(), setTrianglePaint())) {
         private var valuesPerLap = 1
         private var anglesPerValue = 1
-        private var valueChangeListener: TimePickerContract.Behavior.ValueChangeListener? = null
 
-        fun setValueChangeListener(valueChangeListener: TimePickerContract.Behavior.ValueChangeListener) : PickerBehavior {
-            this.valueChangeListener = valueChangeListener
-            return this
-        }
-
-        fun setGradient(colors: IntArray, angle: Int = 0): PickerBehavior {
-            this@PickerBehavior.colors = colors
-            this@PickerBehavior.gradientAngle = angle
-            return this
-        }
-
-        fun setMaxValue(countOfValues: Int): PickerBehavior {
-            this@PickerBehavior.countOfValues = countOfValues
-            return this
-        }
-
-        fun setMaxLap(maxLap: Int): PickerBehavior {
-            this@PickerBehavior.maxLapCount = maxLap
-            return this
-        }
-
-        fun build() : TimePickerView{
+        override fun build() {
             valuesPerLap = countOfValues / maxLapCount
             anglesPerValue = 360 / valuesPerLap
-            behavior = this@PickerBehavior
-            return this@TimePickerView
         }
 
         var prevValue = 0
+        var angle = 0
         override fun calculateValue(angle: Int): Int {
+            this.angle = angle
             val maxAngle = 360 * maxLapCount
             val closestAngle = (0..maxAngle step anglesPerValue).firstOrNull { it > angle } ?: 360 * lapCount - 1
             val value = (countOfValues * closestAngle) / (360 * maxLapCount) - 1
