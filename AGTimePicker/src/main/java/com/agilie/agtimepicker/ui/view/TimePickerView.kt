@@ -3,11 +3,13 @@ package com.agilie.agtimepicker.ui.view
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.agilie.agtimepicker.presenter.BaseBehavior
 import com.agilie.agtimepicker.presenter.TimePickerContract
 import com.agilie.agtimepicker.ui.animation.PickerPath
+import com.agilie.volumecontrol.closestValue
 
 class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
     var behavior: BaseBehavior = PickerBehavior()
@@ -157,7 +159,6 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         strokeWidth = 4f
     }
 
-
     inner class PickerBehavior : BaseBehavior(this@TimePickerView, PickerPath(setPickerPaint(), setTrianglePaint())) {
         private var valuesPerLap = 1
         private var anglesPerValue = 1
@@ -171,8 +172,10 @@ class TimePickerView : View, View.OnTouchListener, TimePickerContract.View {
         var angle = 0
         override fun calculateValue(angle: Int): Int {
             this.angle = angle
-            val maxAngle = 360 * maxLapCount
-            val closestAngle = (0..maxAngle step anglesPerValue).firstOrNull { it > angle } ?: 360 * lapCount - 1
+
+            val closestAngle = closestValue(angle, anglesPerValue)
+            Log.d("123", "$angle closestAngle $closestAngle")
+
             val value = (countOfValues * closestAngle) / (360 * maxLapCount) - 1
             return value
         }

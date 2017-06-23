@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="colorCounterFirst">#00DCE6</color>
+    <color name="colorFirstCounter">#00DCE6</color>
     <color name="colorCounterBehind">#3A3861</color>
-    <color name="colorCounterSecond">#F5005C</color>
+    <color name="colorSecondCounter">#F5005C</color>
 </resources>

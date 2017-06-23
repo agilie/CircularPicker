@@ -71,70 +71,70 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-        private fun addPageListener() {
-            view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-                override fun onPageScrollStateChanged(state: Int) {
+    private fun addPageListener() {
+        view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
 
-                }
+            }
 
-                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                    val scaleFactor = 1 - positionOffset * 0.3f
-                    val scrollX = -positionOffset * (first_value.width + textView.width)
-                    if (positionOffset > 0) {
-                        //Scale
-                        scaleView(scaleFactor)
-                        //Translation
-                        translationView(scrollX)
-                        //Color
-                        first_value.setTextColor(blendColors(Color.parseColor("#00DCE6"), Color.parseColor("#3A3861"), positionOffset))
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                val scaleFactor = 1 - positionOffset * 0.3f
+                val scrollX = -positionOffset * (first_value.width + textView.width)
+                if (positionOffset > 0) {
+                    //Scale
+                    scaleView(scaleFactor)
+                    //Translation
+                    translationView(scrollX)
+                    //Color
+                    first_value.setTextColor(blendColors(resources.getColor(R.color.colorFirstCounter), resources.getColor((R.color.colorCounterBehind)), positionOffset))
 
-                        second_value.apply {
-                            scaleX = 0.7f + positionOffset * 0.3f
-                            scaleY = 0.7f + positionOffset * 0.3f
-                            setTextColor(blendColors(Color.parseColor("#3A3861"), Color.parseColor("#F5005C"), positionOffset))
-                        }
+                    second_value.apply {
+                        scaleX = 0.7f + positionOffset * 0.3f
+                        scaleY = 0.7f + positionOffset * 0.3f
+                        setTextColor(blendColors(resources.getColor(R.color.colorCounterBehind), resources.getColor(R.color.colorSecondCounter), positionOffset))
                     }
                 }
-
-                override fun onPageSelected(position: Int) {
-                }
-
-            })
-        }
-
-        private fun setupScale() {
-            second_value.apply {
-                scaleX = 0.7f
-                scaleY = 0.7f
             }
 
-            textView.apply {
-                scaleX = 0.7f
-                scaleY = 0.7f
+            override fun onPageSelected(position: Int) {
             }
+
+        })
+    }
+
+    private fun setupScale() {
+        second_value.apply {
+            scaleX = 0.7f
+            scaleY = 0.7f
         }
 
-        private fun translationView(scrollX: Float) {
-            first_value.translationX = scrollX
-            textView.translationX = scrollX
-            second_value.translationX = scrollX
-        }
-
-        private fun scaleView(scaleFactor: Float) {
-            first_value.apply {
-                scaleX = scaleFactor
-                scaleY = scaleFactor
-            }
-        }
-
-        private fun blendColors(from: Int, to: Int, ratio: Float): Int {
-            val inverseRatio = 1f - ratio
-
-            val r = Color.red(to) * ratio + Color.red(from) * inverseRatio
-            val g = Color.green(to) * ratio + Color.green(from) * inverseRatio
-            val b = Color.blue(to) * ratio + Color.blue(from) * inverseRatio
-
-            return Color.rgb(r.toInt(), g.toInt(), b.toInt())
+        textView.apply {
+            scaleX = 0.7f
+            scaleY = 0.7f
         }
     }
+
+    private fun translationView(scrollX: Float) {
+        first_value.translationX = scrollX
+        textView.translationX = scrollX
+        second_value.translationX = scrollX
+    }
+
+    private fun scaleView(scaleFactor: Float) {
+        first_value.apply {
+            scaleX = scaleFactor
+            scaleY = scaleFactor
+        }
+    }
+
+    private fun blendColors(from: Int, to: Int, ratio: Float): Int {
+        val inverseRatio = 1f - ratio
+
+        val r = Color.red(to) * ratio + Color.red(from) * inverseRatio
+        val g = Color.green(to) * ratio + Color.green(from) * inverseRatio
+        val b = Color.blue(to) * ratio + Color.blue(from) * inverseRatio
+
+        return Color.rgb(r.toInt(), g.toInt(), b.toInt())
+    }
+}
 

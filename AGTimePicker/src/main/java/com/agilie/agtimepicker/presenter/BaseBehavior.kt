@@ -9,11 +9,11 @@ import com.agilie.agtimepicker.ui.view.TimePickerView.Companion.MAX_PULL_UP
 import com.agilie.volumecontrol.calculateAngleWithTwoVectors
 import com.agilie.volumecontrol.distance
 import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
-import java.lang.Math.max
-import java.lang.Math.min
+import java.lang.Math.*
 
 
 abstract class BaseBehavior : TimePickerContract.Behavior {
+
     val view: TimePickerView
     val pickerPath: PickerPath
     var countOfValues = 24
@@ -27,9 +27,7 @@ abstract class BaseBehavior : TimePickerContract.Behavior {
         this.pickerPath = pickerPath
     }
 
-
     private companion object {
-        val MIN_LAP_COUNT = 1
         val MIN_ANGLE = 0
         val MAX_ANGLE = 360
     }
@@ -94,13 +92,14 @@ abstract class BaseBehavior : TimePickerContract.Behavior {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 onActionDown(PointF(event.x, event.y))
+                previousPoint = PointF(event.x, event.y)
             }
             MotionEvent.ACTION_MOVE -> {
                 onActionMove(PointF(event.x, event.y))
                 view.onInvalidate()
             }
             MotionEvent.ACTION_UP -> {
-                angleDelta = 0
+
                 onActionUp(PointF(event.x, event.y))
                 view.onInvalidate()
             }
@@ -118,97 +117,87 @@ abstract class BaseBehavior : TimePickerContract.Behavior {
         calculateAngleValue(pointF)
     }
 
+    var previousPoint = PointF()
     private fun onActionMove(pointF: PointF) {
-
 
         if (picker) {
             val currentAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
             val angleChanged = previousAngle != currentAngle
 
             if (angleChanged) {
-                if (overlappedClockwise(direction, previousAngle, currentAngle)) {
-                    angleDelta += (MAX_ANGLE - previousAngle + currentAngle)
-                } else if (overlappedCclockwise(direction, previousAngle, currentAngle)) {
-                    angleDelta -= (MAX_ANGLE - currentAngle + previousAngle)
-                } else if (previousAngle < currentAngle) {
-                    direction = Direction.CLOCKWISE
-                    angleDelta += (currentAngle - previousAngle)
+                if (abs(currentAngle - previousAngle) < 180) {
+                    totalAngle += (currentAngle - previousAngle)
+                    if (totalAngle > MAX_ANGLE * maxLapCount) {
+                        totalAngle = MIN_ANGLE
+                    }
+                    if (totalAngle < MIN_ANGLE) {
+                        totalAngle = MAX_ANGLE * maxLapCount
+                    }
+                } /*else {
+                    val angleDelta = previousAngle - currentAngle
+                    if (angleDelta > 0) {
+                        totalAngle += angleDelta
+                    } else {
+                        totalAngle -= angleDelta
+                    }
+                }*/
+
+                /*Log.d("TAG", "totalAngle $totalAngle  ")
+                if (currentAngle == 0) {
+                    previousAngle = 360
                 } else {
-                    direction = Direction.CCLOCKWISE
-                    angleDelta -= (previousAngle - currentAngle)
-                }
+                    previousAngle = currentAngle
+                }*/
 
-
-                val angle = Math.max(Math.min(actionDownAngle + angleDelta, MAX_ANGLE), MIN_ANGLE)
-                //when CLOCKWISE
-                if (direction == Direction.CLOCKWISE && angle == MAX_ANGLE) {
-                    if (lapCount >= maxLapCount) {
-                        lapCount = MIN_LAP_COUNT
-
-                    } else {
-                        lapCount++
-                    }
-                    setMinAngleValue()
-                }
-                // when CCLOCKWISE
-                if (direction == Direction.CCLOCKWISE && angle == MIN_ANGLE) {
-                    if (lapCount == MIN_LAP_COUNT) {
-                        lapCount = maxLapCount
-                    } else {
-                        lapCount--
-                    }
-                    actionDownAngle = MAX_ANGLE
-                    angleDelta = MAX_ANGLE
-                }
-
-                if (angle == 360 || angle == 0) return
+                Log.d("TAG", "totalAngle $totalAngle  ")
                 previousAngle = currentAngle
+
                 val distance = distance(pointF, pickerPath.center) - pickerPath.radius
                 val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
-                pickerPath.onActionMove(currentAngle.toFloat(), pullUp)
-                value(calculateValue(((MAX_ANGLE * lapCount) - MAX_ANGLE) + currentAngle))
+                pickerPath.onActionMove(totalAngle.toFloat(), pullUp)
+                value(calculateValue(totalAngle))
             }
         }
-
     }
 
     private var actionDownAngle = 0
-    private var angleDelta = 0
-    var lapCount = 1
-    var direction: Direction = Direction.UNDEFINED
+    private var totalAngle = 0
     private var previousAngle = 0
 
-    enum class Direction {
-        UNDEFINED, CLOCKWISE, CCLOCKWISE
-    }
-
-    private fun overlappedCclockwise(direction: Direction, previousAngle: Int, currentAngle: Int) = direction == Direction.CCLOCKWISE && (currentAngle - previousAngle) > 45
-
-    private fun overlappedClockwise(direction: Direction, previousAngle: Int, currentAngle: Int) = direction == Direction.CLOCKWISE && (previousAngle - currentAngle) > 45
-
     private fun onActionUp(pointF: PointF) {
-        setMinAngleValue()
+        previousAngle = 0
         pickerPath.lockMove = true
     }
 
-
-    fun calculateAngleValue(pointF: PointF) {
+    private fun calculateAngleValue(pointF: PointF) {
         if (picker) {
             pickerPath.lockMove = !picker
             val distance = distance(pointF, pickerPath.center) - pickerPath.radius
             val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
             actionDownAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
-            pickerPath.onActionMove(actionDownAngle.toFloat(), pullUp)
+
+            if (totalAngle > MAX_ANGLE) {
+                calculateAngleDiff(actionDownAngle)
+            } else {
+                totalAngle = actionDownAngle
+            }
+
             previousAngle = actionDownAngle
-            direction = Direction.UNDEFINED
-            value(calculateValue(((MAX_ANGLE * lapCount) - MAX_ANGLE) + actionDownAngle))
+            pickerPath.onActionMove(actionDownAngle.toFloat(), pullUp)
+            value(calculateValue(totalAngle))
             view.onInvalidate()
         }
     }
 
-    private fun setMinAngleValue() {
-        actionDownAngle = MIN_ANGLE
-        angleDelta = MIN_ANGLE
+    private fun calculateAngleDiff(touchAngle: Int) {
+        val angleInLap = (totalAngle / MAX_ANGLE) * MAX_ANGLE
+        val diff = totalAngle - angleInLap
+        if (touchAngle > diff) {
+            totalAngle += abs(touchAngle - diff)
+        } else {
+            totalAngle -= abs(touchAngle - diff)
+        }
+
     }
 
     abstract fun build()

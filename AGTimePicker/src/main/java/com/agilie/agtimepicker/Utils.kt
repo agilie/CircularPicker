@@ -32,3 +32,16 @@ fun pointInCircle(point: PointF, pointCenter: PointF, radius: Float) =
         pow((point.x - pointCenter.x).toDouble(), 2.0) +
                 pow((point.y - pointCenter.y).toDouble(), 2.0) <= radius * radius
 
+
+fun closestValue(value: Int, step: Int): Int {
+    var j = (Math.round(value.toDouble())).toInt()
+    while (true) {
+        if (j > 0 && step > 0) {
+            if (j % step == 0)
+                return j
+            else
+                ++j
+        } else
+            return j
+    }
+}
