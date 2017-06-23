@@ -18,7 +18,7 @@ class PickerPath(val pickerPaint: Paint,
     }
 
     fun onActionDown(angle: Float, pullUp: Float) {
-        //Draw agg
+        // Draw egg
         updatePickerPath(pullUp)
         rotatePicker(angle)
     }
@@ -43,7 +43,7 @@ class PickerPath(val pickerPaint: Paint,
     }
 
     private fun rotatePicker(angle: Float) {
-        //Rotate agg
+        // Rotate egg
         val matrix = Matrix()
         matrix.setRotate(angle, center.x, center.y)
         path.transform(matrix)
@@ -54,8 +54,8 @@ class PickerPath(val pickerPaint: Paint,
         path.reset()
 
         val controlDelta = radius * 0.552f
-        //Draw agg or circle
-        val offset = pullUp//radius + pullUp
+        // Draw egg or circle
+        val offset = pullUp // radius + pullUp
 
         val startPoint = PointF(center.x, center.y - radius - offset)
         path.moveTo(startPoint.x, startPoint.y)
@@ -88,13 +88,13 @@ class PickerPath(val pickerPaint: Paint,
         trianglePath.reset()
 
         val length = radius / 12f
-        //Top of triangle
+        // Top of triangle
         val point1 = PointF(center.x, center.y - 0.9f * radius - pullUp)
         trianglePath.moveTo(point1.x, point1.y)
-        //Left corn
+        // Left corner
         val point2 = PointF(point1.x - length, point1.y + length)
         trianglePath.lineTo(point2.x, point2.y)
-        //Right corn
+        // Right corner
         val point3 = PointF(point1.x + length, point1.y + length)
         trianglePath.lineTo(point3.x, point3.y)
 
