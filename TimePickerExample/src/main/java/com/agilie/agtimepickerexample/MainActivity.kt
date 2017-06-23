@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                     scaleView(scaleFactor)
                     //Translation
                     translationView(scrollX)
-                    //Color
+                    //ColorZ
                     first_value.setTextColor(blendColors(resources.getColor(R.color.colorFirstCounter), resources.getColor((R.color.colorCounterBehind)), positionOffset))
 
                     second_value.apply {

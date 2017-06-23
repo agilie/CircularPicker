@@ -133,21 +133,7 @@ abstract class BaseBehavior : TimePickerContract.Behavior {
                     if (totalAngle < MIN_ANGLE) {
                         totalAngle = MAX_ANGLE * maxLapCount
                     }
-                } /*else {
-                    val angleDelta = previousAngle - currentAngle
-                    if (angleDelta > 0) {
-                        totalAngle += angleDelta
-                    } else {
-                        totalAngle -= angleDelta
-                    }
-                }*/
-
-                /*Log.d("TAG", "totalAngle $totalAngle  ")
-                if (currentAngle == 0) {
-                    previousAngle = 360
-                } else {
-                    previousAngle = currentAngle
-                }*/
+                }
 
                 Log.d("TAG", "totalAngle $totalAngle  ")
                 previousAngle = currentAngle
