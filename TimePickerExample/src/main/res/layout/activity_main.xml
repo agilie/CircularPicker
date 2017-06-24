@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient">
 
 
     <TextView
-        android:id="@+id/first_value"
+        android:id="@+id/hoursTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/timePickerPagerContainer"
@@ -18,29 +17,29 @@
         android:textSize="50sp" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/colonTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/timePickerPagerContainer"
-        android:layout_alignBottom="@+id/first_value"
-        android:layout_toEndOf="@+id/first_value"
+        android:layout_alignBottom="@+id/hoursTextView"
+        android:layout_toEndOf="@+id/hoursTextView"
         android:text=" :"
         android:textColor="@color/colorCounterBehind"
         android:textSize="50sp" />
 
     <TextView
-        android:id="@+id/second_value"
+        android:id="@+id/minutesTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/first_value"
+        android:layout_alignTop="@+id/hoursTextView"
         android:layout_marginStart="11dp"
-        android:layout_toEndOf="@+id/textView"
+        android:layout_toEndOf="@+id/colonTextView"
         android:text="00"
         android:textColor="@color/colorCounterBehind"
         android:textSize="50sp" />
 
 
-    <com.agilie.agtimepicker.ui.view.TimePickerPagerContainer
+    <com.agilie.circularpicker.ui.view.CircularPickerPagerContainer
         android:id="@+id/timePickerPagerContainer"
         android:layout_width="match_parent"
         android:layout_height="300dp"
@@ -48,7 +47,7 @@
         android:layout_alignParentStart="true"
         android:layout_marginBottom="53dp">
 
-        <com.agilie.agtimepicker.ui.view.TimePickerViewPager
+        <com.agilie.circularpicker.ui.view.CircularPickerViewPager
             android:id="@+id/view_pager"
             android:layout_width="300dp"
             android:layout_height="match_parent"
@@ -56,7 +55,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal">
 
-        </com.agilie.agtimepicker.ui.view.TimePickerViewPager>
-    </com.agilie.agtimepicker.ui.view.TimePickerPagerContainer>
+        </com.agilie.circularpicker.ui.view.CircularPickerViewPager>
+    </com.agilie.circularpicker.ui.view.CircularPickerPagerContainer>
 
 </RelativeLayout>
