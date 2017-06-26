@@ -18,13 +18,13 @@ class CircularPickerPath(val pickerPaint: Paint,
         canvas.drawPath(pointerPath, pointerPaint)
     }
 
-    fun onActionDown(angle: Float, pullUp: Float) {
+    fun onActionDown(angle: Int, pullUp: Float) {
         // Draw egg
         updatePickerPath(pullUp)
         rotatePicker(angle)
     }
 
-    fun onActionMove(angle: Float, pullUp: Float) {
+    fun onActionMove(angle: Int, pullUp: Float) {
         if (lockMove)
             return
 
@@ -43,10 +43,10 @@ class CircularPickerPath(val pickerPaint: Paint,
         updatePointerPath(0f)
     }
 
-    private fun rotatePicker(angle: Float) {
+    private fun rotatePicker(angle: Int) {
         // Rotate egg
         val matrix = Matrix()
-        matrix.setRotate(angle, center.x, center.y)
+        matrix.setRotate(angle.toFloat(), center.x, center.y)
         path.transform(matrix)
         pointerPath.transform(matrix)
     }

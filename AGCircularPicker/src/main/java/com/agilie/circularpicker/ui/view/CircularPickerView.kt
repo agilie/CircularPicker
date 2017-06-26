@@ -3,7 +3,6 @@ package com.agilie.circularpicker.ui.view
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import com.agilie.circularpicker.presenter.AGCircularPickerContract
@@ -36,6 +35,11 @@ class CircularPickerView : View, View.OnTouchListener, AGCircularPickerContract.
         get() = behavior.centeredTypeface
         set(value) {
             behavior.centeredTypeface = value
+        }
+
+    var currentValue: Int = 1
+        set(value) {
+            behavior.currentValue = value
         }
 
     var maxValue: Int

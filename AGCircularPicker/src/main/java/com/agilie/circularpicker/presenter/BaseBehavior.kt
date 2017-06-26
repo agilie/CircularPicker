@@ -19,6 +19,7 @@ abstract class BaseBehavior : AGCircularPickerContract.Behavior {
     val circularPickerPath: CircularPickerPath
     var countOfValues = 24
     var maxLapCount = 2
+    var currentValue = 0
     var colors: IntArray = intArrayOf(
             Color.parseColor("#0080ff"),
             Color.parseColor("#53FFFF"))
@@ -93,7 +94,6 @@ abstract class BaseBehavior : AGCircularPickerContract.Behavior {
         when (event.action) {
             MotionEvent.ACTION_DOWN -> {
                 onActionDown(PointF(event.x, event.y))
-                previousPoint = PointF(event.x, event.y)
             }
             MotionEvent.ACTION_MOVE -> {
                 onActionMove(PointF(event.x, event.y))
@@ -112,13 +112,32 @@ abstract class BaseBehavior : AGCircularPickerContract.Behavior {
         circularPickerPath.center = center
         circularPickerPath.radius = radius
         circularPickerPath.createPickerPath()
+        // rotate to current value
+        val angle = calculateClosestAngle(currentValue)
+        circularPickerPath.onActionDown(angle, MAX_PULL_UP)
+        previousAngle = angle
+
+
+    }
+
+    private fun calculateClosestAngle(currentValue: Int): Int {
+        if (currentValue >= countOfValues) {
+            totalAngle = maxLapCount * MAX_ANGLE
+            return MAX_ANGLE
+        } else if (currentValue <= 0) {
+            return 0
+        } else {
+            val valPerAngle = (maxLapCount * MAX_ANGLE) / countOfValues
+            totalAngle = valPerAngle * currentValue
+            return totalAngle
+        }
+
     }
 
     private fun onActionDown(pointF: PointF) {
         calculateAngleValue(pointF)
     }
 
-    var previousPoint = PointF()
     private fun onActionMove(pointF: PointF) {
 
         if (picker) {
@@ -141,7 +160,7 @@ abstract class BaseBehavior : AGCircularPickerContract.Behavior {
 
                 val distance = distance(pointF, circularPickerPath.center) - circularPickerPath.radius
                 val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
-                circularPickerPath.onActionMove(totalAngle.toFloat(), pullUp)
+                circularPickerPath.onActionMove(totalAngle, pullUp)
                 value(calculateValue(totalAngle))
             }
         }
@@ -170,7 +189,7 @@ abstract class BaseBehavior : AGCircularPickerContract.Behavior {
             }
 
             previousAngle = actionDownAngle
-            circularPickerPath.onActionMove(actionDownAngle.toFloat(), pullUp)
+            circularPickerPath.onActionMove(actionDownAngle, pullUp)
             value(calculateValue(totalAngle))
             view.onInvalidate()
         }
