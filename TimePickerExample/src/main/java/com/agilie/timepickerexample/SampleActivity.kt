@@ -4,9 +4,10 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import com.agilie.circularpicker.presenter.CircularPickerContract
-import com.agilie.circularpicker.ui.view.PickerPagerTransformer
 import com.agilie.circularpicker.ui.view.CircularPickerView
+import com.agilie.circularpicker.ui.view.PickerPagerTransformer
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -17,57 +18,68 @@ class SampleActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         view_pager.apply {
-            view_pager.apply {
-                pageMargin = -50
-                clipChildren = false
-                setPageTransformer(false, PickerPagerTransformer(context, 400))
-            }
+            clipChildren = false
+            setPageTransformer(false, PickerPagerTransformer(context, 300))
+        }
 
-
-            view_pager.onAddView(CircularPickerView(this@SampleActivity).apply {
-                colors = (intArrayOf(
-                        Color.parseColor("#00EDE9"),
-                        Color.parseColor("#0087D9"),
-                        Color.parseColor("#8A1CC3")))
-                gradientAngle = 220
-                maxLapCount = 2
-                maxValue = 24
-                centeredTextSize = 60f
-                centeredText = "Hours"
-                valueChangeListener = (object : CircularPickerContract.Behavior.ValueChangeListener {
-                    override fun onValueChanged(value: Int) {
-                        when (value) {
-                            0 -> hoursTextView.text = value.toString() + "0"
-                            else -> hoursTextView.text = value.toString()
-                        }
-                    }
-                })
-            })
-
-            view_pager.onAddView(CircularPickerView(this@SampleActivity).apply {
-                colors = (intArrayOf(
-                        Color.parseColor("#FF8D00"),
-                        Color.parseColor("#FF0058"),
-                        Color.parseColor("#920084")))
-                gradientAngle = 150
-                maxValue = 60
-                maxLapCount = 1
-                centeredTextSize = 60f
-                centeredText = "Minutes"
-                valueChangeListener = object : CircularPickerContract.Behavior.ValueChangeListener {
-                    override fun onValueChanged(value: Int) {
-                        when (value) {
-                            0 -> minutesTextView.text = value.toString() + "0"
-                            else -> minutesTextView.text = value.toString()
-                        }
+        view_pager.onAddView(CircularPickerView(this@SampleActivity).apply {
+            colors = (intArrayOf(
+                    Color.parseColor("#00EDE9"),
+                    Color.parseColor("#0087D9"),
+                    Color.parseColor("#8A1CC3")))
+            gradientAngle = 220
+            maxLapCount = 2
+            currentValue = 1
+            maxValue = 24
+            centeredTextSize = 60f
+            centeredText = "Hours"
+            valueChangeListener = (object : CircularPickerContract.Behavior.ValueChangeListener {
+                override fun onValueChanged(value: Int) {
+                    when (value) {
+                        0 -> hoursTextView.text = value.toString() + "0"
+                        else -> hoursTextView.text = value.toString()
                     }
                 }
             })
+            onColorChangeListener = (object : CircularPickerView.OnColorChangeListener {
+                override fun onColorChange(r: Int, g: Int, b: Int) {
+                }
 
-            setupScale()
+            })
+        })
 
-            addPageListener()
-        }
+        view_pager.onAddView(CircularPickerView(this@SampleActivity).apply {
+            colors = (intArrayOf(
+                    Color.parseColor("#FF8D00"),
+                    Color.parseColor("#FF0058"),
+                    Color.parseColor("#920084")))
+            gradientAngle = 150
+            maxValue = 60
+            currentValue = 24
+            maxLapCount = 1
+            centeredTextSize = 60f
+            centeredText = "Minutes"
+            valueChangeListener = object : CircularPickerContract.Behavior.ValueChangeListener {
+                override fun onValueChanged(value: Int) {
+                    when (value) {
+                        0 -> minutesTextView.text = value.toString() + "0"
+                        else -> minutesTextView.text = value.toString()
+                    }
+                }
+            }
+            onColorChangeListener = (object : CircularPickerView.OnColorChangeListener {
+                override fun onColorChange(r: Int, g: Int, b: Int) {
+
+                }
+
+            })
+        })
+
+        hoursTextView.text = "1"
+        minutesTextView.text = "24"
+        setupScale()
+        addPageListener()
+
     }
 
     private fun addPageListener() {

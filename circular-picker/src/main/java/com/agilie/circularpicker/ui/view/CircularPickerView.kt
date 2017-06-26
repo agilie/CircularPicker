@@ -19,6 +19,12 @@ class CircularPickerView : View, View.OnTouchListener, CircularPickerContract.Vi
         var SWIPE_RADIUS_FACTOR = 0.6f
     }
 
+    interface OnColorChangeListener {
+        fun onColorChange(r: Int, g: Int, b: Int)
+    }
+
+    var onColorChangeListener: OnColorChangeListener? = null
+
     var centeredTextSize: Float
         get() = behavior.centeredTextSize
         set(value) {
@@ -49,6 +55,11 @@ class CircularPickerView : View, View.OnTouchListener, CircularPickerContract.Vi
         set(value) {
             behavior.maxLapCount = value
             behavior.build()
+        }
+
+    var currentValue: Int = 1
+        set(value) {
+            behavior.currentValue = value
         }
 
     var color: Int
@@ -138,6 +149,7 @@ class CircularPickerView : View, View.OnTouchListener, CircularPickerContract.Vi
 
     private fun init() {
         setOnTouchListener(this)
+        this.isDrawingCacheEnabled = true
     }
 
     interface TouchListener {
@@ -174,7 +186,6 @@ class CircularPickerView : View, View.OnTouchListener, CircularPickerContract.Vi
             this.angle = angle
 
             val closestAngle = closestValue(angle, anglesPerValue)
-            Log.d("123", "$angle closestAngle $closestAngle")
 
             val value = (countOfValues * closestAngle) / (360 * maxLapCount) - 1
             return value

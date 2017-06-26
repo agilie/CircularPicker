@@ -4,50 +4,51 @@ import android.graphics.*
 
 
 class PickerPath(val pickerPaint: Paint,
-                 val trianglePaint: Paint) {
+                 val pointerPaint: Paint) {
 
     private val path = Path()
-    private val trianglePath = Path()
+    private val pointerPath = Path()
+    private val pointerRadius = 10f
     var lockMove: Boolean = true
     var center = PointF()
     var radius = 0f
 
     fun onDraw(canvas: Canvas) {
         canvas.drawPath(path, pickerPaint)
-        canvas.drawPath(trianglePath, trianglePaint)
+        canvas.drawPath(pointerPath, pointerPaint)
     }
 
-    fun onActionDown(angle: Float, pullUp: Float) {
+    fun onActionDown(angle: Int, pullUp: Float) {
         // Draw egg
         updatePickerPath(pullUp)
         rotatePicker(angle)
     }
 
-    fun onActionMove(angle: Float, pullUp: Float) {
+    fun onActionMove(angle: Int, pullUp: Float) {
         if (lockMove)
             return
 
         updatePickerPath(pullUp)
-        updateTrianglePath(pullUp)
+        updatePointerPath(pullUp)
         rotatePicker(angle)
     }
 
     fun onActionUp() {
         updatePickerPath(0f)
-        updateTrianglePath(0f)
+        updatePointerPath(0f)
     }
 
     fun createPickerPath() {
         updatePickerPath(0f)
-        updateTrianglePath(0f)
+        updatePointerPath(0f)
     }
 
-    private fun rotatePicker(angle: Float) {
+    private fun rotatePicker(angle: Int) {
         // Rotate egg
         val matrix = Matrix()
-        matrix.setRotate(angle, center.x, center.y)
+        matrix.setRotate(angle.toFloat(), center.x, center.y)
         path.transform(matrix)
-        trianglePath.transform(matrix)
+        pointerPath.transform(matrix)
     }
 
     private fun updatePickerPath(pullUp: Float) {
@@ -84,21 +85,15 @@ class PickerPath(val pickerPaint: Paint,
         path.close()
     }
 
-    private fun updateTrianglePath(pullUp: Float) {
-        trianglePath.reset()
+    private fun updatePointerPath(pullUp: Float) {
+        pointerPath.reset()
 
-        val length = radius / 12f
-        // Top of triangle
-        val point1 = PointF(center.x, center.y - 0.9f * radius - pullUp)
-        trianglePath.moveTo(point1.x, point1.y)
-        // Left corner
-        val point2 = PointF(point1.x - length, point1.y + length)
-        trianglePath.lineTo(point2.x, point2.y)
-        // Right corner
-        val point3 = PointF(point1.x + length, point1.y + length)
-        trianglePath.lineTo(point3.x, point3.y)
+        val x = center.x
+        val y = center.y - radius - pullUp + 30f
 
-        trianglePath.close()
+        pointerPath.addCircle(x, y, pointerRadius, Path.Direction.CW)
+        pointerPath.close()
+
     }
 }
 

@@ -17,6 +17,7 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
     val view: CircularPickerView
     val pickerPath: PickerPath
     var countOfValues = 24
+    var currentValue = 0
     var maxLapCount = 2
     var colors: IntArray = intArrayOf(
             Color.parseColor("#0080ff"),
@@ -111,10 +112,37 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
         pickerPath.center = center
         pickerPath.radius = radius
         pickerPath.createPickerPath()
+        // rotate to current value
+        val angle = calculateClosestAngle(currentValue)
+        pickerPath.onActionDown(angle, MAX_PULL_UP)
+        previousAngle = angle
+
+    }
+
+    private fun calculateClosestAngle(currentValue: Int): Int {
+        if (currentValue >= countOfValues) {
+            totalAngle = maxLapCount * MAX_ANGLE
+            return MAX_ANGLE
+        } else if (currentValue <= 0) {
+            return 0
+        } else {
+            val valPerAngle = (maxLapCount * MAX_ANGLE) / countOfValues
+            totalAngle = valPerAngle * currentValue
+            return totalAngle
+        }
+
     }
 
     private fun onActionDown(pointF: PointF) {
         calculateAngleValue(pointF)
+        changeColors(pointF)
+    }
+
+    private fun changeColors(pointF: PointF) {
+        if (pointF.x.toInt() < 0 || pointF.y.toInt() < 0 || pointF.x.toInt() > view.width || pointF.y.toInt() > view.height) return
+        view.buildDrawingCache()
+        var pixel = view.getDrawingCache(true).getPixel(pointF.x.toInt(), pointF.y.toInt())
+        view.onColorChangeListener?.onColorChange(Color.red(pixel), Color.green(pixel), Color.blue(pixel))
     }
 
     var previousPoint = PointF()
@@ -140,8 +168,10 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
 
                 val distance = distance(pointF, pickerPath.center) - pickerPath.radius
                 val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
-                pickerPath.onActionMove(totalAngle.toFloat(), pullUp)
+                pickerPath.onActionMove(totalAngle, pullUp)
                 value(calculateValue(totalAngle))
+
+                changeColors(pointF)
             }
         }
     }
@@ -169,7 +199,7 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
             }
 
             previousAngle = actionDownAngle
-            pickerPath.onActionMove(actionDownAngle.toFloat(), pullUp)
+            pickerPath.onActionMove(actionDownAngle, pullUp)
             value(calculateValue(totalAngle))
             view.onInvalidate()
         }
