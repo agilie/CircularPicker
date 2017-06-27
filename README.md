@@ -78,11 +78,11 @@ Here are also two callback interfaces provided with _CircularPickerView_. Use th
 
 ````kotlin
 interface ValueChangedListener {
-    fun onValueChanged (value: Int)
+    fun onValueChanged(value: Int)
 }
 
 interface ColorChangedListener {
-    fun onColorChange(r: Int, g: Int, b: Int)
+    fun onColorChanged(r: Int, g: Int, b: Int)
 }
 ````
 
