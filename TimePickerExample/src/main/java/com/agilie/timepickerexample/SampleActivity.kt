@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import com.agilie.circularpicker.presenter.CircularPickerContract
 import com.agilie.circularpicker.ui.view.CircularPickerView
 import com.agilie.circularpicker.ui.view.PickerPagerTransformer
@@ -43,6 +42,7 @@ class SampleActivity : AppCompatActivity() {
             })
             onColorChangeListener = (object : CircularPickerView.OnColorChangeListener {
                 override fun onColorChange(r: Int, g: Int, b: Int) {
+                    hoursTextView.setTextColor(Color.rgb(r,g,b))
                 }
 
             })
@@ -69,7 +69,7 @@ class SampleActivity : AppCompatActivity() {
             }
             onColorChangeListener = (object : CircularPickerView.OnColorChangeListener {
                 override fun onColorChange(r: Int, g: Int, b: Int) {
-
+                    minutesTextView.setTextColor(Color.rgb(r,g,b))
                 }
 
             })

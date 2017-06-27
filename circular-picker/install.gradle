@@ -1,0 +1,34 @@
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.agilie' // CREATE A GROUP ID FOR YOUR LIBRARY
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'circular-picker'
+                groupId 'com.agilie' // CREATE A GROUP ID FOR YOUR LIBRARY
+                artifactId 'circular-picker' // THE NAME OF YOUR MODULE
+
+                name 'CircularPicker' // YOUR LIBRARY NAME
+                description 'Picker is helpful for creating a controller aimed to manage any calculated parameter' // YOUR LIBRARY DESCRIPTION
+                url 'https://github.com/agilie/circular-picker' // YOUR SITE
+
+                licenses {
+                    license {
+                        name 'MIT'
+                    }
+                }
+                developers {
+                    developer {
+
+                    }
+                }
+                scm {
+                    connection 'https://github.com/agilie/circular-picker.git' // YOUR GIT REPO
+                    developerConnection 'https://github.com/agilie/circular-picker.git' // YOUR GIT REPO
+                    url 'https://github.com/agilie/circular-picker' // YOUR SITE
+                }
+            }
+        }
+    }
+}
