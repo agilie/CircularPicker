@@ -4,82 +4,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient">
 
-
-    <!--<GridLayout
-        android:id="@+id/gridLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:columnCount="4"
-        android:rowCount="2">
-
-        <TextView
-            android:layout_columnWeight="1"
-            android:gravity="center"
-            android:text="Day"
-            android:textColor="@color/text_color"
-            android:textSize="20dp" />
-
-        <TextView
-            android:layout_columnWeight="1"
-            android:gravity="center"
-            android:text="Month"
-            android:textColor="@color/text_color"
-            android:textSize="20dp" />
-
-        <TextView
-            android:layout_columnWeight="1"
-            android:gravity="center"
-            android:text="Year"
-            android:textColor="@color/text_color"
-            android:textSize="20dp" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_columnWeight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/time" />
-
-        </LinearLayout>
-
-
-        <TextView
-            android:layout_columnWeight="1"
-            android:gravity="center"
-            android:text="23"
-            android:textColor="@color/text_color"
-            android:textSize="20dp" />
-
-        <TextView
-            android:layout_columnWeight="1"
-            android:gravity="center"
-            android:text="Mar"
-            android:textColor="@color/text_color"
-            android:textSize="20dp" />
-
-        <TextView
-            android:layout_columnWeight="1"
-            android:gravity="center"
-            android:text="-"
-            android:textColor="@color/text_color"
-            android:textSize="20dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_columnWeight="1"
-            android:gravity="center"
-            android:text="13:15"
-            android:textColor="@color/time_color"
-            android:textSize="20dp" />
-
-    </GridLayout>-->
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -138,22 +62,4 @@
         </com.agilie.circularpicker.ui.view.CircularPickerViewPager>
     </com.agilie.circularpicker.ui.view.CircularPickerPagerContainer>
 
-
-   <!-- <ImageButton
-
-        android:id="@+id/imageButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/circle" />
-
-    <ImageButton
-
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="12dp"
-        android:background="@drawable/check" />-->
 </RelativeLayout>
