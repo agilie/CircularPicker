@@ -59,7 +59,7 @@ var colorChangeListener : object
 
 ### Our example of using CircularPicker
 Let's see how we can use it in practice.
-In our *layout.xml* just add CircularPickerPagerContainer which contains CircularPickerViewPager, then create CircularPickerView in the Activity and set up parameters:
+In our *layout.xml* we added CircularPickerPagerContainer which contains CircularPickerViewPager, then created CircularPickerView in the Activity and set up parameters:
 
 ````gradle
 СircularPickerView(context).apply {
@@ -74,8 +74,17 @@ In our *layout.xml* just add CircularPickerPagerContainer which contains Circula
             centeredTextSize = 60f
             centeredText = "Hours"
  ````
-СircularPickerView сontains two callback interfaces: ```` ValueChangeListener, ColorChangeListener````</br>.
-ValueChangeListener returns the current value, ColorChangeListener returns the color pointed to by the picker.
+Here are also two callback interfaces provided with _CircularPickerView_. Use them to handle changes made during the interaction with the component: 
+
+````kotlin
+interface ValueChangedListener {
+    fun onValueChanged (value: Int)
+}
+
+interface ColorChangedListener {
+    fun onColorChange(r: Int, g: Int, b: Int)
+}
+````
 
 ## Usage
 
