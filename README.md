@@ -53,7 +53,7 @@ var centeredText : String
 var centeredTextColor: Int
 var centeredTypeFace : TypeFace
 var valueChangeListener : object
-var onColorChangeListener : object
+var colorChangeListener : object
 ````
 
 ### Our example of using CircularPicker
