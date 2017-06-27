@@ -1,12 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient">
 
-    <com.agilie.agtimepicker.TimePickerView
+
+    <GridLayout
+        android:id="@+id/gridLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:columnCount="4"
+        android:rowCount="2">
 
-    </com.agilie.agtimepicker.TimePickerView>
+        <TextView
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="Day"
+            android:textColor="@color/text_color"
+            android:textSize="20dp" />
 
+        <TextView
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="Month"
+            android:textColor="@color/text_color"
+            android:textSize="20dp" />
+
+        <TextView
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="Year"
+            android:textColor="@color/text_color"
+            android:textSize="20dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_columnWeight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/time" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="23"
+            android:textColor="@color/text_color"
+            android:textSize="20dp" />
+
+        <TextView
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="Mar"
+            android:textColor="@color/text_color"
+            android:textSize="20dp" />
+
+        <TextView
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="-"
+            android:textColor="@color/text_color"
+            android:textSize="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_columnWeight="1"
+            android:gravity="center"
+            android:text="13:15"
+            android:textColor="@color/time_color"
+            android:textSize="20dp" />
+
+    </GridLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/timePickerPagerContainer"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/gridLayout">
+
+        <TextView
+            android:id="@+id/hoursTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="00"
+            android:textColor="@color/colorFirstCounter"
+            android:textSize="80sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/colonTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/hoursTextView"
+            android:layout_toEndOf="@+id/hoursTextView"
+            android:text=" :"
+            android:textColor="@color/colorCounterBehind"
+            android:textSize="80sp" />
+
+        <TextView
+            android:id="@+id/minutesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/hoursTextView"
+            android:layout_toEndOf="@+id/colonTextView"
+            android:text="00"
+            android:textColor="@color/colorCounterBehind"
+            android:textSize="80sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+
+    <com.agilie.circularpicker.ui.view.CircularPickerPagerContainer
+        android:id="@+id/timePickerPagerContainer"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="53dp">
+
+        <com.agilie.circularpicker.ui.view.CircularPickerViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal">
+
+        </com.agilie.circularpicker.ui.view.CircularPickerViewPager>
+    </com.agilie.circularpicker.ui.view.CircularPickerPagerContainer>
+
+    <ImageButton
+
+        android:id="@+id/imageButton"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/circle" />
+
+    <ImageButton
+
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/check" />
 </RelativeLayout>
