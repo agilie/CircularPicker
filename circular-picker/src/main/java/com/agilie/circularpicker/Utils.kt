@@ -45,3 +45,10 @@ fun closestValue(value: Int, step: Int): Int {
             return j
     }
 }
+
+
+fun getPointOnBorderLineOfCircle(innerX: Float, innerY: Float, innerRadius: Float, alfa: Double = 0.0) =
+        PointF().apply {
+            x = (innerRadius * Math.cos(Math.toRadians(alfa - 90.0)) + innerX).toFloat()
+            y = (innerRadius * Math.sin(Math.toRadians(alfa - 90.0)) + innerY).toFloat()
+        }

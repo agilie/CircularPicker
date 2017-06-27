@@ -28,7 +28,7 @@ class SampleActivity : AppCompatActivity() {
                     Color.parseColor("#8A1CC3")))
             gradientAngle = 220
             maxLapCount = 2
-            currentValue = 1
+            currentValue = 13
             maxValue = 24
             centeredTextSize = 60f
             centeredText = "Hours"
@@ -75,7 +75,7 @@ class SampleActivity : AppCompatActivity() {
             })
         })
 
-        hoursTextView.text = "1"
+        hoursTextView.text = "13"
         minutesTextView.text = "24"
         setupScale()
         addPageListener()

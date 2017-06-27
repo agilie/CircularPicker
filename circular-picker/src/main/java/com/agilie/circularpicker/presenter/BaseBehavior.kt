@@ -135,13 +135,14 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
 
     private fun onActionDown(pointF: PointF) {
         calculateAngleValue(pointF)
-        changeColors(pointF)
     }
 
-    private fun changeColors(pointF: PointF) {
-        if (pointF.x.toInt() < 0 || pointF.y.toInt() < 0 || pointF.x.toInt() > view.width || pointF.y.toInt() > view.height) return
+    private fun changeColors(angle: Int, pullUp: Float) {
+
+        val colorPoint = getPointOnBorderLineOfCircle(pointCenter, radius - pullUp, angle)
+
         view.buildDrawingCache()
-        var pixel = view.getDrawingCache(true).getPixel(pointF.x.toInt(), pointF.y.toInt())
+        var pixel = view.getDrawingCache(true).getPixel(colorPoint.x.toInt(), colorPoint.y.toInt())
         view.onColorChangeListener?.onColorChange(Color.red(pixel), Color.green(pixel), Color.blue(pixel))
     }
 
@@ -171,7 +172,7 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
                 pickerPath.onActionMove(totalAngle, pullUp)
                 value(calculateValue(totalAngle))
 
-                changeColors(pointF)
+                changeColors(totalAngle, pullUp)
             }
         }
     }
@@ -201,6 +202,9 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
             previousAngle = actionDownAngle
             pickerPath.onActionMove(actionDownAngle, pullUp)
             value(calculateValue(totalAngle))
+
+            changeColors(totalAngle, 0f)
+
             view.onInvalidate()
         }
     }
