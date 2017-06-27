@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.MotionEvent
 import com.agilie.circularpicker.ui.animation.PickerPath
 import com.agilie.circularpicker.ui.view.CircularPickerView
-import com.agilie.circularpicker.ui.view.CircularPickerView.Companion.MAX_PULL_UP
 import com.agilie.volumecontrol.calculateAngleWithTwoVectors
 import com.agilie.volumecontrol.distance
 import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
@@ -36,6 +35,9 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
     var valueChangeListener: CircularPickerContract.Behavior.ValueChangeListener? = null
 
     var centeredText = ""
+    var swipeRadiusFactor = 0.6f
+    var viewSpace = 3f
+    var maxPullUp = 35f
 
     var picker = true
 
@@ -72,7 +74,7 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
 
     override fun onSizeChanged(width: Int, height: Int) {
         val center = PointF(width / 2f, height / 2f)
-        val radius = max(min(width, height), 0) / 3f
+        val radius = max(min(width, height), 0) / viewSpace
         updatePaint(center, radius)
         drawShapes(center, radius)
     }
@@ -114,7 +116,7 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
         pickerPath.createPickerPath()
         // rotate to current value
         val angle = calculateClosestAngle(currentValue)
-        pickerPath.onActionDown(angle, MAX_PULL_UP)
+        pickerPath.onActionDown(angle, maxPullUp)
         previousAngle = angle
 
     }
@@ -143,7 +145,7 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
 
         view.buildDrawingCache()
         var pixel = view.getDrawingCache(true).getPixel(colorPoint.x.toInt(), colorPoint.y.toInt())
-        view.onColorChangeListener?.onColorChange(Color.red(pixel), Color.green(pixel), Color.blue(pixel))
+        view.colorChangeListener?.onColorChange(Color.red(pixel), Color.green(pixel), Color.blue(pixel))
     }
 
     var previousPoint = PointF()
@@ -168,7 +170,7 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
                 previousAngle = currentAngle
 
                 val distance = distance(pointF, pickerPath.center) - pickerPath.radius
-                val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
+                val pullUp = Math.min(maxPullUp, Math.max(distance, 0f))
                 pickerPath.onActionMove(totalAngle, pullUp)
                 value(calculateValue(totalAngle))
 
@@ -190,7 +192,7 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
         if (picker) {
             pickerPath.lockMove = !picker
             val distance = distance(pointF, pickerPath.center) - pickerPath.radius
-            val pullUp = Math.min(MAX_PULL_UP, Math.max(distance, 0f))
+            val pullUp = Math.min(maxPullUp, Math.max(distance, 0f))
             actionDownAngle = calculateAngleWithTwoVectors(pointF, pickerPath.center).toInt()
 
             if (totalAngle > MAX_ANGLE) {

@@ -13,16 +13,28 @@ import com.agilie.volumecontrol.closestValue
 class CircularPickerView : View, View.OnTouchListener, CircularPickerContract.View {
     var behavior: BaseBehavior = PickerBehavior()
 
-    companion object {
-        var MAX_PULL_UP = 35f
-        var SWIPE_RADIUS_FACTOR = 0.6f
-    }
-
-    interface OnColorChangeListener {
+    interface ColorChangeListener {
         fun onColorChange(r: Int, g: Int, b: Int)
     }
 
-    var onColorChangeListener: OnColorChangeListener? = null
+    var swipeRadiusFactor: Float
+        get() = behavior.swipeRadiusFactor
+        set(value) {
+            behavior.swipeRadiusFactor = value
+        }
+
+    var viewSpace: Float
+        get() = behavior.viewSpace
+        set(value) {
+            behavior.viewSpace
+        }
+    var maxPullUp: Float
+        get() = behavior.maxPullUp
+        set(value) {
+            behavior.maxPullUp
+        }
+
+    var colorChangeListener: ColorChangeListener? = null
 
     var centeredTextSize: Float
         get() = behavior.centeredTextSize

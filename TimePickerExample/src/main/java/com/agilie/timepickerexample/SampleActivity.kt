@@ -40,7 +40,7 @@ class SampleActivity : AppCompatActivity() {
                     }
                 }
             })
-            onColorChangeListener = (object : CircularPickerView.OnColorChangeListener {
+            colorChangeListener = (object : CircularPickerView.ColorChangeListener {
                 override fun onColorChange(r: Int, g: Int, b: Int) {
                     hoursTextView.setTextColor(Color.rgb(r,g,b))
                 }
@@ -67,7 +67,7 @@ class SampleActivity : AppCompatActivity() {
                     }
                 }
             }
-            onColorChangeListener = (object : CircularPickerView.OnColorChangeListener {
+            colorChangeListener = (object : CircularPickerView.ColorChangeListener {
                 override fun onColorChange(r: Int, g: Int, b: Int) {
                     minutesTextView.setTextColor(Color.rgb(r,g,b))
                 }
