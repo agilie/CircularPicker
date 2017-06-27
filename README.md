@@ -1,12 +1,13 @@
 # CircularPicker
-We are pleased to offer you our new free lightweight plugin named Picker.
+We are pleased to offer you our new free lightweight plugin named CircularPicker.
 
 CircularPicker is helpful for creating a controller aimed to manage any calculated parameter. For example, it can be used as a countdown timer or for keeping the score in the game interface.
 
 CircularPicker can be customized to meet your individual requirements. The developer can set the number of the controllers and their design by selecting a color, gradient and other similar parameters. In addition, it’s possible to specify the transition type for showing controllers on the screen.
 
 ## Example
-To run the example project, clone the repo, and run sample.
+To run the example project, clone the repo and run [sample](TimePickerExample/).
+
 ### How does it work?
 
 Just add CircularPickerPagerContainer which contains CircularPickerViewPager to your layout file.
@@ -24,7 +25,7 @@ Just add CircularPickerPagerContainer which contains CircularPickerViewPager to 
             android:layout_gravity="center_horizontal">
 
         </com.agilie.circularpicker.ui.view.CircularPickerViewPager>
-    </com.agilie.circularpicker.ui.view.CircularPickerPagerContainer>
+</com.agilie.circularpicker.ui.view.CircularPickerPagerContainer>
     
    
 ````
@@ -43,8 +44,8 @@ CircularPickerView has the following settings:
 ````kotlin
 var colors : intArrayOf
 var gradientAngle : Int 
-var maxLapCount : Int //Required parameter number of laps
-var maxValue : Int //Required parameter total values
+var maxLapCount : Int           // number of laps (required)
+var maxValue : Int              // total values (required)
 var currentValue : Int 
 var maxPullUp: Float 
 var viewSpace : Float 
@@ -58,7 +59,8 @@ var colorChangeListener : object
 
 ### Our example of using CircularPicker
 Let's see how we can use it in practice.
-In our layout.xml we add CircularPickerPagerContainer which contains CircularPickerViewPager, than in the Activity we create CircularPickerView and assign parameters
+In our *layout.xml* just add CircularPickerPagerContainer which contains CircularPickerViewPager, then create CircularPickerView in the Activity and set up parameters:
+
 ````gradle
 СircularPickerView(context).apply {
             colors = (intArrayOf(
@@ -72,8 +74,9 @@ In our layout.xml we add CircularPickerPagerContainer which contains CircularPic
             centeredTextSize = 60f
             centeredText = "Hours"
  ````
-СircularPickerView сontains two liseners ```` ValueChangeListener, ColorChangeListener````</br>
+СircularPickerView сontains two callback interfaces: ```` ValueChangeListener, ColorChangeListener````</br>.
 ValueChangeListener returns the current value, ColorChangeListener returns the color pointed to by the picker.
+
 ## Usage
 
 ### Gradle
