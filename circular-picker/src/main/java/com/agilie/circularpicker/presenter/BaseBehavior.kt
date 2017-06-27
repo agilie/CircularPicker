@@ -10,7 +10,6 @@ import com.agilie.volumecontrol.distance
 import com.agilie.volumecontrol.getPointOnBorderLineOfCircle
 import java.lang.Math.*
 
-
 abstract class BaseBehavior : CircularPickerContract.Behavior {
 
     val view: CircularPickerView
@@ -32,7 +31,8 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
         val MAX_ANGLE = 360
     }
 
-    var valueChangeListener: CircularPickerContract.Behavior.ValueChangeListener? = null
+    var valueChangedListener: CircularPickerContract.Behavior.ValueChangedListener? = null
+    var colorChangedListener: CircularPickerContract.Behavior.ColorChangedListener? = null
 
     var centeredText = ""
     var swipeRadiusFactor = 0.6f
@@ -145,7 +145,7 @@ abstract class BaseBehavior : CircularPickerContract.Behavior {
 
         view.buildDrawingCache()
         var pixel = view.getDrawingCache(true).getPixel(colorPoint.x.toInt(), colorPoint.y.toInt())
-        view.colorChangeListener?.onColorChange(Color.red(pixel), Color.green(pixel), Color.blue(pixel))
+        colorChangedListener?.onColorChanged(Color.red(pixel), Color.green(pixel), Color.blue(pixel))
     }
 
     var previousPoint = PointF()

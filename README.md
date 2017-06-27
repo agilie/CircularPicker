@@ -24,9 +24,7 @@ Just add CircularPickerPagerContainer which contains CircularPickerViewPager to 
             android:layout_gravity="center_horizontal">
 
         </com.agilie.circularpicker.ui.view.CircularPickerViewPager>
-    </com.agilie.circularpicker.ui.view.CircularPickerPagerContainer>
-    
-   
+    </com.agilie.circularpicker.ui.view.CircularPickerPagerContainer>       
 ````
 Also you can use only CircularPickerView
 ````xml

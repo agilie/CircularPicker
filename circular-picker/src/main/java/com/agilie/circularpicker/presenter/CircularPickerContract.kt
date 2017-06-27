@@ -10,8 +10,12 @@ interface CircularPickerContract {
         fun calculateValue(angle: Int): Int
         fun value(value: Int)
 
-        interface ValueChangeListener {
-            fun onValueChanged (value: Int)
+        interface ValueChangedListener {
+            fun onValueChanged(value: Int)
+        }
+
+        interface ColorChangedListener {
+            fun onColorChanged(r: Int, g: Int, b: Int)
         }
     }
 

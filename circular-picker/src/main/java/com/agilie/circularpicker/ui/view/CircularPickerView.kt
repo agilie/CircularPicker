@@ -5,6 +5,9 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.agilie.circularpicker.R
+import com.agilie.circularpicker.R.styleable.CircularPickerView_circularPickerSpace
+import com.agilie.circularpicker.R.styleable.CircularPickerView_pullUp
 import com.agilie.circularpicker.presenter.BaseBehavior
 import com.agilie.circularpicker.presenter.CircularPickerContract
 import com.agilie.circularpicker.ui.animation.PickerPath
@@ -13,20 +16,16 @@ import com.agilie.volumecontrol.closestValue
 class CircularPickerView : View, View.OnTouchListener, CircularPickerContract.View {
     var behavior: BaseBehavior = PickerBehavior()
 
-    interface ColorChangeListener {
-        fun onColorChange(r: Int, g: Int, b: Int)
-    }
-
     var swipeRadiusFactor: Float
         get() = behavior.swipeRadiusFactor
         set(value) {
             behavior.swipeRadiusFactor = value
         }
 
-    var viewSpace: Float
-        get() = behavior.viewSpace
+    var centeredTextSize: Float
+        get() = behavior.centeredTextSize
         set(value) {
-            behavior.viewSpace
+            behavior.centeredTextSize = value
         }
     var maxPullUp: Float
         get() = behavior.maxPullUp
@@ -34,12 +33,10 @@ class CircularPickerView : View, View.OnTouchListener, CircularPickerContract.Vi
             behavior.maxPullUp
         }
 
-    var colorChangeListener: ColorChangeListener? = null
-
-    var centeredTextSize: Float
-        get() = behavior.centeredTextSize
+    var viewSpace: Float
+        get() = behavior.viewSpace
         set(value) {
-            behavior.centeredTextSize = value
+            behavior.viewSpace
         }
 
     var centeredTextColor: Int
@@ -100,12 +97,18 @@ class CircularPickerView : View, View.OnTouchListener, CircularPickerContract.Vi
             behavior.centeredText = value
         }
 
-
-    var valueChangeListener: CircularPickerContract.Behavior.ValueChangeListener?
-        get() = behavior.valueChangeListener
+    var valueChangedListener: CircularPickerContract.Behavior.ValueChangedListener?
+        get() = behavior.valueChangedListener
         set(value) {
-            behavior.valueChangeListener = value
+            behavior.valueChangedListener = value
         }
+
+    var colorChangedListener: CircularPickerContract.Behavior.ColorChangedListener?
+        get() = behavior.colorChangedListener
+        set(value) {
+            behavior.colorChangedListener = value
+        }
+
     private var w = 0
     private var h = 0
 
@@ -123,15 +126,15 @@ class CircularPickerView : View, View.OnTouchListener, CircularPickerContract.Vi
     var touchListener: TouchListener? = null
 
     constructor(context: Context?) : super(context) {
-        init()
+        init(null)
     }
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
-        init()
+        init(attrs)
     }
 
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init()
+        init(attrs)
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -158,9 +161,14 @@ class CircularPickerView : View, View.OnTouchListener, CircularPickerContract.Vi
         invalidate()
     }
 
-    private fun init() {
+    private fun init(attrs: AttributeSet?) {
         setOnTouchListener(this)
         this.isDrawingCacheEnabled = true
+
+        val attributes = context
+                .obtainStyledAttributes(attrs, R.styleable.CircularPickerView)
+        viewSpace = attributes.getFloat(CircularPickerView_circularPickerSpace, behavior.viewSpace)
+        maxPullUp = attributes.getFloat(CircularPickerView_pullUp, behavior.maxPullUp)
     }
 
     interface TouchListener {
@@ -204,10 +212,10 @@ class CircularPickerView : View, View.OnTouchListener, CircularPickerContract.Vi
 
         override fun value(value: Int) {
             if (prevValue == value) return
-            if (value < 0) valueChangeListener?.onValueChanged(prevValue)
+            if (value < 0) valueChangedListener?.onValueChanged(prevValue)
             else {
                 prevValue = value
-                valueChangeListener?.onValueChanged(prevValue)
+                valueChangedListener?.onValueChanged(prevValue)
             }
         }
 

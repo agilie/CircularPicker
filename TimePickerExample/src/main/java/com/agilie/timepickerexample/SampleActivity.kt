@@ -1,6 +1,7 @@
 package com.agilie.timepickerexample
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
@@ -8,7 +9,6 @@ import com.agilie.circularpicker.presenter.CircularPickerContract
 import com.agilie.circularpicker.ui.view.CircularPickerView
 import com.agilie.circularpicker.ui.view.PickerPagerTransformer
 import kotlinx.android.synthetic.main.activity_main.*
-
 
 class SampleActivity : AppCompatActivity() {
 
@@ -32,7 +32,7 @@ class SampleActivity : AppCompatActivity() {
             maxValue = 24
             centeredTextSize = 60f
             centeredText = "Hours"
-            valueChangeListener = (object : CircularPickerContract.Behavior.ValueChangeListener {
+            valueChangedListener = (object : CircularPickerContract.Behavior.ValueChangedListener {
                 override fun onValueChanged(value: Int) {
                     when (value) {
                         0 -> hoursTextView.text = value.toString() + "0"
@@ -40,11 +40,10 @@ class SampleActivity : AppCompatActivity() {
                     }
                 }
             })
-            colorChangeListener = (object : CircularPickerView.ColorChangeListener {
-                override fun onColorChange(r: Int, g: Int, b: Int) {
-                    hoursTextView.setTextColor(Color.rgb(r,g,b))
+            colorChangedListener = (object : CircularPickerContract.Behavior.ColorChangedListener {
+                override fun onColorChanged(r: Int, g: Int, b: Int) {
+                    hoursTextView.setTextColor(Color.rgb(r, g, b))
                 }
-
             })
         })
 
@@ -59,7 +58,7 @@ class SampleActivity : AppCompatActivity() {
             maxLapCount = 1
             centeredTextSize = 60f
             centeredText = "Minutes"
-            valueChangeListener = object : CircularPickerContract.Behavior.ValueChangeListener {
+            valueChangedListener = object : CircularPickerContract.Behavior.ValueChangedListener {
                 override fun onValueChanged(value: Int) {
                     when (value) {
                         0 -> minutesTextView.text = value.toString() + "0"
@@ -67,19 +66,25 @@ class SampleActivity : AppCompatActivity() {
                     }
                 }
             }
-            colorChangeListener = (object : CircularPickerView.ColorChangeListener {
-                override fun onColorChange(r: Int, g: Int, b: Int) {
-                    minutesTextView.setTextColor(Color.rgb(r,g,b))
+            colorChangedListener = (object : CircularPickerContract.Behavior.ColorChangedListener {
+                override fun onColorChanged(r: Int, g: Int, b: Int) {
+                    minutesTextView.setTextColor(Color.rgb(r, g, b))
                 }
-
             })
         })
+        val tf = Typeface.createFromAsset(this.assets, "OpenSans-ExtraBold.ttf")
+        hoursTextView.apply {
+            typeface = tf
+            text = "13"
+        }
 
-        hoursTextView.text = "13"
-        minutesTextView.text = "24"
+        minutesTextView.apply {
+            typeface = tf
+            text = "24"
+
+        }
         setupScale()
         addPageListener()
-
     }
 
     private fun addPageListener() {
