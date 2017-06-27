@@ -1,4 +1,5 @@
 # CircularPicker
+[ ![Download](https://api.bintray.com/packages/agilie/maven/CircularPicker/images/download.svg) ](https://bintray.com/agilie/maven/CircularPicker/_latestVersion)
 We are pleased to offer you our new free lightweight plugin named CircularPicker.
 
 CircularPicker is helpful for creating a controller aimed to manage any calculated parameter. For example, it can be used as a countdown timer or for keeping the score in the game interface.
