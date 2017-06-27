@@ -20,6 +20,7 @@ class SampleActivity : AppCompatActivity() {
             clipChildren = false
             setPageTransformer(false, PickerPagerTransformer(context, 300))
         }
+        val typeface = Typeface.createFromAsset(this.assets, "OpenSans-ExtraBold.ttf")
 
         view_pager.onAddView(CircularPickerView(this@SampleActivity).apply {
             colors = (intArrayOf(
@@ -27,11 +28,12 @@ class SampleActivity : AppCompatActivity() {
                     Color.parseColor("#0087D9"),
                     Color.parseColor("#8A1CC3")))
             gradientAngle = 220
-            maxLapCount = 2
+            maxLapCount = 1
+            centeredTypeFace = typeface
             currentValue = 13
-            maxValue = 24
+            maxValue = 100
             centeredTextSize = 60f
-            centeredText = "Hours"
+            centeredText = "Volume"
             valueChangedListener = (object : CircularPickerContract.Behavior.ValueChangedListener {
                 override fun onValueChanged(value: Int) {
                     when (value) {
@@ -55,6 +57,7 @@ class SampleActivity : AppCompatActivity() {
             gradientAngle = 150
             maxValue = 60
             currentValue = 24
+            centeredTypeFace = typeface
             maxLapCount = 1
             centeredTextSize = 60f
             centeredText = "Minutes"
@@ -72,19 +75,19 @@ class SampleActivity : AppCompatActivity() {
                 }
             })
         })
-        val tf = Typeface.createFromAsset(this.assets, "OpenSans-ExtraBold.ttf")
         hoursTextView.apply {
-            typeface = tf
+            this.typeface = typeface
             text = "13"
         }
 
         minutesTextView.apply {
-            typeface = tf
+            this.typeface = typeface
             text = "24"
 
         }
         setupScale()
         addPageListener()
+
     }
 
     private fun addPageListener() {

@@ -19,7 +19,7 @@
             android:layout_centerVertical="true"
             android:text="00"
             android:textColor="@color/colorFirstCounter"
-            android:textSize="80sp"
+            android:textSize="75sp"
             android:textStyle="bold" />
 
         <TextView
@@ -31,7 +31,7 @@
             android:fontFamily=""
             android:text=" :"
             android:textColor="@color/colorCounterBehind"
-            android:textSize="80sp" />
+            android:textSize="75sp" />
 
         <TextView
             android:id="@+id/minutesTextView"
@@ -41,7 +41,7 @@
             android:layout_toEndOf="@+id/colonTextView"
             android:text="00"
             android:textColor="@color/colorCounterBehind"
-            android:textSize="80sp"
+            android:textSize="75sp"
             android:textStyle="bold" />
     </RelativeLayout>
 

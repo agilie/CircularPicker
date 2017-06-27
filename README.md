@@ -1,9 +1,11 @@
 # CircularPicker
 We are pleased to offer you our new free lightweight plugin named Picker.
 
-CircularPicker is helpful for creating a controller aimed to manage any calculated parameter. For example, it can be used as a countdown timer or for keeping the score in the game interface.
+CircularPicker is helpful for creating a controller aimed to manage any calculated parameter.
 
 CircularPicker can be customized to meet your individual requirements. The developer can set the number of the controllers and their design by selecting a color, gradient and other similar parameters. In addition, it’s possible to specify the transition type for showing controllers on the screen.
+### Demo
+<img src="https://user-images.githubusercontent.com/17047537/27594456-777bb7b8-5b62-11e7-8e45-2bbe695b3525.gif">  <img src="https://user-images.githubusercontent.com/17047537/27594534-b350add4-5b62-11e7-987e-fc558eb8ee21.gif">
 
 ## Example
 To run the example project, clone the repo, and run sample.
@@ -44,14 +46,18 @@ var gradientAngle : Int
 var maxLapCount : Int //Required parameter number of laps
 var maxValue : Int //Required parameter total values
 var currentValue : Int 
-var maxPullUp: Float 
-var viewSpace : Float 
 var centeredTextSize : Float 
 var centeredText : String 
 var centeredTextColor: Int
 var centeredTypeFace : TypeFace
-var valueChangeListener : object
-var colorChangeListener : object
+var valueChangedListener : object
+var colorChangedListener : object
+````
+````xml
+<declare-styleable name="CircularPickerView">
+        <attr name="circularPickerSpace" format="float" />
+        <attr name="pullUp" format="float" />
+    </declare-styleable>
 ````
 
 ### Our example of using CircularPicker
@@ -70,8 +76,8 @@ In our layout.xml we add CircularPickerPagerContainer which contains CircularPic
             centeredTextSize = 60f
             centeredText = "Hours"
  ````
-СircularPickerView сontains two liseners ```` ValueChangeListener, ColorChangeListener````</br>
-ValueChangeListener returns the current value, ColorChangeListener returns the color pointed to by the picker.
+СircularPickerView сontains two liseners ```` ValueChangedListener, ColorChangedListener````</br>
+ValueChangedListener returns a value relative to the current circle pointed to by the picker </br> ColorChangedListener returns the color pointed to by the picker.
 ## Usage
 
 ### Gradle
