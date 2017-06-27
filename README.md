@@ -72,7 +72,7 @@ In our layout.xml we add CircularPickerPagerContainer which contains CircularPic
             centeredTextSize = 60f
             centeredText = "Hours"
  ````
-СircularPickerView сontains two liseners ````gradle ValueChangeListener, ColorChangeListener````
+СircularPickerView сontains two liseners ```` ValueChangeListener, ColorChangeListener````</br>
 ValueChangeListener returns the current value, ColorChangeListener returns the color pointed to by the picker.
 ## Usage
 
