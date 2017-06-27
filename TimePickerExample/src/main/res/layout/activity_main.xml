@@ -87,7 +87,6 @@
         android:layout_marginBottom="27dp">
 
         <TextView
-            android:fontFamily="JCHEadA"
             android:id="@+id/hoursTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -99,7 +98,6 @@
             android:textStyle="bold" />
 
         <TextView
-            android:fontFamily="JCHEadA"
             android:id="@+id/colonTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -110,7 +108,6 @@
             android:textSize="80sp" />
 
         <TextView
-            android:fontFamily="JCHEadA"
             android:id="@+id/minutesTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

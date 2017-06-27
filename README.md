@@ -1,5 +1,9 @@
 # CircularPicker
-CircularPicker is helpful for creating a controller aimed to manage any calculated parameter.
+We are pleased to offer you our new free lightweight plugin named Picker.
+
+AGCircularPicker is helpful for creating a controller aimed to manage any calculated parameter. For example, it can be used as a countdown timer or for keeping the score in the game interface.
+
+AGCircularPicker can be customized to meet your individual requirements. The developer can set the number of the controllers and their design by selecting a color, gradient and other similar parameters. In addition, it’s possible to specify the transition type for showing controllers on the screen.
 
 ## Example
 
