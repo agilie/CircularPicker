@@ -1,4 +1,9 @@
-# CircularPicker
+<p align="center">
+
+<img src="https://user-images.githubusercontent.com/1777595/28011162-0969de96-656a-11e7-976f-90e9347bcdb5.png" alt="CircularPicker" title="CircularPicker" width="500"/>
+</p>
+
+<p>
 
 <p align="center">
 
