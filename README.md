@@ -1,5 +1,21 @@
 # CircularPicker
-[ ![Download](https://api.bintray.com/packages/agilie/maven/CircularPicker/images/download.svg) ](https://bintray.com/agilie/maven/CircularPicker/_latestVersion)</br>
+
+<p align="center">
+
+<a href="https://www.agilie.com?utm_source=github&utm_medium=referral&utm_campaign=Git_Swift&utm_term=AGCircularPicker">
+<img src="https://img.shields.io/badge/Made%20by%20Agilie-*****-green.svg?style=flat" alt="Made by Agilie">
+</a>
+
+<a href='https://bintray.com/agilie/maven/CircularPicker/_latestVersion'>
+<img src='https://api.bintray.com/packages/agilie/maven/CircularPicker/images/download.svg'>
+</a>
+
+<a href='https://raw.githubusercontent.com/agilie/CircularPicker/master/LICENSE.txt'>
+<img src='https://img.shields.io/badge/license-MIT-blue.svg' alt='GitHub license'>
+</a>
+
+</p>
+
 We are pleased to offer you our new free lightweight plugin named CircularPicker.
 
 CircularPicker is helpful for creating a controller aimed to manage any calculated parameter. For example, it can be used as a countdown timer or for keeping the score in the game interface.
