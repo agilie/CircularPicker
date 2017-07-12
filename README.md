@@ -29,6 +29,10 @@ CircularPicker can be customized to meet your individual requirements. The devel
 ### Demo
 <img src="https://user-images.githubusercontent.com/17047537/27594456-777bb7b8-5b62-11e7-8e45-2bbe695b3525.gif">  <img src="https://user-images.githubusercontent.com/17047537/27594534-b350add4-5b62-11e7-987e-fc558eb8ee21.gif">
 
+## Link to Android repo
+
+Check out our iOS [CircularPicker](https://github.com/agilie/AGCircularPicker/) also!
+
 ## Example
 To run the example project, clone the repo and run [sample](TimePickerExample/).
 
